@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>q</title>
+	<style type="text/css">
+		.m_menu {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 51px;
+    font-size: 0;
+    border-top: 1px solid #e7e7eb; 
+    background-position: 0 0;
+    background-repeat: no-repeat;
+    padding-left: 43px;
+}
+html {
+    background: #F9F9FB;
+}
+ul{
+	background-color: #fff;
+}
+.m_menu li {
+    display: inline-block;
+    line-height: 50px;
+    position: relative;
+    background-color: #fff;
+}
+.p_width3 {
+    width: 33.33%;
+}
+* {
+    box-sizing: border-box;
+}
+ul, ol {
+    padding: 0;
+}
+p, ul, ol, dl, blockquote, pre, address, fieldset, figure {
+    margin: 0;
+}
+.m_menu li a {
+    border-left: 1px solid #e7e7eb;
+    font-size: 14px;
+    text-align: center;
+    display: block;
+    width: auto;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    word-wrap: normal;
+    color: #616161;
+    text-decoration: none;
+}
+.m_menu li .sub_menu {
+    position: absolute;
+    left: 0;
+    width: 100px;
+    border: 1px solid #d0d0d0;
+    bottom: 60px;
+    background-color: #fafafa;
+}
+.m_menu li .sub_menu ul {
+    font-size: 0;
+    text-align: center;
+}
+.m_menu li .sub_menu ul li {
+    width: 100%;
+    display: block;
+    border-bottom: 1px solid #d0d0d0;
+}
+ul li, ol li {
+    list-style: none;
+}
+.m_menu li .sub_menu ul li a {
+    display: block;
+    width: auto;
+    border-left: 0;
+    font-size: 14px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    word-wrap: normal;
+    line-height: 44px;
+    color: #616161;
+    text-decoration: none;
+}
+a {
+    background: transparent;
+}
+
+
+	</style>
+	<script src="http://cdn.bootcss.com/jquery/1.11.3/jquery.min.js"></script>
+	<script type="text/javascript" src="gre.js"></script>
+</head>
+<body>
+	<ul class="m_menu" id="m_menu">
+		<li class="p_width3">
+			<a data-lv="1" href="javascript:;" class="">all</a>
+			<div class="sub_menu" style="display: block;">
+				<ul>
+					<li>
+						<a data-lv="2" href="javascript:;">qq</a>
+					</li>
+					<li>
+						<a data-lv="2" href="javascript:;">ww</a>
+					</li>
+					<li>
+						<a data-lv="2" href="javascript:;" class="">ee</a>
+					</li>
+					<li>
+						<a data-lv="2" href="javascript:;" class="active">rr</a>
+					</li>
+					<li>
+						<a data-lv="2" class="add_sub_menu" href="javascript:;">+</a>
+					</li>
+				</ul> <i class="tra"></i> <i class="tra2"></i>
+			</div>
+		</li>
+		
+		
+		
+	</ul>
+</body>
+</html>
