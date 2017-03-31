@@ -1,0 +1,101 @@
+.ProfileHeader-main {
+    position: relative;
+    margin: 0 24px 24px;
+}
+*, *:after, *:before {
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+}
+.ProfileEdit {
+    width: 1000px;
+    padding: 0 16px;
+    margin: 14px auto;
+    font-size: 15px;
+    color: #262626;
+}
+.ProfileHeader-avatar {
+    position: absolute;
+    top: -25px;
+    left: 0;
+    z-index: 4;
+}
+.UserAvatarEditor {
+    cursor: pointer;
+}
+.UserAvatar, .UserAvatar-inner {
+    vertical-align: top;
+}
+.UserAvatar {
+    display: inline-block;
+    overflow: hidden;
+    border: 4px solid #fff;
+    -moz-border-radius: 8px;
+    border-radius: 8px;
+}
+.Avatar--large {
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+}
+.Avatar {
+    background: #fff;
+    -moz-border-radius: 2px;
+    border-radius: 2px;
+}
+img {
+    border: 0;
+}
+.Mask {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 1;
+    -webkit-transition: opacity .2s ease-in;
+    -moz-transition: opacity .2s ease-in;
+    transition: opacity .2s ease-in;
+}.UserAvatarEditor-maskInner {
+    z-index: 4;
+    border: 4px solid #fff;
+    -moz-border-radius: 8px;
+    border-radius: 8px;
+}
+.Mask-mask--black {
+    background: #000;
+}
+.Mask-mask {
+    position: absolute;
+    z-index: -1;
+    width: 100%;
+    height: 100%;
+    opacity: .4;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+.Mask-content {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    z-index: 5;
+    color: #fff;
+    text-align: center;
+    -webkit-transform: translate(-50%, -50%);
+    -moz-transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+}
+svg:not(:root) {
+    overflow: hidden;
+}
+.UserAvatarEditor-cameraIcon {
+    margin-bottom: 14px;
+    fill: #fff;
+}
+.UserAvatarEditor-maskInnerText {
+    white-space: nowrap;
+}
+.Icon {
+    vertical-align: text-bottom;
+    fill: #9fadc7;
+}
