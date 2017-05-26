@@ -6,4 +6,4 @@ complete_pic_edit:
 图片剪裁上传;
 
 jquery_reproduction:
-仿 jquery 项目
+仿 jquery 项目;
