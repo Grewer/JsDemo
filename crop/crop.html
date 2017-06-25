@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>crop</title>
+	<script type="text/javascript" src="jquery.js"></script>
+</head>
+<body>
+<input type="file" name="" accept="image/gif, image/jpeg" id="upload">
+<canvas id="showimg" style="border:1px solid #aaa;"></canvas>
+ <p>移动:</p>     
+ <input type="range" min="0" max="2" id="move" step="0.01" value="1" class="range-control"/><br/>
+
+<button id="crop">剪裁输出</button><img id="img" src="" style="border:1px solid #aaa;">
+</body>
+<script type="text/javascript">
+	-(function($){
+		var crop = {
+			init:function(){
+				this.img = new Image();
+				this.can = document.getElementById('showimg');
+				var ctx = this.ctx = this.can.getContext("2d");
+				this.width = this.can.width = 500;
+				this.height = this.can.height = 400;
+				ctx.fillStyle = "#aaa";  
+				ctx.fillRect(0,0,500,400); 
+				ctx.beginPath();
+				ctx.moveTo(100,100);   
+				ctx.lineTo(400,100);
+				ctx.lineTo(400,300);
+				ctx.lineTo(100,300); 
+				ctx.lineTo(100,100); 
+				ctx.lineWidth = 3;
+				ctx.strokeStyle = '#333'
+				ctx.stroke();
+				ctx.clip();
+				ctx.closePath();
+				this.clear();  
+				this.addListen();
+			},
+			change:function(){
+				this.clear();
+				this.img.onload = function(){
+					var $this = crop;
+					$this.img_width = $this.img.width;
+					$this.img_height = $this.img.height;
+					$this.fictitious_imgwidth = $this.img_width;
+					$this.fictitious_imgheight = $this.img_height;
+					$this.present_x = $this.width*0.5-$this.img_width*0.5;
+					$this.present_y = $this.height*0.5-$this.img_height*0.5;
+					$this.ctx.drawImage($this.img,$this.present_x,$this.present_y,$this.img_width,$this.img_height);
+				}
+				this.img.src = this.getFileUrl('upload');
+			},
+			translate:function(){
+				var val = document.getElementById("move").value;
+				this.clear();
+				this.fictitious_imgwidth = this.img_width*val;
+				this.fictitious_imgheight = this.img_height*val;
+				this.ctx.drawImage(this.img,this.present_x,this.present_y,this.fictitious_imgwidth,this.fictitious_imgheight);
+			},
+			mouseDown:function(e){
+				this.orign_x = e.offsetX;
+				this.orign_y = e.offsetY;
+				this.judgmentIsInImg(e);
+			},
+			mouseMove:function(e){
+				var e = e || event;
+				if(this.flag){
+					this.distance_x = e.offsetX - this.orign_x;
+					this.distance_y = e.offsetY - this.orign_y;
+					this.clear();
+					this.substitute_x = this.present_x + this.distance_x;
+					this.substitute_y = this.present_y + this.distance_y;
+					this.ctx.drawImage(this.img,this.substitute_x,this.substitute_y,this.fictitious_imgwidth,this.fictitious_imgheight);
+				}
+			},
+			mouseLeave:function(){
+				if(this.flag){
+					this.present_x = this.substitute_x;
+					this.present_y = this.substitute_y;
+					this.flag = false;
+				}
+				
+			},
+			out:function(){
+				var crop_canvas = document.createElement('canvas');
+			    crop_canvas.width = 300;  
+			    crop_canvas.height = 200;
+			    crop_ctx = crop_canvas.getContext('2d');
+			    crop_ctx.fillStyle = "#fff";
+			    crop_ctx.fillRect(0,0,300,200);
+			    crop_ctx.drawImage(this.img,Number(this.present_x)-100,Number(this.present_y)-100,this.fictitious_imgwidth,this.fictitious_imgheight);
+				var fullQuality = crop_canvas.toDataURL('image/jpeg', 1.0);
+				$('#img').attr('src',fullQuality);
+			},
+			judgmentIsInImg:function(e){
+				var e = e || event;
+				var ll = this.present_x;
+				var lt = this.present_y;
+				var rl = this.present_x+this.fictitious_imgwidth;
+				var rt = this.present_y+this.fictitious_imgheight;
+				
+				var x=e.clientX-this.can.getBoundingClientRect().left;
+				var y=e.clientY-this.can.getBoundingClientRect().top;
+
+				if(ll < x && x < rl && lt < y && y < rt){
+					this.flag = true;
+				}else{
+					this.flag = false;
+				}
+				
+			},
+			clear:function(){
+				this.ctx.clearRect(0, 0, this.width, this.height);
+			},
+			getFileUrl:function(id){
+				var url;
+				try{
+					if (navigator.userAgent.indexOf("MSIE")>=1) { // IE 
+						url = document.getElementById(id).value; 
+					} else if(navigator.userAgent.indexOf("Firefox")>0) { // Firefox 
+						url = window.URL.createObjectURL(document.getElementById(id).files.item(0)); 
+					} else if(navigator.userAgent.indexOf("Chrome")>0) { // Chrome 
+						url = window.URL.createObjectURL(document.getElementById(id).files.item(0)); 
+					}
+				}catch(e){
+					throw new Error('you can ignore it')
+				}
+				return url;
+			},
+			addListen:function(){
+				$('#upload').on('change',this.change.bind(this));
+				$('#move').on('input',this.translate.bind(this));
+				$('#showimg').on('mousedown',this.mouseDown.bind(this))
+				.on('mousemove',this.mouseMove.bind(this))
+				.on('mouseleave mouseup',this.mouseLeave.bind(this));
+				$('#crop').on('click',this.out.bind(this));
+			}
+		}
+		return crop.init();
+	})(jQuery)
+</script>
+</html>
