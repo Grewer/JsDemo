@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>object</title>
+</head>
+<body>
+
+<ul id="qq">
+	<li class="ww"><span class="qwe"><div class="test">qwe</div><a class="qwerty" href="#"></a></span></li>
+	<li  shuxing  class="ww">asd</li>
+	<li shuxing="zzz" class="ww "><span id="ss"><p>ss</p> <a href="#"></a></span></li>
+
+</ul>
+<div shuxing="zzz">this is a div</div>
+<span><div>qqq</div><div>www</div></span>
+<div id="x" shu="zzzz" class="test and">
+	ssssssssssss
+</div>
+<input type="text" name="sssss" value="wwwwww" >
+<textarea>ceshi</textarea>
+</body>
+<script type="text/javascript">
+	(function(window, undefined) {
+     var Grewer = function(select) {
+     	return new Grewer.fn.init(select);
+     }
+     Grewer.extend  = function(obj){
+     	if(typeof obj != 'object'){
+     		console.error('扩展对象错误')
+     	}else{
+     		for(var i in obj){
+     			Grewer[i] = obj[i];
+     		}
+     	}
+     	return this;
+     }
+     
+
+     Grewer.prototype = Grewer.fn = {
+         constructor: Grewer,
+         init: function(select) {
+			if(typeof select == 'undefined'){
+				return this;
+			}
+			if ( select.nodeType ) {
+				this.context = this[0] = select;
+				this.length = 1;
+				return this;
+			}
+			
+            var strs = [];
+            var obj = document;
+			strs=select.split(" ");
+			var len = strs.length
+			this.select = select;
+			this.content = document;
+			if(select.charAt(0) === '[' && select.charAt(select.length-1) === ']'){
+					var posi = select.indexOf('=');
+					if(posi != '-1'){
+						var attr = select.substring(1,posi);
+						attr = Grewer.trim(attr);
+						var val = select.substring(posi+1,select.length-1);
+						val = Grewer.trim(val);
+						obj = this.getEleByAttr(obj,attr,val);
+					}else{
+						var attr = select.substring(1,select.length-1);
+						attr = Grewer.trim(attr);
+						obj = this.getEleByAttr(obj,attr);
+					}
+					if(Object.prototype.toString.call(obj) == '[object HTMLCollection]' || Object.prototype.toString.call(obj) == '[object Array]'){
+						for(var l = 0,objlen = obj.length;l<objlen;l++){
+							this[l] = obj[l];
+						}
+					}else if(Object.prototype.toString.call(obj) == '[object HTMLDocument]'){
+
+					}else{
+						this[0] = obj;
+					}
+		            return this;
+
+			}
+			for(var i=0;i<len;i++){
+				var first = strs[i].charAt(0);
+				if(first === '#'){
+					obj = obj.getElementById(strs[i].substring(1));
+				}else if(first === '.'){
+					// !obj.getElementsByClassName ? obj = this.getByClassName(obj,strs[i].substring(1)):obj = obj.getElementsByClassName(strs[i].substring(1));
+					// obj = this.getByClassName(obj,strs[i].substring(1))//ie 兼容
+					if(Object.prototype.toString.call(obj)=='[object Array]' || Object.prototype.toString.call(obj)=='[object HTMLCollection]'){
+						for(var k = 0;k<obj.length;k++){
+							obj = obj[k].getElementsByClassName(strs[i].substring(1));
+						}
+					}else{
+
+						obj = obj.getElementsByClassName(strs[i].substring(1));
+
+					}
+					
+					// obj = this.getByClassName(obj,strs[i].substring(1))
+					// obj = obj.getElementsByClassName(strs[i].substring(1));
+				}else{
+					//html dom元素
+					if(Object.prototype.toString.call(obj) == '[object HTMLCollection]'  || Object.prototype.toString.call(obj) == '[object Array]'){
+						var result = [];
+						for(var a=0,domlen = obj.length;a<domlen;a++){
+							result[a] = Array.prototype.slice.call(obj[a].getElementsByTagName(strs[i]))
+						}
+						obj = this.merge(result);
+					}else{
+						obj = obj.getElementsByTagName(strs[i]);
+					}
+				}
+				
+			}
+
+			if(Object.prototype.toString.call(obj) == '[object HTMLCollection]' || Object.prototype.toString.call(obj) == '[object Array]'){
+				for(var l = 0,objlen = obj.length;l<objlen;l++){
+					this[l] = obj[l];
+				}
+				this.length = objlen
+
+			}else if(Object.prototype.toString.call(obj) == '[object HTMLDocument]'){
+
+			}else{
+				this[0] = obj;
+				this.length = 1;
+			}
+			if(!this.prevObject){
+				this.prevObject = {
+					0:document,
+					context:document,
+					length:1
+				}
+			}
+			
+             return this;
+         },
+         getByClassName:function(obj,className){
+         	var result = [];   
+         	if(Object.prototype.toString.call(obj)=='[object Array]'){
+				for(var l,len = obj.length;l<len;l++){
+					var tags = obj[l].getElementsByTagName("*"); 
+					console.log(tags)
+					for (var i = 0, len = tags.length; i < len; i++) {  
+				        var classNames = tags[i].className.split(" ");  
+				        for (var j = 0, l = classNames.length; j < l; j++) {  
+				            if ( classNames[j] === className ) {   
+				                result.push(tags[i]);  
+				                break;  
+				            }  
+				        }  
+				    }  
+				}
+         		  
+         	}else{
+         		var tags = obj.getElementsByTagName("*"); 
+			    for (var i = 0, len = tags.length; i < len; i++) {  
+			        var classNames = tags[i].className.split(" ");  
+			        for (var j = 0, l = classNames.length; j < l; j++) {  
+			            if ( classNames[j] === className ) {   
+			                result.push(tags[i]);  
+			                break;  
+			            }  
+			        }  
+			    }  
+         	}
+		    
+		    return result;  
+         },
+         getEleByAttr:function(obj,attr,value){
+         	var result = []; 
+         	var tags = obj.getElementsByTagName("*"); 
+         	if(!obj||!attr) return;
+         	if(typeof value == 'undefined'){
+         		for (var i = 0, len = tags.length; i < len; i++) {
+			        if(tags[i].hasAttribute(attr)){
+			        	result.push(tags[i]);
+			        }
+			    } 
+         	}else{
+         		for (var i = 0, len = tags.length; i < len; i++) {  
+			        if(tags[i].getAttribute(attr) == value){
+			        	result.push(tags[i]);
+			        }
+			    } 
+         	}
+         	return result;
+			    
+         },
+         merge:function(arr){
+         	var firstarr = arr[0]
+         	for(var i=1,len=arr.length;i<len;i++){
+         		firstarr.push.apply(firstarr,arr[i]);
+         	}
+         	return firstarr;
+         },
+		extend:function(obj){
+			if(typeof obj != 'object'){
+	     		console.error('扩展对象错误')
+	     	}else{
+	     		for(var i in obj){
+	     			Grewer.fn[i] = obj[i];
+	     		}
+	     	}
+	     	return this;
+     	}
+         	
+     }
+     Grewer.fn.extend({
+     	click:function(fun){
+     		var target = this
+	     	if(typeof fun == 'undefined'){
+	     		this.each(function(i){
+	     			target[i].click();
+	     		})
+	     	}else{
+	     		this.each(function(i){
+	     			target[i].addEventListener('click',fun);
+	     		})
+	     	}
+	     	return this;
+	     },
+	     css:function(name,value){
+	     	return typeof value == 'undefined' ? Grewer.getclass(this,name):(Grewer.setclass(this,name,value),this)
+	     },
+	     attr:function(name,value){
+	     	return typeof value == 'undefined' ? Grewer.get(this,name):(Grewer.set(this,name,value),this);
+	     	
+	     },
+	     addClass:function(value){
+	     	value = value || '';
+	     	var className
+	     	this.each(function(i,e){
+	     		className = Grewer.trim(this.getAttribute('class'))
+	     		className =  className ? className+' '+value :value;
+	     		this.setAttribute('class',className);
+	     	})
+	     	return this;
+	     },
+	     removeClass:function(value){
+	     	var className = Grewer.get(this,'class');
+	     	var reg = new RegExp("(\\s|^)" + value + "(\\s|$)");
+	     	if(typeof value === 'string'){
+	     		Grewer.each(this,function(i,e){
+	     			if(Grewer.hasClass(e,value)){
+	     				this.className = Grewer.trim(this.className.replace(reg, " "))
+	     			}
+	     		})
+	     	}
+	     	return this;
+	     },
+	     each:function(callback){
+	     	for(var i=0,len=this.length;i<len;i++){
+	     		callback.call(this[i],i,this[i]);
+	     	}
+	     	return this;
+	     },
+	     text:function(value){
+	     	var str=''
+	     	return typeof value === 'string'?
+	     		(this.each(function(){
+	     			document.all?this.innerText = value:this.textContent = value
+	     		}),this):
+	     		(this.each(function(){
+	     			document.all?str += this.innerText:str += this.textContent
+	     		}),str);
+	     },
+	     val:function(value){
+	     	return typeof value === 'string'?(this.each(function(){
+	     		this.value = value;
+	     	}),this):this[0].value;
+
+	     },
+	     html:function(value){
+	     	return typeof value === 'string'?(this[0].innerHTML = value,this): this[0].innerHTML;
+	     },
+	     show:function(){
+	     	this.each(function(){
+	     		this.style.display = 'block';
+	     	})
+	     	return this;
+	     },
+	     hide:function(){
+	     	this.each(function(){
+	     		this.style.display = 'none';
+	     	})
+	     	return this;
+	     },
+	     eq:function(num){
+	     	var obj = Grewer(this[num]);
+	     	obj.prevObject = this;
+	     	return obj;
+	     },
+	     get:function(num){
+	     	return this[num];
+	     },
+	     children:function(value){
+	     	//children 存在兼容性问题
+	     	if(typeof value !== 'string'){
+		     	var newobj  = Grewer();
+		     	var arr = []
+		     	this.each(function(i){
+		     		arr[i] = Array.prototype.slice.call(this.children)
+		     	})
+		     	var resultarr = newobj.merge(arr);
+		     	Grewer.each(resultarr,function(i,e){
+		     		newobj[i] = e
+		     	})
+		     	newobj.length = resultarr.length;
+			   	newobj.prevObject = this;
+			   	newobj.content = document;
+		     	return newobj;
+	     	}else{
+	     		var target = Grewer.clone(this);
+	     		var ano = this;
+	     		this.each(function(i){
+	     			delete ano[i]
+	     		})
+	     		var obj = ano.init(value);
+	     		obj.prevObject = target;
+	     		return obj
+
+	     	}
+	     },
+	     end:function(){
+	     	return this.prevObject? this.prevObject:Grewer(document);
+	     },
+
+     })
+     Grewer.extend({
+     	clone:function(obj){
+     		var result = {};
+     		Grewer.each(obj,function(i){
+     			result[i] = this
+     		})
+     		return result;
+     	},
+        trim:function(str){
+			return str.replace(/(^\s*)|(\s*$)/g, ""); 
+		},
+     	hasClass:function(ele, cls) {
+		    return ele.className.match(new RegExp("(\\s|^)" + cls + "(\\s|$)"));
+		},
+     	each:function(obj,callback){
+     		for(var i=0,len=obj.length;i<len;i++){
+	     		callback.call(obj[i],i,obj[i]);
+	     	}
+     	},
+     	getclass:function(obj,name){
+     		var foo = obj[0].style[name]
+	     	return  foo === '' ? undefined :foo
+	     },
+	     setclass:function(obj,name,value){
+	     	obj.each(function(i,e){
+	     		obj[i]['style'][name] = value;
+	     	})
+	     },
+	     get:function(obj,name){
+	     	return obj[0].getAttribute(name);
+	     },
+	     set:function(obj,name,value){
+	     	obj.each(function(i,e){
+	     		obj[i].setAttribute(name,value);
+	     	})
+	     }
+     })
+     Grewer.fn.init.prototype = Grewer.fn;//循环 Grewer.fn的 中值得prototype都是 Grewer.fn
+     window.Grewer = window.g = Grewer;
+
+ })(window);
+
+ console.dir(g)//g=person
+</script>
+</html>
