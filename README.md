@@ -7,3 +7,9 @@ complete_pic_edit:
 
 jquery_reproduction:
 仿 jquery 项目;
+
+crop:
+使用h5的canvas写的图片上传操作;
+
+js_modal:
+使用 js 写的摸态框
