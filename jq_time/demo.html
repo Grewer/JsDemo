@@ -48,11 +48,32 @@
 				}else{
 					alert("请选择小于今天的时间！");
 				}
+			},
+			timeToTime:function(timeOne,timeTwo){
+				if(timeOne == undefined && timeTwo == undefined){
+					alert('请输入日期');
+					return false;
+				}
+				var timeOne = timeOne == undefined ?
+				new  Date().valueOf():
+				Date.parse(timeOne .replace(/-/g,"/"));
+
+				var timeTwo = timeTwo == undefined ?
+				new  Date().valueOf():
+				Date.parse(timeTwo.replace(/-/g,"/"));
+
+				var gap = timeOne > timeTwo?
+				timeOne-timeTwo:
+				timeTwo-timeOne;
+
+				return caculation(gap)
+			
 			}
 		})
 	})(jQuery);
 
 	console.log($.nowToTime('2017-7-16 17:51:34')+'后');
 	console.log($.timeToNow('2017-07-15 18:01:23')+'前');
+	console.log($.timeToTime('2017-07-15 18:01:23','2018-06-16 19:02:23'))
 </script>
 </html>
