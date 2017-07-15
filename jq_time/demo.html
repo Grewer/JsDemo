@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>demo</title>
+	<script type="text/javascript" src="../jquery.js"></script>
+</head>
+<body>
+
+</body>
+<script type="text/javascript">
+	-(function($){
+		var caculation = function(gap){
+			var minutes = 1000 * 60
+			var hours = minutes * 60
+			var days = hours * 24
+			var years = days * 365
+			if(gap/years >= 1){
+				return parseInt(gap/years)+'年';
+			}else if(gap/days >= 30){
+				return parseInt(gap/days/30)+'个月'
+			}else if(gap/hours >= 24){
+				return parseInt(gap/hours/24)+'天'
+			}else if(gap/minutes >=60){
+				var num = gap/minutes/60;
+				var intNum = parseInt(gap/minutes/60);
+				return intNum+'小时'+parseInt((num.toFixed(4)-intNum)*60)+'分钟'
+			}else{
+				return parseInt(gap/minutes)+'分钟'
+			}
+		}
+		$.extend({
+			nowToTime:function(time){
+				var theTime = Date.parse(time .replace(/-/g,"/"));
+				var curDate=new  Date().valueOf();//当前时间的时间戳
+				if(theTime <=curDate){
+					alert("请选择大于今天的时间！");
+				}else{
+					var gap = theTime - curDate;
+					return caculation(gap)
+				}
+			},
+			timeToNow:function(time){
+				var theTime = Date.parse(time .replace(/-/g,"/"));
+				var curDate=new  Date().valueOf();
+				if(theTime <=curDate){
+					var gap =  curDate - theTime;
+					return caculation(gap)
+				}else{
+					alert("请选择小于今天的时间！");
+				}
+			}
+		})
+	})(jQuery);
+
+	console.log($.nowToTime('2017-7-16 17:51:34')+'后');
+	console.log($.timeToNow('2017-07-15 18:01:23')+'前');
+</script>
+</html>
