@@ -15,4 +15,8 @@ js_modal:
 使用 js 写的摸态框
 
 jq_time:
-jq时间计算插件
+jq时间计算插件;
+
+
+game:
+canvas 小游戏
