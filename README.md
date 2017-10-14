@@ -1,22 +1,22 @@
-# JsDemo
-Js-drag:
+### JsDemo
+-Js-drag:
 js 拖曳操作;
 
-complete_pic_edit:
+-complete_pic_edit:
 图片剪裁上传;
 
-jquery_reproduction:
+-jquery_reproduction:
 仿 jquery 项目;
 
-crop:
+-crop:
 使用h5的canvas写的图片上传操作;
 
-js_modal:
+-js_modal:
 使用 js 写的摸态框
 
-jq_time:
+-jq_time:
 jq时间计算插件;
 
 
-game:
+-game:
 canvas 小游戏
