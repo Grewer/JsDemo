@@ -20,5 +20,5 @@ jq时间计算插件;
 - game:  
 canvas 小游戏
 
-- canvasLine:
+- canvasLine:  
 canvas 动画之动态绘制会缩放的六边形
