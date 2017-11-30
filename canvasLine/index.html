@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>canvas</title>
+
+</head>
+<body>
+<canvas id="canvas" width="200" height="200" style="border:1px solid #000"></canvas>
+</body>
+<script type="text/javascript">
+	var canvas = document.getElementById("canvas");
+var context = canvas.getContext("2d");
+
+
+var offset;
+var flag = true;
+
+function animate() {
+    var myAnimation = requestAnimationFrame(animate);
+
+    offset += (flag === true) ? 10 : -10;
+
+    if (offset >= 0) {
+        offset = 0;
+    }
+    if (offset <= -600) {
+        offset = -600
+        cancelAnimationFrame(myAnimation);
+    }
+
+    canvas.height = 200;
+
+    context.strokeStyle = "#000";
+    context.moveTo(100, 200);
+    context.lineTo(100 + 50 * (Math.sqrt(3)), 150);
+    context.lineTo(100 + 50 * (Math.sqrt(3)), 50);
+    context.lineTo(100, 0);
+    context.lineTo(100 - 50 * (Math.sqrt(3)), 50);
+    context.lineTo(100 - 50 * (Math.sqrt(3)), 150);
+    context.closePath();
+    context.setLineDash([600, 600]);
+    context.lineDashOffset = -offset;
+    context.stroke();
+}
+
+canvas.addEventListener('mouseenter', function() {
+    offset = -600;
+    flag = true
+    animate();
+})
+canvas.addEventListener('mouseleave', function() {
+    flag = false;
+
+})
+</script>
+</html>
