@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>clock</title>
+</head>
+<body>
+<canvas id="canvas" style="border:1px solid #999"></canvas>
+</body>
+<script type="text/javascript">
+	var canvas = document.getElementById('canvas');
+	var ctx = canvas.getContext('2d');
+	canvas.width = canvas.height = 400;
+	ctx.translate(200,200);
+	var R = 150;
+	ctx.font = "14px Helvetica";
+	ctx.textAlign = 'center';
+	ctx.textBaseline = 'middle';
+	for(var i=1;i<13;i++){
+		var radian = (i*30)*Math.PI / 180;
+		ctx.fillText(i,R*Math.sin(radian),R*(-Math.cos(radian)))
+	}
+	
+	var getTime = function(){
+		var myDate =  new Date();
+		return {
+			H:myDate.getHours(),      //获取当前小时数(0-23)
+		 	M:myDate.getMinutes(),    //获取当前分钟数(0-59)
+		 	S:myDate.getSeconds(),    //获取当前秒数(0-59)
+		}
+	}
+	
+	var sDeg = 6*Math.PI / 180;
+	var dDeg = 30*Math.PI /180;
+
+	var Animation = function(time){
+		ctx.strokeStyle = "#e20437";
+		ctx.moveTo(0,0);
+		ctx.lineTo(140*Math.sin(sDeg*time.S),140*(-Math.cos(sDeg*time.S)))
+		ctx.lineWidth = 2;
+		ctx.lineCap = 'round';
+		ctx.stroke();
+		ctx.beginPath();
+		ctx.lineWidth = 2;
+		ctx.strokeStyle = "#000";
+		ctx.moveTo(0,0);
+		ctx.lineTo(100*Math.sin(sDeg*time.M),100*(-Math.cos(sDeg*time.M)));
+		ctx.stroke();
+		ctx.beginPath();
+		ctx.lineWidth = 3;
+		ctx.moveTo(0,0);
+		ctx.lineTo(80*Math.sin(dDeg*time.H),80*(-Math.cos(dDeg*time.H)));
+		ctx.stroke();
+	}
+	var time = getTime();
+	Animation(time);
+
+</script>
+</html>

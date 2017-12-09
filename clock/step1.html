@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>clock</title>
+</head>
+<body>
+<canvas id="canvas" style="border:1px solid #999"></canvas>
+</body>
+<script type="text/javascript">
+	var canvas = document.getElementById('canvas');
+	var ctx = canvas.getContext('2d');
+	canvas.width = canvas.height = 400;
+	ctx.translate(200,200);
+	var R = 150;
+	ctx.font = "14px Helvetica";
+	ctx.textAlign = 'center';
+	ctx.textBaseline = 'middle';
+	for(var i=1;i<13;i++){
+		var radian = (i*30)*Math.PI / 180;
+		ctx.fillText(i,R*Math.sin(radian),R*(-Math.cos(radian)))
+	}
+
+
+</script>
+</html>
