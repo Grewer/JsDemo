@@ -21,4 +21,7 @@ jq时间计算插件;
 canvas 小游戏
 
 - canvasLine:  
-canvas 动画之动态绘制会缩放的六边形
+canvas 动画之动态绘制会缩放的六边形;
+
+- clock:  
+canvas 实现闹钟;
