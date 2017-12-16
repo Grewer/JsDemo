@@ -93,7 +93,8 @@
 			    crop_ctx = crop_canvas.getContext('2d');
 			    crop_ctx.fillStyle = "#fff";
 			    crop_ctx.fillRect(0,0,300,200);
-			    crop_ctx.drawImage(this.img,Number(this.present_x)-100,Number(this.present_y)-100,this.fictitious_imgwidth,this.fictitious_imgheight);
+			    crop_ctx.drawImage(this.img,this.init_x-this.fictitious_imgwidth/2-100,this.init_y-this.fictitious_imgheight/2-100,this.fictitious_imgwidth,this.fictitious_imgheight);
+			    //这边的减去100 是原 canvas 阴影边框的长度
 				var fullQuality = crop_canvas.toDataURL('image/jpeg', 1.0);
 				$('#img').attr('src',fullQuality);
 			},
