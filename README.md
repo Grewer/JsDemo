@@ -9,7 +9,7 @@ js 拖曳操作;
 仿 jquery 项目;
 
 - crop:  
-使用h5的canvas写的图片上传操作;
+使用h5的canvas写的图片上传操作,包含图片的缩放,移动,剪裁;
 
 - js_modal:  
 使用 js 写的摸态框;

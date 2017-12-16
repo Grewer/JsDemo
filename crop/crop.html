@@ -39,15 +39,18 @@
 			},
 			change:function(){
 				this.clear();
+				$('#move').val(1)//根据实际需要进行初始化
 				this.img.onload = function(){
 					var $this = crop;
-					$this.img_width = $this.img.width;
-					$this.img_height = $this.img.height;
-					$this.fictitious_imgwidth = $this.img_width;
-					$this.fictitious_imgheight = $this.img_height;
-					$this.present_x = $this.width*0.5-$this.img_width*0.5;
-					$this.present_y = $this.height*0.5-$this.img_height*0.5;
-					$this.ctx.drawImage($this.img,$this.present_x,$this.present_y,$this.img_width,$this.img_height);
+					$this.img_width = $this.img.width;//原图像横坐标
+					$this.img_height = $this.img.height;//原图像纵坐标
+					$this.fictitious_imgwidth = $this.img_width;//被缩放的图像横坐标
+					$this.fictitious_imgheight = $this.img_height;//被缩放的图像纵坐标
+					//因为后面图像的变化后长度都不是原长度了,后面使用图像长度是就使用fictitious属性
+					$this.init_x = $this.width*0.5;//图片中心点横坐标
+					$this.init_y = $this.height*0.5;//图片中心点纵坐标
+					//绘图时同过中心点减去fictitious/2长度来确定图像左上角的坐标
+					$this.ctx.drawImage($this.img,$this.init_x-$this.img_width/2,$this.init_y-$this.img_height/2,$this.img_width,$this.img_height);
 				}
 				this.img.src = this.getFileUrl('upload');
 			},
@@ -56,33 +59,34 @@
 				this.clear();
 				this.fictitious_imgwidth = this.img_width*val;
 				this.fictitious_imgheight = this.img_height*val;
-				this.ctx.drawImage(this.img,this.present_x,this.present_y,this.fictitious_imgwidth,this.fictitious_imgheight);
+				this.ctx.drawImage(this.img,this.init_x-this.fictitious_imgwidth/2,this.init_y-this.fictitious_imgheight/2 ,this.fictitious_imgwidth,this.fictitious_imgheight);
 			},
 			mouseDown:function(e){
 				this.orign_x = e.offsetX;
 				this.orign_y = e.offsetY;
-				this.judgmentIsInImg(e);
+				this.judgmentIsInImg(e);//判断点击是否在图像内
 			},
 			mouseMove:function(e){
 				var e = e || event;
 				if(this.flag){
-					this.distance_x = e.offsetX - this.orign_x;
+					this.distance_x = e.offsetX - this.orign_x;//鼠标移动的长度
 					this.distance_y = e.offsetY - this.orign_y;
 					this.clear();
-					this.substitute_x = this.present_x + this.distance_x;
-					this.substitute_y = this.present_y + this.distance_y;
-					this.ctx.drawImage(this.img,this.substitute_x,this.substitute_y,this.fictitious_imgwidth,this.fictitious_imgheight);
+					this.substitute_x = this.init_x + this.distance_x;
+					this.substitute_y = this.init_y + this.distance_y;
+					this.ctx.drawImage(this.img,this.substitute_x-this.fictitious_imgwidth/2,this.substitute_y-this.fictitious_imgheight/2,this.fictitious_imgwidth,this.fictitious_imgheight);
 				}
 			},
 			mouseLeave:function(){
 				if(this.flag){
-					this.present_x = this.substitute_x;
-					this.present_y = this.substitute_y;
+					this.init_x = this.substitute_x;
+					this.init_y = this.substitute_y;
 					this.flag = false;
 				}
 				
 			},
 			out:function(){
+				//输出图像
 				var crop_canvas = document.createElement('canvas');
 			    crop_canvas.width = 300;  
 			    crop_canvas.height = 200;
@@ -95,10 +99,12 @@
 			},
 			judgmentIsInImg:function(e){
 				var e = e || event;
-				var ll = this.present_x;
-				var lt = this.present_y;
-				var rl = this.present_x+this.fictitious_imgwidth;
-				var rt = this.present_y+this.fictitious_imgheight;
+
+				var ll = this.init_x-this.fictitious_imgwidth/2;
+				var lt = this.init_y-this.fictitious_imgheight/2;
+				var rl = this.init_x+this.fictitious_imgwidth/2;
+				var rt = this.init_y+this.fictitious_imgheight/2;
+				//图像四个角的坐标
 				
 				var x=e.clientX-this.can.getBoundingClientRect().left;
 				var y=e.clientY-this.can.getBoundingClientRect().top;
