@@ -134,7 +134,6 @@ Init.prototype.drawTree = function(size, scale, lean, level) {
     } else {
         ctx.fillRect(0, 0,constitute.rightSize, -constitute.rightSize);
     } //递归绘制右正方形
-
     ctx.restore();
 }
 
@@ -147,9 +146,7 @@ Init.prototype.render = function(){
     var lean = map(this.mouse.x, 0,this.vw, 0.5, -0.5)
     //通过 map函数得出左右倾斜程度 只要影响:鼠标 x 的值
 
-
     ctx.clearRect(0,0,this.vw,this.vh)//清空画布
-
     ctx.save(); //因为颜色会渐变,所以需要使用 save 存储为染色前的状态
     ctx.fillStyle = this.colors[this.maxLevel];
     //树根颜色
@@ -161,8 +158,7 @@ Init.prototype.render = function(){
 
     requestAnimationFrame(this.render.bind(this));
 }
-
-
+   
 
 var init = new Init();
 init.render();
