@@ -54,7 +54,7 @@ Init.prototype.getColors = function(c1, c2, steps) {
         const s = Math.round(lerp(c1.s, c2.s, t));
         const l = Math.round(lerp(c1.l, c2.l, t));
 
-        this.colors.push(`hsl(${h},${s}%,${l}%)`);
+        this.colors.push('hsl('+h+','+s+'%,'+l+'%)');
     }
 }
 
