@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Pythagoras tree</title>
+</head>
+
+<body>
+    <canvas id="canvas"></canvas>
+</body>
+<script type="text/javascript">
+var Init = function() {
+    var canvas = document.getElementById('canvas');
+    this.ctx = canvas.getContext('2d');
+
+    this.vw = canvas.width = window.innerWidth;
+    this.vh = canvas.height = window.innerHeight; //定义 canvas大小
+    this.boxSize = 80; //树的大小
+
+    this.maxLevel = 6; //树的节数
+    this.color1 = { h: 70, s: 75, l: 51 }; //树顶颜色 青绿色
+    this.color2 = { h: 310, s: 98, l: 17 }; //树根颜色 咖啡色
+    // HSL色彩模式：就是色调(Hue)、饱和度(Saturation)、亮度(Lightness)三个颜色通道的改变以及它们相互之间的叠加来获得各种颜色，色调(Hue)色调最大值360，饱和度和亮度有百分比表示0-100%之间。
+    // H：
+    // Hue(色调)。0(或360)表示红色，120表示绿色，240表示蓝色，也可取其他数值来指定颜色。取值为：0 - 360
+    // S：
+    // Saturation(饱和度)。取值为：0.0% - 100.0%
+    // L：
+    // Lightness(亮度)。取值为：0.0% - 100.0%
+    // 当然这里 rgb 肯定也是可以的
+
+    this.mouse = {
+        x: this.vw / 2,
+        y: this.vh / 2
+    }; //默认鼠标位置 屏幕中心
+
+    this.lean = 0; //三角形顶点左右偏移程度
+    this.scale = 0; //三角形高度比例
+
+    this.x = (this.vw - this.boxSize) / 2;
+    //x 时候从浏览器左边开始到树根左边的长度 同样的也是 浏览器右边到树根右边的长度
+    this.y = this.vh;
+
+    this.getColors(this.color1, this.color2, this.maxLevel + 1);
+    //取色,将颜色从 color1到 color 2 平均分成 maxLevel+1 种,你可以加3,加4 因为 maxLeval 不足的话有一部分颜色计算出来是白色会与白色背景冲突
+}
+
+Init.prototype.getColors = function(c1, c2, steps) {
+    this.colors = [];
+    var lerp = this.methods.lerp;
+    for (let i = 0; i < steps; i++) {
+        const t = i / (steps - 1);
+        const h = Math.round(lerp(c1.h, c2.h, t));
+        const s = Math.round(lerp(c1.s, c2.s, t));
+        const l = Math.round(lerp(c1.l, c2.l, t));
+
+        this.colors.push(`hsl(${h},${s}%,${l}%)`);
+    }
+}
+
+Init.prototype.methods = {
+    //pure function
+    lerp: function lerp(a, b, t) {
+        return a + (b - a) * t;
+    },
+    map:function map(x, a, b, c, d) {
+	    return c + (d - c) * ((x - a) / (b - a)) || 0;
+	}
+}
+
+
+
+Init.prototype.calcBranches = (function() {
+    var cache = {};
+
+    var memoize = function(width, scale, lean) {
+        //长度,三角形高度比例,倾斜度 初始值 80 0.4 0
+        //lean 范围 -0.5 到0.5 lean接近0.5时 左树枝几乎为0 同理 -.5时 有树枝几乎为0 即构成三角形皆为直角三角形
+        var memoKey = width+'-'+scale+'-'+lean;
+        if (!cache[memoKey]) {
+            //存储这三个值,形成缓存,减少绘制压力
+            var currentH = width * scale; //当前高度即构成三角形对于正方形的高度
+
+            var result = {
+                leftSize: Math.sqrt(currentH ** 2 + (width * (0.5 - lean)) ** 2),
+                rightSize: Math.sqrt(currentH ** 2 + (width * (0.5 + lean)) ** 2),
+                leftAngle: Math.atan(currentH / ((0.5 - lean) * width)),
+                rightAngle: Math.atan(currentH / ((0.5 + lean) * width))
+            };
+            //**表示几次方 
+            //关键代码,根据当前的长度
+            //初始化时  第一个width = boxSize;
+            //leftSize 构成三角形的左边长
+            //rightSize 右变长
+            //leftAngle 左边的角度的反正切值  -PI/2 到 PI/2 之间的弧度值。 是一个角度
+            //rightAngle 右边的角度的反正切值 同上
+            cache[memoKey] = result;
+        }
+        return cache[memoKey];
+
+    }
+    memoize.cache = cache;
+    return memoize;
+})();//通过闭包实现缓存;
+
+Init.prototype.drawTree = function(size, scale, lean, level) {
+    //最初值80 0.4 0 5
+    //长度,弯曲度,倾斜度,颜色域
+    var ctx = this.ctx;
+    var constitute = this.calcBranches(size, scale, lean);
+    //获取构成三角形的边长和角度
+
+    ctx.save(); //因为倾斜的角度是不一样的,所以需要存储
+    ctx.fillRect(0, 0, size, -size); //构成三角形的绘出正方形,初始是树根的位置
+
+    ctx.fillStyle = this.colors[level]; //填充树的颜色
+
+    ctx.translate(0, -size); //改变canvas的坐标位置 ,移至正方形左上角
+    ctx.rotate(-constitute.leftAngle); //根据一个角度对图像进行旋转,负值代表向左倾斜
+
+    if (level) {
+        this.drawTree(constitute.leftSize, scale, lean, level - 1);
+    } else {
+        ctx.fillRect(0, 0, constitute.leftSize, -constitute.leftSize);
+        //最后一种颜色,递归结束
+    }
+    //根据颜色域,来递归进行渲染三角形 直至颜色用完
+
+    ctx.translate(constitute.leftSize, 0); //改变坐标  横坐标移至左边正方形的右下角
+    ctx.rotate(constitute.rightAngle + constitute.leftAngle); //旋转
+    //渲染右边的正方形,rotate 是整个绘图都会旋转,因为刚刚 rotate(-leftAngle),所以加上 leftAngle 是让整个图像变成水平,再根据 rightAngle 进行右旋转
+    if (level) {
+        this.drawTree(constitute.rightSize, scale, lean, level - 1);
+    } else {
+        ctx.fillRect(0, 0,constitute.rightSize, -constitute.rightSize);
+    } //递归绘制右正方形
+
+    ctx.restore();
+}
+
+Init.prototype.render = function(){
+	var map = this.methods.map,
+		ctx = this.ctx
+    var scale = map(this.mouse.y, this.vh, 0, 0, 0.8)
+    //通过 map函数得出高的比例 主要来源鼠标 y 的值
+
+    var lean = map(this.mouse.x, 0,this.vw, 0.5, -0.5)
+    //通过 map函数得出左右倾斜程度 只要影响:鼠标 x 的值
+
+
+    ctx.clearRect(0,0,this.vw,this.vh)//清空画布
+
+    ctx.save(); //因为颜色会渐变,所以需要使用 save 存储为染色前的状态
+    ctx.fillStyle = this.colors[this.maxLevel];
+    //树根颜色
+    ctx.translate(this.x,this.y); //将 canvas 坐标移动到 x,0  x 是树根左边距浏览器左边的长度
+
+    this.drawTree(this.boxSize, scale, lean,this.maxLevel); //绘制初始树
+
+    ctx.restore();
+
+    requestAnimationFrame(this.render.bind(this));
+}
+
+
+
+var init = new Init();
+init.render();
+window.addEventListener("mousemove", function(event) {
+    init.mouse.x = event.clientX;
+    init.mouse.y = event.clientY;
+
+});
+</script>
+
+</html>
