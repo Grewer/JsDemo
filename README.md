@@ -27,4 +27,4 @@ canvas 动画之动态绘制会缩放的六边形;
 canvas 实现闹钟;
 
 - pythagorasTree:  
-canvas 必达哥斯拉树树的动画实现,附带注释;
+canvas 毕达哥拉斯树的动画实现,附带注释;
