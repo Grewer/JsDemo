@@ -21,7 +21,7 @@ demo:[https://grewer.github.io/JsDemo/crop/crop.html](https://grewer.github.io/J
 jq时间计算插件;
 
 - game:  
-canvas 小游戏;  
+canvas 最最最基础小游戏,初始手;  
 demo:[https://grewer.github.io/JsDemo/game/canvasGame.html](https://grewer.github.io/JsDemo/game/canvasGame.html)
 
 - canvasLine:  
@@ -34,5 +34,8 @@ demo:[https://grewer.github.io/JsDemo/clock/step3.html](https://grewer.github.io
 
 - pythagorasTree:  
 canvas 毕达哥拉斯树的动画实现,附带注释;  
-demo:[https://grewer.github.io/JsDemo/pythagorasTree/pythagorasTree.html](https://grewer.github.io/JsDemo/pythagorasTree/pythagorasTree.html)
+demo:[https://grewer.github.io/JsDemo/pythagorasTree/pythagorasTree.html](https://grewer.github.io/JsDemo/pythagorasTree/pythagorasTree.html);
+
+- Tetris:  
+js 俄罗斯方块小游戏(暂未完成);
 
