@@ -23,8 +23,12 @@
     <div id="ee">
         
     </div>
+    <button onclick="clearInterval(request)">stop</button>
 </body>
 <script type="text/javascript">
+//TODO 产生错误的情况 
+//形状的旋转的记录,重置
+//fail 情况测试
 var Store = new Array(20); //表格有10行
 
 for (var i = 0; i < Store.length; i++) {
@@ -75,6 +79,7 @@ var render = function(shape) {
         	cdiv.style.backgroundColor = colorSet[color||0]
         	div.appendChild(cdiv);
 
+
         	if(Store.length=== currentPosi[0]+shape.length){
         		status = 'wait';
         	}
@@ -97,10 +102,9 @@ function addShape(shape){
 	console.log('run addShape')
 	for(var o=0;o<shape.length;o++){
 		for(var p=0;p<shape[0].length;p++){
-			if(Store[o+currentPosi[0]][p+currentPosi[1]]){
-				status = 'fail';
-			}//错误  z 的情况 加上
-			Store[o+currentPosi[0]][p+currentPosi[1]] = shape[o][p]
+			if(!Store[o+currentPosi[0]][p+currentPosi[1]]){
+				Store[o+currentPosi[0]][p+currentPosi[1]] = shape[o][p]
+			}
 		}
 	}
 	clear(checkIsRemove())
@@ -108,7 +112,7 @@ function addShape(shape){
 function checkIsRemove(){
 	console.log('run checkIsRemove')
 	var checkRow = Store.length;
-	var clearNum = 0;
+	var clearArr = [];
 	while(checkRow--){
 		var maxNum = 0;
 		for(var u=0;u<Store[checkRow].length;u++){
@@ -117,32 +121,47 @@ function checkIsRemove(){
 			}
 		}
 		if(maxNum === 10){
-			clearNum +=1;
+			clearArr.push(checkRow);
 		}
 	}
 
-	return clearNum;
+	return clearArr;
 }
 
-function clear(num){
-	if(num === 0){
+function clear(arr){
+	if(arr.length === 0){
 		return;
 	}
-	while(num--){
-		Store.pop();
+	var clearNum = arr.length;
+	while(clearNum--){
+		Store.splice(arr[clearNum],1)
 		Store.unshift([0,0,0,0,0,0,0,0,0,0])
 	}
 }
-
+function checkFail(shape){
+	var checkFailArr = Store[currentPosi[0]+shape.length-1];
+	for(var fi=0;fi<shape[0].length;fi++){
+		if(checkFailArr[fi+currentPosi[1]]){
+			status = 'fail'
+		}
+		
+	}
+	
+}
 function check(shape,i,j){
 	if(i >= currentPosi[0]&&j >= currentPosi[1] && i< currentPosi[0]+shape.length && j< currentPosi[1]+shape[0].length){
 
-		if(Store[i+1]){
-			if(Store[i+1][j]){
+		if(Store[i+1]&&Store[i+1][j]){
+			if(shape[i-currentPosi[0]][j-currentPosi[1]]){
 				status = 'wait';
+			}else{
+				return Store[i][j];
 			}
 		}
-
+		if(currentPosi[0] === 0){
+			checkFail(shape)
+		}
+		
 		return shape[i-currentPosi[0]][j-currentPosi[1]];
 
     }else{
