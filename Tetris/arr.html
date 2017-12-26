@@ -1,27 +1,29 @@
 <!DOCTYPE html>
 <html>
 <style type="text/css">
-	.row{
-		width: 100%;
-		height:20px;
-	}
-	#ee{
-		width: 200px;
-		height: 400px;
-	}
-	.row div{
-		display: inline-block;
-		width: 10%;
-		height: 100%;
-	}
+.row {
+    width: 100%;
+    height: 20px;
+}
+
+#ee {
+    width: 200px;
+    height: 400px;
+}
+
+.row div {
+    display: inline-block;
+    width: 10%;
+    height: 100%;
+}
 </style>
+
 <head>
     <title>demo</title>
 </head>
 
 <body>
     <div id="ee">
-        
     </div>
     <button onclick="clearInterval(request)">stop</button>
 </body>
@@ -29,6 +31,27 @@
 //TODO 产生错误的情况 
 //形状的旋转的记录,重置
 //fail 情况测试
+
+// 转置的方法 -> 顺时针旋转90°
+// var a = [2, 2, 2, 2, 2, 2];
+// var result = [];
+// if(!a[0].length){
+// 	for(var i=0;i<a.length;i++){
+// 		result[i] = [];
+// 		result[i].push(a[i])
+// 	}
+// }else{
+// for(var i=0;i<a[0].length;i++){
+// 	result.push([]);
+// 	for(var j=a.length;j>0;){
+// 		result[i].push(a[--j][i])
+// 	}
+// 	}
+// }
+// console.log(a)
+// console.log(result)
+
+
 var Store = new Array(20); //表格有10行
 
 for (var i = 0; i < Store.length; i++) {
@@ -37,135 +60,198 @@ for (var i = 0; i < Store.length; i++) {
 var obj = document.getElementById('ee');
 
 var colorSet = {
-	0:'#000',
-	1:'#03A9F4',
-	2:'#44e04a',
-	3:'#eceb0e',
-	4:'#e61d2b'
+    0: '#000',
+    1: '#03A9F4',
+    2: '#44e04a',
+    3: '#eceb0e',
+    4: '#e61d2b'
 }
 var shape = {
-	square:[
-		[1,1],
-		[1,1]
-	],
-	rectangle:[[2],[2],[2],[2],[2],[2]],
-	L:[[3,0,0],[3,0,0],[3,0,0],[3,3,3]],
-	Z:[[4,0],[4,4],[0,4]]
+    square: [
+        [1, 1],
+        [1, 1]
+    ],
+    rectangle: [
+        [2],
+        [2],
+        [2],
+        [2],
+        [2],
+        [2]
+    ],
+    L: [
+        [3, 0, 0],
+        [3, 0, 0],
+        [3, 0, 0],
+        [3, 3, 3]
+    ],
+    Z: [
+        [4, 0],
+        [4, 4],
+        [0, 4]
+    ]
 }
-var shapeSet = ['square','rectangle','L','Z']
+var originShape = {
+    square: [
+        [1, 1],
+        [1, 1]
+    ],
+    rectangle: [
+        [2],
+        [2],
+        [2],
+        [2],
+        [2],
+        [2]
+    ],
+    L: [
+        [3, 0, 0],
+        [3, 0, 0],
+        [3, 0, 0],
+        [3, 3, 3]
+    ],
+    Z: [
+        [4, 0],
+        [4, 4],
+        [0, 4]
+    ]
+}
+var isRotate = 0; //当前的旋转
 
-var currentPosi = [0,4];
+var shapeSet = ['square', 'rectangle', 'L', 'Z']
+
+var currentPosi = [0, 4];
 var status = 'down';
 
 var currentShape = getNewShape();
 
-function getNewShape(){
-	return  shapeSet[(Math.random()*shapeSet.length)|0];
+function getNewShape() {
+    return shapeSet[(Math.random() * shapeSet.length) | 0];
 }
 var time = 1000;
 
+function rotate(shape) {
+    var result = [];
+    if (!shape[0].length) {
+        for (var i = 0; i < shape.length; i++) {
+            result[i] = [];
+            result[i].push(shape[i])
+        }
+    } else {
+        for (var i = 0; i < shape[0].length; i++) {
+            result.push([]);
+            for (var j = shape.length; j > 0;) {
+                result[i].push(shape[--j][i])
+            }
+        }
+    }
+    return result;
+}
 
 var render = function(shape) {
-	obj.innerHTML = '';
-	for(var i=0;i<Store.length;i++){
-		//i 行
-		var div = document.createElement('div');
-    	div.className = 'row';
+    obj.innerHTML = '';
+    for (var i = 0; i < Store.length; i++) {
+        //i 行
+        var div = document.createElement('div');
+        div.className = 'row';
         obj.appendChild(div);
-        for(var j=0,leng = Store[i].length;j<leng;j++){
-        	//j 列
-        	var cdiv = document.createElement('div');
-        	var color = check(shape,i,j);
-        	cdiv.style.backgroundColor = colorSet[color||0]
-        	div.appendChild(cdiv);
+        for (var j = 0, leng = Store[i].length; j < leng; j++) {
+            //j 列
+            var cdiv = document.createElement('div');
+            var color = check(shape, i, j);
+            cdiv.style.backgroundColor = colorSet[color || 0]
+            div.appendChild(cdiv);
 
 
-        	if(Store.length=== currentPosi[0]+shape.length){
-        		status = 'wait';
-        	}
+            if (Store.length === currentPosi[0] + shape.length) {
+                status = 'wait';
+            }
         }
-	}
-	if(status === 'wait'){
-		addShape(shape);
-	}
-	if(status === 'fail'){
-		alert('fail')
-		clearInterval(request);
-	}
+    }
+    if (status === 'wait') {
+        addShape(shape);
+    }
+    if (status === 'fail') {
+        alert('fail')
+        clearInterval(request);
+    }
 
 
 
 
 }
 
-function addShape(shape){
-	console.log('run addShape')
-	for(var o=0;o<shape.length;o++){
-		for(var p=0;p<shape[0].length;p++){
-			if(!Store[o+currentPosi[0]][p+currentPosi[1]]){
-				Store[o+currentPosi[0]][p+currentPosi[1]] = shape[o][p]
-			}
-		}
-	}
-	clear(checkIsRemove())
-}
-function checkIsRemove(){
-	console.log('run checkIsRemove')
-	var checkRow = Store.length;
-	var clearArr = [];
-	while(checkRow--){
-		var maxNum = 0;
-		for(var u=0;u<Store[checkRow].length;u++){
-			if(Store[checkRow][u]){
-				maxNum +=1;
-			}
-		}
-		if(maxNum === 10){
-			clearArr.push(checkRow);
-		}
-	}
-
-	return clearArr;
+function addShape(shape) {
+    console.log('run addShape')
+    for (var o = 0; o < shape.length; o++) {
+        for (var p = 0; p < shape[0].length; p++) {
+            if (!Store[o + currentPosi[0]][p + currentPosi[1]]) {
+                Store[o + currentPosi[0]][p + currentPosi[1]] = shape[o][p]
+            }
+        }
+    }
+    clear(checkIsRemove())
 }
 
-function clear(arr){
-	if(arr.length === 0){
-		return;
-	}
-	var clearNum = arr.length;
-	while(clearNum--){
-		Store.splice(arr[clearNum],1)
-		Store.unshift([0,0,0,0,0,0,0,0,0,0])
-	}
-}
-function checkFail(shape){
-	var checkFailArr = Store[currentPosi[0]+shape.length-1];
-	for(var fi=0;fi<shape[0].length;fi++){
-		if(checkFailArr[fi+currentPosi[1]]){
-			status = 'fail'
-		}
-		
-	}
-	
-}
-function check(shape,i,j){
-	if(i >= currentPosi[0]&&j >= currentPosi[1] && i< currentPosi[0]+shape.length && j< currentPosi[1]+shape[0].length){
+function checkIsRemove() {
+    console.log('run checkIsRemove')
+    var checkRow = Store.length;
+    var clearArr = [];
+    while (checkRow--) {
+        var maxNum = 0;
+        for (var u = 0; u < Store[checkRow].length; u++) {
+            if (Store[checkRow][u]) {
+                maxNum += 1;
+            }
+        }
+        if (maxNum === 10) {
+            clearArr.push(checkRow);
+        }
+    }
 
-		if(Store[i+1]&&Store[i+1][j]){
-			if(shape[i-currentPosi[0]][j-currentPosi[1]]){
-				status = 'wait';
-			}else{
-				return Store[i][j];
-			}
-		}
-		if(currentPosi[0] === 0){
-			checkFail(shape)
-		}
-		
-		return shape[i-currentPosi[0]][j-currentPosi[1]];
+    return clearArr;
+}
 
-    }else{
-    	return Store[i][j]
+function clear(arr) {
+    if (arr.length === 0) {
+        return;
+    }
+    var clearNum = arr.length;
+    while (clearNum--) {
+        Store.splice(arr[clearNum], 1)
+        Store.unshift([0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
+    }
+}
+
+function checkFail(shape) {
+    var checkFailArr = Store[currentPosi[0] + shape.length - 1];
+    for (var fi = 0; fi < shape[0].length; fi++) {
+        if (checkFailArr[fi + currentPosi[1]]) {
+            status = 'fail'
+        }
+
+    }
+
+}
+
+function check(shape, i, j) {
+    if (i >= currentPosi[0] && j >= currentPosi[1] && i < currentPosi[0] + shape.length && j < currentPosi[1] + shape[0].length) {
+
+        if (Store[i + 1] && Store[i + 1][j]) {
+            if (shape[i - currentPosi[0]][j - currentPosi[1]]) {
+                status = 'wait';
+            } else {
+                return Store[i][j];
+            }
+        }
+        if (currentPosi[0] === 0) {
+            checkFail(shape)
+        }
+
+        return shape[i - currentPosi[0]][j - currentPosi[1]];
+
+    } else {
+        return Store[i][j]
     }
 }
 
@@ -173,68 +259,69 @@ render(shape[currentShape])
 
 
 var o = 0;
-function run(){
-	if(o>40){
-		// return;
-	}
-	o+=1;
-	if(status === 'down'){
-		currentPosi = [currentPosi[0]+1,currentPosi[1]]
-	}else if(status === 'wait'){
-		currentPosi = [0,4];
-		status = 'down';
-		//新选择一个
-		currentShape = getNewShape();
 
-	}
-	render(shape[currentShape]);
+function run() {
+    if (o > 40) {
+        // return;
+    }
+    o += 1;
+    if (status === 'down') {
+        currentPosi = [currentPosi[0] + 1, currentPosi[1]]
+    } else if (status === 'wait') {
+        currentPosi = [0, 4];
+        status = 'down';
+        //新选择一个
+        currentShape = getNewShape();
+
+    }
+    render(shape[currentShape]);
 }
-var request = setInterval(run,time)
-function checkLeft(){
-	console.log('run checkLeft')
-	for(var cl=0;cl<shape[currentShape].length;cl++){
-		if(Store[currentPosi[0]+cl][currentPosi[1]-1]){
-			return false
-		}
-	}
-	return true
+var request = setInterval(run, time)
+
+function checkLeft() {
+    console.log('run checkLeft')
+    for (var cl = 0; cl < shape[currentShape].length; cl++) {
+        if (Store[currentPosi[0] + cl][currentPosi[1] - 1]) {
+            return false
+        }
+    }
+    return true
 }
 
-function checkRight(){
-	console.log('run checkRight');
-	for(var cr=0;cr<shape[currentShape].length;cr++){
-		if(Store[currentPosi[0]+cr][currentPosi[1]+shape[currentShape][0].length]){
-			return false;
-		}
-	}
-	return true;
+function checkRight() {
+    console.log('run checkRight');
+    for (var cr = 0; cr < shape[currentShape].length; cr++) {
+        if (Store[currentPosi[0] + cr][currentPosi[1] + shape[currentShape][0].length]) {
+            return false;
+        }
+    }
+    return true;
 
 }
-document.addEventListener('keydown',function(e){
-	if(e&&e.keyCode === 37){
-		currentPosi[1] = (currentPosi[1]-1)>=0 && checkLeft() ? currentPosi[1]-1 : currentPosi[1]
-	}
-	if(e&&e.keyCode === 39){
-		currentPosi[1] = ((currentPosi[1]+1+shape[currentShape][0].length) <= Store[0].length) && checkRight() ? currentPosi[1]+1 : currentPosi[1];
-	}
-	if(e&&e.keyCode ===40){
-		if(time === 50){
-			return;
-		}
-		time = 50;
-		clearInterval(request);
-	request = setInterval(run,time)
-	}
-},false)
+document.addEventListener('keydown', function(e) {
+    if (e && e.keyCode === 37) {
+        currentPosi[1] = (currentPosi[1] - 1) >= 0 && checkLeft() ? currentPosi[1] - 1 : currentPosi[1]
+    }
+    if (e && e.keyCode === 39) {
+        currentPosi[1] = ((currentPosi[1] + 1 + shape[currentShape][0].length) <= Store[0].length) && checkRight() ? currentPosi[1] + 1 : currentPosi[1];
+    }
+    if (e && e.keyCode === 40) {
+        if (time === 50) {
+            return;
+        }
+        time = 50;
+        clearInterval(request);
+        request = setInterval(run, time)
+    }
+}, false)
 
-document.addEventListener('keyup',function(e){
-	if(e&&e.keyCode ===40){
-		time = 1000;
-		clearInterval(request);
-		request = setInterval(run,time)
-	}
-},false)
-
+document.addEventListener('keyup', function(e) {
+    if (e && e.keyCode === 40) {
+        time = 1000;
+        clearInterval(request);
+        request = setInterval(run, time)
+    }
+}, false)
 </script>
 
 </html>
