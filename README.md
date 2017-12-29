@@ -37,5 +37,6 @@ canvas 毕达哥拉斯树的动画实现,附带注释;
 demo:[https://grewer.github.io/JsDemo/pythagorasTree/pythagorasTree.html](https://grewer.github.io/JsDemo/pythagorasTree/pythagorasTree.html);
 
 - Tetris:  
-js 俄罗斯方块小游戏(暂未完成);
+js 俄罗斯方块小游戏;  
+demo:[https://grewer.github.io/JsDemo/Tetris/](https://grewer.github.io/JsDemo/Tetris/);
 

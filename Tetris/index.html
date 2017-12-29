@@ -25,7 +25,7 @@
 <body>
     <div id="ee">
     </div>
-    <button onclick="clearInterval(request)">stop</button>
+    按键: 方向键左-向左移动 方向键右-向右移动 方向键下-向下移动 空格键-变换形状
 </body>
 <script type="text/javascript">
 //TODO 产生错误的情况 
@@ -36,17 +36,17 @@
 // var a = [2, 2, 2, 2, 2, 2];
 // var result = [];
 // if(!a[0].length){
-// 	for(var i=0;i<a.length;i++){
-// 		result[i] = [];
-// 		result[i].push(a[i])
-// 	}
+//  for(var i=0;i<a.length;i++){
+//      result[i] = [];
+//      result[i].push(a[i])
+//  }
 // }else{
 // for(var i=0;i<a[0].length;i++){
-// 	result.push([]);
-// 	for(var j=a.length;j>0;){
-// 		result[i].push(a[--j][i])
-// 	}
-// 	}
+//  result.push([]);
+//  for(var j=a.length;j>0;){
+//      result[i].push(a[--j][i])
+//  }
+//  }
 // }
 // console.log(a)
 // console.log(result)
@@ -64,7 +64,8 @@ var colorSet = {
     1: '#03A9F4',
     2: '#44e04a',
     3: '#eceb0e',
-    4: '#e61d2b'
+    4: '#e61d2b',
+    5: '#ff9800'
 }
 var shape = {
     square: [
@@ -76,19 +77,21 @@ var shape = {
         [2],
         [2],
         [2],
-        [2],
-        [2]
     ],
     L: [
-        [3, 0, 0],
-        [3, 0, 0],
-        [3, 0, 0],
-        [3, 3, 3]
+        [3, 0],
+        [3, 0],
+        [3, 3]
     ],
     Z: [
         [4, 0],
         [4, 4],
         [0, 4]
+    ],
+
+    tu: [
+        [0, 5, 0],
+        [5, 5, 5]
     ]
 }
 var originShape = {
@@ -101,24 +104,26 @@ var originShape = {
         [2],
         [2],
         [2],
-        [2],
-        [2]
     ],
     L: [
-        [3, 0, 0],
-        [3, 0, 0],
-        [3, 0, 0],
-        [3, 3, 3]
+        [3, 0],
+        [3, 0],
+        [3, 3]
     ],
     Z: [
         [4, 0],
         [4, 4],
         [0, 4]
+    ],
+
+    tu: [
+        [0, 5, 0],
+        [5, 5, 5]
     ]
 }
 var isRotate = 0; //当前的旋转
 
-var shapeSet = ['square', 'rectangle', 'L', 'Z']
+var shapeSet = ['square', 'rectangle', 'L', 'Z', 'tu']
 
 var currentPosi = [0, 4];
 var status = 'down';
@@ -162,23 +167,11 @@ var render = function(shape) {
             cdiv.style.backgroundColor = colorSet[color || 0]
             div.appendChild(cdiv);
 
-
             if (Store.length === currentPosi[0] + shape.length) {
                 status = 'wait';
             }
         }
     }
-    if (status === 'wait') {
-        addShape(shape);
-    }
-    if (status === 'fail') {
-        alert('fail')
-        clearInterval(request);
-    }
-
-
-
-
 }
 
 function addShape(shape) {
@@ -265,21 +258,33 @@ function run() {
         // return;
     }
     o += 1;
-    if (status === 'down') {
-        currentPosi = [currentPosi[0] + 1, currentPosi[1]]
-    } else if (status === 'wait') {
-        currentPosi = [0, 4];
-        status = 'down';
-        //新选择一个
-        currentShape = getNewShape();
+    switch (status) {
+        case 'down':
+            currentPosi = [currentPosi[0] + 1, currentPosi[1]]
+            break;
+        case 'wait':
+            addShape(shape[currentShape]);
 
+            if (!isRotate) {
+                shape[currentShape] = originShape[currentShape];
+                isRotate = 0;
+            }
+
+            currentPosi = [0, 4];
+            status = 'down';
+            //新选择一个
+            currentShape = getNewShape();
+            break;
+        case 'fail':
+            alert('fail')
+            clearInterval(request);
+            break;
     }
     render(shape[currentShape]);
 }
 var request = setInterval(run, time)
 
 function checkLeft() {
-    console.log('run checkLeft')
     for (var cl = 0; cl < shape[currentShape].length; cl++) {
         if (Store[currentPosi[0] + cl][currentPosi[1] - 1]) {
             return false
@@ -289,7 +294,6 @@ function checkLeft() {
 }
 
 function checkRight() {
-    console.log('run checkRight');
     for (var cr = 0; cr < shape[currentShape].length; cr++) {
         if (Store[currentPosi[0] + cr][currentPosi[1] + shape[currentShape][0].length]) {
             return false;
@@ -312,6 +316,10 @@ document.addEventListener('keydown', function(e) {
         time = 50;
         clearInterval(request);
         request = setInterval(run, time)
+    }
+    if (e && e.keyCode === 32) {
+        shape[currentShape] = rotate(shape[currentShape]);
+        isRotate += 1;
     }
 }, false)
 
