@@ -29,7 +29,6 @@
 </body>
 <script type="text/javascript">
 //TODO 产生错误的情况 
-//形状的旋转的记录,重置
 //fail 情况测试
 
 // 转置的方法 -> 顺时针旋转90°
@@ -51,11 +50,12 @@
 // console.log(a)
 // console.log(result)
 
+var row = 20 ,col = 10;
 
-var Store = new Array(20); //表格有10行
+var Store = new Array(row); //表格有20行
 
-for (var i = 0; i < Store.length; i++) {
-    Store[i] = new Array(10); //每行有10列
+for (var i = 0; i < row; i++) {
+    Store[i] = new Array(col); //每行有10列
 }
 var obj = document.getElementById('ee');
 
@@ -135,6 +135,36 @@ function getNewShape() {
 }
 var time = 1000;
 
+//初始化:
+for (var i = 0; i < row; i++) {
+        //i 行
+        var div = document.createElement('div');
+        div.className = 'row';
+        obj.appendChild(div);
+        for (var j = 0; j < col; j++) {
+            //j 列
+            var cdiv = document.createElement('div');
+            var color = check(shape, i, j);
+            cdiv.style.backgroundColor = colorSet[0]
+            div.appendChild(cdiv);
+        }
+    }
+var rowArray = obj.getElementsByClassName('row')
+
+var render = function(shape) {
+    for (var i = 0; i < row; i++) {
+        for (var j = 0; j < col; j++) {
+            //j 列
+            var color = check(shape, i, j);
+            var currentRow = rowArray[i].children;
+            currentRow[j].style.backgroundColor = colorSet[color || 0]
+            if (Store.length === currentPosi[0] + shape.length) {
+                status = 'wait';
+            }
+        }
+    }
+}
+
 function rotate(shape) {
     var result = [];
     if (!shape[0].length) {
@@ -153,26 +183,6 @@ function rotate(shape) {
     return result;
 }
 
-var render = function(shape) {
-    obj.innerHTML = '';
-    for (var i = 0; i < Store.length; i++) {
-        //i 行
-        var div = document.createElement('div');
-        div.className = 'row';
-        obj.appendChild(div);
-        for (var j = 0, leng = Store[i].length; j < leng; j++) {
-            //j 列
-            var cdiv = document.createElement('div');
-            var color = check(shape, i, j);
-            cdiv.style.backgroundColor = colorSet[color || 0]
-            div.appendChild(cdiv);
-
-            if (Store.length === currentPosi[0] + shape.length) {
-                status = 'wait';
-            }
-        }
-    }
-}
 
 function addShape(shape) {
     console.log('run addShape')
