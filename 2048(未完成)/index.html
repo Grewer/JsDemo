@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>2048</title>
+</head>
+<style>
+
+    #main {
+        width: 400px;
+        height: 400px;
+        background: #99CCFF;
+        table-layout: fixed;
+        border-spacing: 1px;
+        border-collapse: separate;
+    }
+
+    #main tr {
+        height: 25%;
+    }
+
+    #main td {
+        border: 1px solid #fff;
+    }
+
+    #main td div {
+        width: 100%;
+        height: 100%;
+        line-height: 94px;
+        text-align: center;
+        font-size: 35px;
+        font-weight: bold;
+    }
+
+    .rank2 {
+        color: #cac7c5;
+    }
+
+    .rank4 {
+        color: #d2b19b;
+    }
+
+    .rank8 {
+        color: #d2a384;
+    }
+
+    .rank16 {
+        color: #d29369;
+    }
+
+    .rank32 {
+        color: #d2804a;
+
+    }
+
+    .rank64 {
+        color: #d07438;
+    }
+
+    .rank128 {
+        color: #d0641e;
+    }
+
+    .rank256 {
+        color: #cc5407
+    }
+
+    .rank512 {
+        color: #c73806;
+    }
+
+    .rank1024 {
+        color: #da3d07
+    }
+
+    .rank2048 {
+        color: #f34104
+    }
+</style>
+<body>
+<table id="main">
+    <tr>
+        <td>
+            <div class="rank2">2</div>
+        </td>
+        <td>
+            <div class="rank4">4</div>
+        </td>
+        <td>
+            <div class="rank8">8</div>
+        </td>
+        <td>
+            <div class="rank16">16</div>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <div class="rank32">32</div>
+        </td>
+        <td>
+            <div class="rank64">64</div>
+        </td>
+        <td>
+            <div class="rank128">128</div>
+        </td>
+        <td>
+            <div class="rank256">256</div>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <div class="rank512">512</div>
+        </td>
+        <td>
+            <div class="rank1024">1024</div>
+        </td>
+        <td>
+            <div class="rank2048">2048</div>
+        </td>
+        <td></td>
+    </tr>
+    <tr>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+    </tr>
+</table>
+</body>
+</html>
