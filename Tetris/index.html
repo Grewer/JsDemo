@@ -275,7 +275,7 @@ function run() {
         case 'wait':
             addShape(shape[currentShape]);
 
-            if (!isRotate) {
+            if (isRotate) {
                 shape[currentShape] = originShape[currentShape];
                 isRotate = 0;
             }
