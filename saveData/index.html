@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!--intro:使用 localStorage 存储带有图片的表单数据-->
+    <meta charset="UTF-8">
+    <title>form saveCache</title>
+    <style>
+        input {
+            display: block;
+            margin: 20px;
+            height: 25px;
+            outline: 0;
+            padding: 5px;
+            border: 1px solid #cccccc;
+            border-radius: 4px;
+            transition: border-color .5s;
+            width: 200px;
+            font-size: 14px;
+        }
+
+        input:focus ,.upload:hover{
+            border-color: #409eff;
+        }
+
+        input:hover{
+            border-color: #999;
+        }
+
+        .upload {
+            width: 150px;
+            height: 150px;
+            margin-left: 20px;
+            border: 1px dashed #cccccc;
+            border-radius: 4px;
+            position: relative;
+            cursor: pointer;
+        }
+        .upload img{
+            width: 150px;
+            height: 150px;
+            border-radius: 4px;
+
+        }
+        .empty:before, .empty:after {
+            content: '';
+            height: 2px;
+            width: 20px;
+            display: block;
+            background: #999;
+            border-radius: 10px;
+            -webkit-border-radius: 10px;
+            -moz-border-radius: 10px;
+            position: absolute;
+            top: 75px;
+            left: 66px;
+        }
+
+
+        .empty:after {
+            height: 20px;
+            width: 2px;
+            top: 66px;
+            left: 75px;
+        }
+        button{
+            padding: 5px;
+            text-shadow: none;
+            border: 1px solid #409eff;
+            border-radius: 4px;
+            background-color: #fff;
+            color: #409eff;
+            outline: 0;
+            margin: 30px;
+            cursor: pointer;
+            transition: all .3s;
+            width: 100px;
+        }
+        button:hover{
+            background-color: #409eff;
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+<input type="text" placeholder="myName" name="name">
+<input type="text" placeholder="age" name="age">
+<input type="text" placeholder="sex" name="sex">
+<div class="upload empty" onclick="upload(this)">
+    <img src="#" alt="">
+    <input type="file" name="img" onchange="change(this)" style="display: none" accept="image/jpeg,image/png">
+</div>
+<button onclick="set()">暂存数据</button>
+<button onclick="submit()">上传</button>
+<button onclick="localStorage.clear()">清除存储数据</button>
+</body>
+<script>
+    let cache={};
+    let obj = document.querySelector('.upload');
+    function upload(e) {
+        e.querySelector('input').click();
+    }
+    function change(e) {
+        let reader = new FileReader();
+        let img = e.files[0];
+        reader.readAsDataURL(img);
+        reader.onload = (result) => {
+            obj.querySelector('img').setAttribute('src',result.target.result);
+            obj.setAttribute('class','upload')
+
+            cache.img = result.target.result;
+        }
+
+    }
+    function set() {
+        let input = document.querySelectorAll('input');
+        for(let i of input){
+            if(i.type==='text') cache[i.name] = i.value;
+        }
+        try {
+            localStorage.cache = JSON.stringify(cache);
+        }catch (e){
+            //不支持localStorage 或者 数据已存满
+        }
+    }
+    function submit() {
+        let formData = new FormData();
+
+        if(localStorage.cache){
+            let data = JSON.parse(localStorage.cache);
+            for(let i in data){
+                if(i === 'img'){
+                    formData.append(i,getFileBydataURI(data[i],'cacheImg'))
+                }else{
+                    formData.append(i,data[i]);
+                }
+            }
+        }else{
+            let input = document.querySelectorAll('input');
+            for(let i of input){
+                if(i.type==='text'){
+                    formData.append(i.name,i.value)
+                }else{
+                    formData.append(i.name,i.files[0])
+                }
+
+            }
+        }
+
+
+        let xhr = new XMLHttpRequest();
+        xhr.open("post", './receive.php', true);
+        xhr.send(formData);
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState == 4 && xhr.status == 200) {
+                console.log(xhr.responseText)
+            }
+        }
+
+    }
+    function getFileBydataURI(dataURI,name) {
+        let binary = atob(dataURI.split(',')[1]);// atob->将base64 解码
+        let array = [];
+        for(let i = 0; i < binary.length; i++) {
+            array.push(binary.charCodeAt(i));
+        }
+        return new File([new Uint8Array(array)],name,{type:'image/png' });
+    }
+</script>
+</html>
