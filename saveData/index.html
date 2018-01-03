@@ -160,9 +160,11 @@
     function getFileBydataURI(dataURI,name) {
         let binary = atob(dataURI.split(',')[1]);// atob->将base64 解码
         let array = [];
+        console.log(binary)
         for(let i = 0; i < binary.length; i++) {
             array.push(binary.charCodeAt(i));
         }
+        console.log(array);
         return new File([new Uint8Array(array)],name,{type:'image/png' });
     }
 </script>
