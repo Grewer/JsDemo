@@ -22,7 +22,11 @@ jq时间计算插件;
 
 - game:  
 canvas 最最最基础小游戏,初始手;  
-demo:[https://grewer.github.io/JsDemo/game/canvasGame.html](https://grewer.github.io/JsDemo/game/canvasGame.html)
+demo:[https://grewer.github.io/JsDemo/game/canvasGame.html](https://grewer.github.io/JsDemo/game/canvasGame.html)  
+
+-particle:  
+canvas particle:
+demo:[https://grewer.github.io/JsDemo/particle/](https://grewer.github.io/JsDemo/particle/)  
 
 - canvasLine:  
 canvas 动画之动态绘制会缩放的六边形;  

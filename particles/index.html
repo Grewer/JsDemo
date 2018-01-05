@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>demo</title>
+</head>
+
+<body>
+    <canvas id="canvas"></canvas>
+</body>
+<script type="text/javascript">
+var canvas = document.getElementById('canvas');
+var ctx = canvas.getContext('2d');
+
+var Grewer = {
+    init: function() {
+        this.getWindowSize();
+        canvas.width = this.w;
+        canvas.height = this.h;
+        this.num = 70;
+        this.range = 80;
+        this.arr = [];
+        this.add();
+    },
+    getWindowSize: function() {
+        //获取窗口宽度
+        if (window.innerWidth) { //兼容火狐，谷歌,safari等浏览器
+            this.w = window.innerWidth;
+        } else if ((document.body) && (document.body.clientWidth)) { //兼容IE浏览器
+            this.w = document.body.clientWidth;
+        }
+
+        //获取窗口高度
+        if (window.innerHeight) {
+            this.h = window.innerHeight;
+        } else if ((document.body) && (document.body.clientHeight)) {
+            this.h = document.body.clientHeight;
+        }
+    },
+    update: function(obj) {
+        obj.x += obj.vx;
+        obj.y += obj.vy;
+
+        if (obj.x < 0 || obj.x > this.w) {
+            obj.vx *= -1;
+        }
+        if (obj.y < 0 || obj.y > this.h) {
+            obj.vy *= -1;
+        }
+    },
+    add: function() {
+
+        var i = this.num;
+        while (i--) {
+            var particles = {
+                x: (Math.random() * this.w) | 0,
+                y: (Math.random() * this.h) | 0,
+                vx: (Math.random() - .5) * 1,
+                vy: (Math.random() - .5) * 1,
+                r: ((Math.random() * 2) | 0) + 1
+            }
+            this.arr.push(particles);
+        }
+    },
+    checkDist: function(a, b, dist) {
+        var x = a.x - b.x,
+            y = a.y - b.y;
+
+        return x * x + y * y <= dist * dist;
+    },
+    print: function(obj) {
+        ctx.beginPath();
+        ctx.arc(obj.x, obj.y, obj.r, 0, 2 * Math.PI);
+        ctx.fillStyle = '#cccccc';
+        ctx.fill();
+    }
+
+
+}
+var G = Object.create(Grewer);
+G.init();
+var Ganim = function() {
+    window.requestAnimationFrame(Ganim);
+
+    ctx.fillStyle = '#fff';
+    ctx.fillRect(0, 0, G.w, G.h);
+
+    var length = G.arr.length;
+    for (var i = 0; i < length; i++) {
+        var o1 = G.arr[i]
+        G.update(o1);
+        G.print(o1);
+
+        for (var j = i + 1; j < length; ++j) {
+
+            var o2 = G.arr[j];
+            if (G.checkDist(o1, o2, G.range)) {
+                ctx.strokeStyle = '#cccccc';
+                ctx.beginPath();
+                ctx.moveTo(o1.x, o1.y);
+                ctx.lineTo(o2.x, o2.y);
+                ctx.stroke();
+            }
+        }
+
+    }
+}
+G.arr.push({
+    x: 1,
+    y: 1,
+    vx: 0,
+    vy: 0,
+    r: 1
+})
+document.addEventListener('mousemove', function(e) {
+    G.arr[G.num].x = e.clientX;
+    G.arr[G.num].y = e.clientY;
+}, false)
+Ganim();
+</script>
+
+</html>
