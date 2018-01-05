@@ -248,26 +248,20 @@ function check(shape, i, j) {
             }
         }
         if (currentPosi[0] === 0) {
-            checkFail(shape)
+            checkFail(shape);
         }
 
         return shape[i - currentPosi[0]][j - currentPosi[1]];
 
     } else {
-        return Store[i][j]
+        return Store[i][j];
     }
 }
 
-render(shape[currentShape])
+render(shape[currentShape]);
 
-
-var o = 0;
 
 function run() {
-    if (o > 40) {
-        // return;
-    }
-    o += 1;
     switch (status) {
         case 'down':
             currentPosi = [currentPosi[0] + 1, currentPosi[1]]
