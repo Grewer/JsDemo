@@ -28,6 +28,10 @@ demo:[https://grewer.github.io/JsDemo/game/canvasGame.html](https://grewer.githu
 canvas particle:
 demo:[https://grewer.github.io/JsDemo/particles/](https://grewer.github.io/JsDemo/particles/)  
 
+- canvasParticle:  
+canvas 文字转化成粒子:  
+demo:[点击查看](https://grewer.github.io/JsDemo/canvasParticle/)  
+
 - canvasLine:  
 canvas 动画之动态绘制会缩放的六边形;  
 demo:[https://grewer.github.io/JsDemo/canvasLine/](https://grewer.github.io/JsDemo/canvasLine/)

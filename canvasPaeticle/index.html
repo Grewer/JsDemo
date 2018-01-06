@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>demo</title>
+</head>
+
+<body>
+</body>
+<script type="text/javascript">
+var canvas = document.createElement('canvas');
+var cxt = canvas.getContext('2d');
+var W = canvas.width = 500;
+var H = canvas.height = 200;
+var str = 'Grewer,点击此处';
+cxt.textBaseline = 'hanging';
+cxt.font = '60px  宋体'
+var sw = cxt.measureText(str).width;
+if (sw > W) {
+    sw = W;
+}
+cxt.fillText(str, (W - sw) / 2, (H - 60) / 2, W);
+
+canvas.style.border = '1px solid #ddd'
+
+document.body.appendChild(canvas);
+
+var imageData = cxt.getImageData(0, 0, W, H);
+
+var getV = function(i,j) {
+    var v = Math.random() * 1;
+    v = v < 0.1 ? 0.1 : v;
+    var slope = (i-W/2) / (j-H/2);
+    slope =  slope < 0 ? -slope :slope;
+    var x = v*slope;
+    var y = v;
+    if(i<W/2&&j<H/2){
+      x = -x;
+      y = -y;
+    };
+    if(i<W/2&&j>H/2){
+      x = -x;
+    };
+    if(i>W/2&&j<H/2){
+      y = -y;
+    };
+    return{x:x,y:y}
+}
+
+function getDots(imageData) {
+    //从imageData对象中取得粒子，并存储到dots数组中
+    var dots = [];
+    //dots的索引
+    var index = 0;
+    for (var i = 0; i < W; i++) {
+        for (var j = 0; j < H; j++) {
+            //data值中的红色值
+            var k = 4 * (i + j * W);
+            //data值中的透明度
+            if (imageData.data[k + 3] > 0) {
+              var v = getV(i,j);
+                dots[index++] = {
+                    'index': index,
+                    'x': i,
+                    'y': j,
+                    'red': k,
+                    'vX': v.x,
+                    'vY': v.y,
+                }
+
+            }
+        }
+    }
+
+    var newDots = [];
+    var len = dots.length;
+    for (var i = 0; i < len; i++) {
+        newDots.push(dots.splice(Math.floor(Math.random() * dots.length), 1)[0]);
+    }//打乱顺序
+    
+    return newDots;
+
+}
+
+var dataArr = getDots(imageData)
+
+
+var random = function() {
+    cxt.clearRect(0, 0, W, H);
+
+    for (var i = 0; i < dataArr.length; i++) {
+        var temp = dataArr[i];
+        temp.x += temp.vX;
+        temp.y += temp.vY
+        cxt.fillRect(temp.x, temp.y, 1, 1);
+    }
+
+    window.requestAnimationFrame(random);
+}
+document.onclick = function(e) {
+    e = e || event;
+    var x = e.clientX - canvas.getBoundingClientRect().left;
+    var y = e.clientY - canvas.getBoundingClientRect().top;
+
+    if ((0 <= x) && (x <= 500) && (0 <= y) && (y <= 200)) {
+        random();
+    }
+}
+</script>
+
+</html>
