@@ -18,7 +18,7 @@ var Grewer = {
         canvas.width = this.w;
         canvas.height = this.h;
         this.num = 70;
-        this.range = 80;
+        this.range = 100;
         this.arr = [];
         this.add();
     },
@@ -113,8 +113,8 @@ G.arr.push({
     r: 1
 })
 document.addEventListener('mousemove', function(e) {
-    G.arr[G.num].x = e.clientX;
-    G.arr[G.num].y = e.clientY;
+    G.arr[G.num].x = e.pageX || e.clientX;
+    G.arr[G.num].y = e.pageY || e.clientY;
 }, false)
 Ganim();
 </script>
