@@ -30,7 +30,7 @@ demo:[https://grewer.github.io/JsDemo/particles/](https://grewer.github.io/JsDem
 
 - canvasParticle:  
 canvas 文字转化成粒子:  
-demo:[点击查看](https://grewer.github.io/JsDemo/canvasParticle/)  
+demo:<a href="https://grewer.github.io/JsDemo/canvasParticle/" target="_blank">点击查看</a>  
 
 - canvasLine:  
 canvas 动画之动态绘制会缩放的六边形;  
