@@ -11,7 +11,7 @@
         height: 400px;
         background: #99CCFF;
         table-layout: fixed;
-        border-spacing: 1px;
+        border-spacing: 0;
         border-collapse: separate;
     }
 
@@ -30,6 +30,8 @@
         text-align: center;
         font-size: 35px;
         font-weight: bold;
+        transition: all 1s;
+        background-color: #fdfdfc;
     }
 
     .rank2 {
@@ -107,42 +109,119 @@
 </body>
 <script>
     let arr = [
-        [0,0,0,0],
-        [0,0,0,0],
-        [0,0,0,0],
-        [0,0,0,0]
+        [0, 2, 0, 2],
+        [0, 0, 8, 8],
+        [0, 0, 0, 32],
+        [0, 0, 0, 0]
     ];
     let elementRow = document.querySelectorAll('#main tr');
+
     function getOne() {
-        return (Math.random()-0.5)>0?2:4;
+        return (Math.random() - 0.5) > 0 ? 2 : 4;
     }
-    function addOne(){
+
+    function addOne() {
         let result = [];
-        for(let i=0;i<4;i++){
-            for(let j=0;j<4;j++){
-                if(!arr[i][j]){
-                    result.push({i,j});
+        for (let i = 0; i < 4; i++) {
+            for (let j = 0; j < 4; j++) {
+                if (!arr[i][j]) {
+                    result.push({i, j});
                 }
             }
         }
-        let {i,j} = result[(result.length*Math.random())|0];
+        let {i, j} = result[(result.length * Math.random()) | 0];
         let fillNumber = getOne();
         arr[i][j] = fillNumber;
         let currentRow = elementRow[i].children;
         currentRow[j].innerHTML = `<div class="rank${fillNumber}">${fillNumber}</div>`;
     }
-    function init() {
-        addOne();//先添加一个
+
+    function render() {
+        for (let i = 0; i < 4; i++) {
+            for (let j = 0; j < 4; j++) {
+                if (arr[i][j]) {
+                    elementRow[i].children[j].innerHTML = `<div class="rank${arr[i][j]}">${arr[i][j]}</div>`;
+                }else{
+                    elementRow[i].children[j].innerHTML = ''
+                }
+            }
+        }
     }
 
-    function operation() {
-        let all = document.querySelectorAll('#main div');
-        console.log(all)
+    function init() {
+        render();//初始渲染;
+        addOne();//先添加一个;
     }
-    document.addEventListener('keydown', function(e) {
+
+    function operationLeft() {
+        for (let i = 0; i < 4; i++) {
+            let repeat = checkRepeat(arr[i]);
+            if (repeat.length !== 0) {
+                // console.log(repeat);
+                for(let k=0;k<repeat.length;k++){
+                    let {originPos,repeatPos} = repeat[k];
+                    //暂认为  repeat大于 origin
+                    let offset = repeatPos-originPos;
+                    let moveDiv = elementRow[i].children[repeatPos].getElementsByTagName('div')[0];
+                    moveDiv.style.transform = `translateX(-${offset*100}px)`;
+                    //移动 end;
+                    // setTimeout(()=>{
+                        // moveDiv.innerText = Number(moveDiv.innerText)*2;
+                    // },500);
+                    //改变值 ,暂定
+                    //改变数组值;
+
+                    arr[i].splice(repeatPos,1,0);
+                    arr[i][originPos] = arr[i][originPos]*2;
+
+                }
+            }//移动,修改值;
+            // 清除左边为0的值,特有
+            let delArr = [];
+            for(let j=0;j<4;j++){
+                if(!arr[i][j]){
+                    delArr.push(j);
+                }
+            }
+            let c = delArr.length;
+            while (c--){
+                arr[i].splice(delArr[c],1);
+                arr[i].push(0);
+            }
+
+        }
+
+    }
+
+    function checkRepeat(checkArr) {
+        // console.log(checkArr);
+        let testArr = [];
+        let result = [];
+        for (let j = 0; j < 4; j++) {
+            if (checkArr[j]) {//不为0
+                if (testArr[checkArr[j]]||testArr[checkArr[j]]===0) {
+                    result.push({
+                        originPos:testArr[checkArr[j]],
+                        repeatPos:j
+                    })
+                } else {
+                    testArr[checkArr[j]] = j;
+                }
+            }
+
+        }
+        //TODO 连续出现3个相同数字时的bug
+        return result;
+        //result  重复的位置  如 {2:1} 这一行 第二个和第三个是重复的,可以出现多次;
+    }
+
+    document.addEventListener('keydown', function (e) {
         if (e && e.keyCode === 37) {
             //左
-            operation()
+            operationLeft();
+            setTimeout(()=>{
+                render();
+            },700);
         }
         if (e && e.keyCode === 38) {
             //上
