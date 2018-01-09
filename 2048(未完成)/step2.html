@@ -108,10 +108,11 @@
 </table>
 </body>
 <script>
+    //TODO 覆盖的机制搞错了,待修改
     let arr = [
-        [0, 2, 0, 2],
+        [0, 2, 8, 2],
         [0, 0, 8, 8],
-        [0, 0, 0, 32],
+        [64, 0, 0, 0],
         [0, 0, 0, 0]
     ];
     let elementRow = document.querySelectorAll('#main tr');
@@ -128,6 +129,9 @@
                     result.push({i, j});
                 }
             }
+        }
+        if(result.length === 0){
+            return;//暂时,无法添加新元素时失败
         }
         let {i, j} = result[(result.length * Math.random()) | 0];
         let fillNumber = getOne();
@@ -155,28 +159,7 @@
 
     function operationLeft() {
         for (let i = 0; i < 4; i++) {
-            let repeat = checkRepeat(arr[i]);
-            if (repeat.length !== 0) {
-                // console.log(repeat);
-                for(let k=0;k<repeat.length;k++){
-                    let {originPos,repeatPos} = repeat[k];
-                    //暂认为  repeat大于 origin
-                    let offset = repeatPos-originPos;
-                    let moveDiv = elementRow[i].children[repeatPos].getElementsByTagName('div')[0];
-                    moveDiv.style.transform = `translateX(-${offset*100}px)`;
-                    //移动 end;
-                    // setTimeout(()=>{
-                        // moveDiv.innerText = Number(moveDiv.innerText)*2;
-                    // },500);
-                    //改变值 ,暂定
-                    //改变数组值;
-
-                    arr[i].splice(repeatPos,1,0);
-                    arr[i][originPos] = arr[i][originPos]*2;
-
-                }
-            }//移动,修改值;
-            // 清除左边为0的值,特有
+            leftRight(i,false);
             let delArr = [];
             for(let j=0;j<4;j++){
                 if(!arr[i][j]){
@@ -193,6 +176,41 @@
 
     }
 
+    function operationRight() {
+        for (let i = 0; i < 4; i++) {
+
+            leftRight(i,true);
+
+            let delArr = [];
+            let j = 4;
+            while (j--){
+                if (!arr[i][j]) {
+                    delArr.push(j);
+                }
+            }
+            let c = delArr.length;
+            while(c--){
+                arr[i].splice(delArr[c], 1);
+                arr[i].unshift(0);
+            }
+        }
+
+    }
+
+    function leftRight(i,isRight) {
+        let repeat = checkRepeat(arr[i]);
+        if (repeat.length !== 0) {
+            for (let k = 0; k < repeat.length; k++) {
+                let {originPos, repeatPos} = repeat[k];
+                let offset = isRight ? repeatPos - originPos : originPos - repeatPos;
+                let moveDiv = elementRow[i].children[isRight?originPos:repeatPos].getElementsByTagName('div')[0];
+                moveDiv.style.transform = `translateX(${offset * 100}px)`;
+                arr[i].splice(isRight?originPos:repeatPos, 1, 0);
+                arr[i][isRight?repeatPos:originPos] *= 2;
+            }
+        }
+    }
+
     function checkRepeat(checkArr) {
         // console.log(checkArr);
         let testArr = [];
@@ -203,14 +221,14 @@
                     result.push({
                         originPos:testArr[checkArr[j]],
                         repeatPos:j
-                    })
+                    });
+                    testArr.splice(checkArr[j],1);
                 } else {
                     testArr[checkArr[j]] = j;
                 }
             }
 
         }
-        //TODO 连续出现3个相同数字时的bug
         return result;
         //result  重复的位置  如 {2:1} 这一行 第二个和第三个是重复的,可以出现多次;
     }
@@ -220,7 +238,7 @@
             //左
             operationLeft();
             setTimeout(()=>{
-                render();
+                init();
             },700);
         }
         if (e && e.keyCode === 38) {
@@ -229,6 +247,10 @@
 
         if (e && e.keyCode === 39) {
             //右
+            operationRight();
+            setTimeout(()=>{
+                init();
+            },700);
         }
         if (e && e.keyCode === 40) {
             //下
