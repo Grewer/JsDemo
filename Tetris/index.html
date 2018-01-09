@@ -133,7 +133,7 @@ var currentShape = getNewShape();
 function getNewShape() {
     return shapeSet[(Math.random() * shapeSet.length) | 0];
 }
-var time = 1000;
+var time = 500;
 
 //初始化:
 for (var i = 0; i < row; i++) {
@@ -243,16 +243,13 @@ function check(shape, i, j) {
         if (Store[i + 1] && Store[i + 1][j]) {
             if (shape[i - currentPosi[0]][j - currentPosi[1]]) {
                 status = 'wait';
-            } else {
-                return Store[i][j];
             }
         }
         if (currentPosi[0] === 0) {
             checkFail(shape);
         }
 
-        return shape[i - currentPosi[0]][j - currentPosi[1]];
-
+        return shape[i - currentPosi[0]][j - currentPosi[1]] || Store[i][j];
     } else {
         return Store[i][j];
     }
@@ -268,12 +265,10 @@ function run() {
             break;
         case 'wait':
             addShape(shape[currentShape]);
-
             if (isRotate) {
                 shape[currentShape] = originShape[currentShape];
                 isRotate = 0;
             }
-
             currentPosi = [0, 4];
             status = 'down';
             //新选择一个
@@ -326,10 +321,9 @@ document.addEventListener('keydown', function(e) {
         isRotate += 1;
     }
 }, false)
-
 document.addEventListener('keyup', function(e) {
     if (e && e.keyCode === 40) {
-        time = 1000;
+        time = 500;
         clearInterval(request);
         request = setInterval(run, time)
     }
