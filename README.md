@@ -25,7 +25,7 @@ canvas 最最最基础小游戏,初始手;
 demo:[点击查看](https://grewer.github.io/JsDemo/game/canvasGame.html)  
 
 - particle:  
-canvas particle:
+canvas particle:  
 demo:[点击查看](https://grewer.github.io/JsDemo/particles/)  
 
 - canvasParticle:  
@@ -47,4 +47,9 @@ demo:[点击查看](https://grewer.github.io/JsDemo/pythagorasTree/pythagorasTre
 - Tetris:  
 js 俄罗斯方块小游戏;  
 demo:[点击查看](https://grewer.github.io/JsDemo/Tetris/);
+
+- snow:  
+js with typescript 下雪效果:  
+demo:[点击查看](https://grewer.github.io/JsDemo/snow/);
+
 
