@@ -109,13 +109,14 @@
 </body>
 <script>
     let arr = [
-        [0, 16, 8, 2],
-        [0, 0, 0, 2],
-        [0, 0, 8, 2],
-        [2, 16, 0, 2]
+        [0, 0, 0, 0],
+        [0, 0, 0, 0],
+        [0, 0, 0, 0],
+        [0, 0, 0, 0]
     ];
 
     let elementRow = document.querySelectorAll('#main tr');
+
     function getOne() {
         return (Math.random() - 0.5) > 0 ? 2 : 4;
     }
@@ -130,6 +131,7 @@
             }
         }
         if (result.length === 0) {
+            alert('fail');
             return;//暂时,无法添加新元素时失败
         }
         let {i, j} = result[(result.length * Math.random()) | 0];
@@ -138,6 +140,8 @@
         let currentRow = elementRow[i].children;
         currentRow[j].innerHTML = `<div class="rank${fillNumber}">${fillNumber}</div>`;
     }
+
+    let status = 'pending';
 
     function render() {
         for (let i = 0; i < 4; i++) {
@@ -154,6 +158,8 @@
     function main() {
         render();//初始渲染;
         addOne();//先添加一个;
+        if (status === 'success') return;
+        status = 'pending'
     }
 
     function operationLeft() {
@@ -204,15 +210,19 @@
                 moveDiv.style.transform = `translateX(${offset * 100}px)`;
                 arr[i].splice(isRight ? originPos : repeatPos, 1, 0);
                 arr[i][isRight ? repeatPos : originPos] *= 2;
+                if (arr[i][isRight ? repeatPos : originPos] === 2048) {
+                    status = 'success';
+                    alert('success');
+                }
             }
         }
     }
 
 
-
     function checkRepeat(checkArr) {
         let result = [];
-        function addResult(j,num) {
+
+        function addResult(j, num) {
             if (checkArr[j] === checkArr[j + num]) {
                 return result.push({
                     originPos: j,
@@ -221,23 +231,24 @@
             }
             return false;
         }
+
         for (let j = 0; j < 3; j++) {
             if (checkArr[j]) {//不为0
-                 if(j<3&&checkArr[j+1]){
-                    if(addResult(j,1)){
-                        j+=1;
+                if (j < 3 && checkArr[j + 1]) {
+                    if (addResult(j, 1)) {
+                        j += 1;
                         continue;
                     }
-                }else if(j<2&&checkArr[j+2]){
-                    if(addResult(j,2)){
-                        j+=2;
+                } else if (j < 2 && checkArr[j + 2]) {
+                    if (addResult(j, 2)) {
+                        j += 2;
                         continue;
                     }
-                }else if(j<1&&checkArr[j+3]){
-                     if(addResult(j,3)){
-                         continue;
-                     }
-                 }
+                } else if (j < 1 && checkArr[j + 3]) {
+                    if (addResult(j, 3)) {
+                        continue;
+                    }
+                }
             }
         }
         return result;
@@ -245,60 +256,94 @@
     }
 
     function operationUp() {
-        console.log('up');
+        upDown(true);
+        //del
         for (let i = 0; i < 4; i++) {
-            let repeat = checkRepeat([arr[0][i], arr[1][i], arr[2][i], arr[3][i]])
-            if(repeat.length !== 0){
-                for(k=0;k<repeat.length;k++){
-                    let {originPos, repeatPos} = repeat[k];
-                    let offset = repeatPos - originPos;
-                    let moveDiv = elementRow[repeatPos].children[i].getElementsByTagName('div')[0];
-                    moveDiv.style.transform = `translateY(-${offset * 100}px)`;
-                    arr[repeatPos].splice(i, 1, 0);
-                    arr[originPos][i] *= 2;
-
+            for (let j = 0; j < 4; j++) {
+                if (!arr[i][j]) {
+                    rm:for (let o = 1; o < 4; o++) {
+                        if (arr[i + o] && arr[i + o][j]) {
+                            arr[i].splice(j, 1, arr[i + o][j]);
+                            arr[i + o].splice(j, 1, 0);
+                            break rm;
+                        }
+                    }
                 }
             }
-
-
-            // let delArr = [];
-            // for (let j = 0; j < 4; j++) {
-            //     if (!arr[j][i]) {
-            //         delArr.push(i);
-            //     }
-            // }
-            // let c = delArr.length;
-            // while (c--) {
-            //     arr[i].splice(delArr[c], 1);
-            //     arr[i].push(0);
-            // }
         }
     }
 
+    function upDown(isUp) {
+        for (let i = 0; i < 4; i++) {
+            let repeat = checkRepeat([arr[0][i], arr[1][i], arr[2][i], arr[3][i]])
+            if (repeat.length !== 0) {
+                for (k = 0; k < repeat.length; k++) {
+                    let {originPos, repeatPos} = repeat[k];
+                    let offset = isUp ? originPos - repeatPos : repeatPos - originPos;
+                    let moveDiv = elementRow[isUp ? repeatPos : originPos].children[i].getElementsByTagName('div')[0];
+                    moveDiv.style.transform = `translateY(${offset * 100}px)`;
+                    arr[isUp ? repeatPos : originPos].splice(i, 1, 0);
+                    arr[isUp ? originPos : repeatPos][i] *= 2;
+                    if (arr[isUp ? originPos : repeatPos][i] === 2048) {
+                        status = 'success';
+                        alert('success');
+                    }
+                }
+            }
+        }
+    }
+
+    function operationDown() {
+        upDown(false);
+        let leng = arr.length;
+        while (leng--) {
+            for (let j = 0; j < 4; j++) {
+                if (!arr[leng][j]) {
+                    rm:for (let o = 1; o < 4; o++) {
+                        if (arr[leng - o] && arr[leng - o][j]) {
+                            arr[leng].splice(j, 1, arr[leng - o][j])
+                            arr[leng - o].splice(j, 1, 0)
+                            break rm;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    function run(type) {
+        if (status === 'success') return alert('success');
+        const methods = {
+            left: operationLeft,
+            right: operationRight,
+            up: operationUp,
+            down: operationDown,
+        }
+        status = 'adding';
+        methods[type]();
+        setTimeout(() => {
+            main();
+        }, 700);
+    }
 
     document.addEventListener('keydown', function (e) {
+        if (status === 'adding') return;
         if (e && e.keyCode === 37) {
             //左
-            operationLeft();
-            setTimeout(() => {
-                main();
-            }, 700);
+            run('left')
         }
         if (e && e.keyCode === 38) {
             //上
-            operationUp()
-
+            run('up')
         }
 
         if (e && e.keyCode === 39) {
             //右
-            operationRight();
-            setTimeout(() => {
-                main();
-            }, 700);
+            run('right')
         }
         if (e && e.keyCode === 40) {
             //下
+            run('down')
         }
     }, false);
 

@@ -42,14 +42,18 @@ demo:[点击查看](https://grewer.github.io/JsDemo/clock/step3.html)
 
 - pythagorasTree:  
 canvas 毕达哥拉斯树的动画实现,附带注释;  
-demo:[点击查看](https://grewer.github.io/JsDemo/pythagorasTree/pythagorasTree.html);
+demo:[点击查看](https://grewer.github.io/JsDemo/pythagorasTree/pythagorasTree.html)
 
 - Tetris:  
 js 俄罗斯方块小游戏;  
-demo:[点击查看](https://grewer.github.io/JsDemo/Tetris/);
+demo:[点击查看](https://grewer.github.io/JsDemo/Tetris/)
 
 - snow:  
 js with typescript 下雪效果:  
-demo:[点击查看](https://grewer.github.io/JsDemo/snow/);
+demo:[点击查看](https://grewer.github.io/JsDemo/snow/)  
+
+- 2048:  
+2048小游戏:  
+demo:[点击查看](https://grewer.github.io/JsDemo/2048/)
 
 
