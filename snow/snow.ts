@@ -1,8 +1,8 @@
 let canvas = <HTMLCanvasElement>document.getElementById('canvas');
-let ctx = canvas.getContext('2d');
-let H = canvas.height = window.innerHeight;
-let W = canvas.width = window.innerWidth;
-ctx.fillStyle = "#53B7F6";
+let ctx: any = canvas.getContext('2d');
+let H: number = canvas.height = window.innerHeight;
+let W: number = canvas.width = window.innerWidth;
+ctx.fillStyle = "#000";
 
 let clearBg = (): void => {
     ctx.fillRect(0, 0, W, H);
@@ -10,18 +10,18 @@ let clearBg = (): void => {
 
 clearBg();
 
-interface Size{
-    w:number,
-    h:number
+interface Size {
+    w: number,
+    h: number
 }
 
-const getSize = ():Size =>{
-    const w = (Math.random()*21+21)|0;
-    const h = (w*5/7)|0;
-    return {w,h}
+const getSize = (): Size => {
+    const w: number = (Math.random() * 21 + 21) | 0;
+    const h: number = (w * 5 / 7) | 0;
+    return {w, h}
 }
 
-const renderImg = (x: number = 10, y: number = 10,w:number=42,h:number=30): void => {
+const renderImg = (x: number = 10, y: number = 10, w: number = 42, h: number = 30): void => {
     ctx.drawImage(snowImg, x, y, w, h);
 };
 
@@ -42,13 +42,16 @@ interface snowType {
     stepX: number,
     stepY: number
 }
-interface snow extends snowType,Size{}
+
+interface snow extends snowType, Size {
+}
+
 let store: snow[] = [];//存储雪花数据
 
 const add = (): void => {
     let num: number = snowNum * Math.random() | 0;
     while (num--) {
-        const {w,h}:Size = getSize();
+        const {w, h}:Size = getSize();
         store.push({
             x: Math.random() * W | 0,
             y: 0,
@@ -68,8 +71,8 @@ const render = (): void => {
     clearBg();
     let length: number = store.length;
     while (length--) {
-        let {x, y, stepX, stepY,w,h}:snow = store[length];
-        renderImg(x, y,w,h);
+        let {x, y, stepX, stepY, w, h}:snow = store[length];
+        renderImg(x, y, w, h);
         store[length].x += stepX;
         store[length].y += stepY;
         if (check(store[length])) {

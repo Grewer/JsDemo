@@ -2,7 +2,7 @@ var canvas = document.getElementById('canvas');
 var ctx = canvas.getContext('2d');
 var H = canvas.height = window.innerHeight;
 var W = canvas.width = window.innerWidth;
-ctx.fillStyle = "#53B7F6";
+ctx.fillStyle = "#000";
 var clearBg = function () {
     ctx.fillRect(0, 0, W, H);
 };
