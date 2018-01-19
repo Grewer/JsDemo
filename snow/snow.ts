@@ -10,8 +10,19 @@ let clearBg = (): void => {
 
 clearBg();
 
-const renderImg = (x: number = 10, y: number = 10): void => {
-    ctx.drawImage(snowImg, x, y, 42, 30);
+interface Size{
+    w:number,
+    h:number
+}
+
+const getSize = ():Size =>{
+    const w = (Math.random()*21+21)|0;
+    const h = (w*5/7)|0;
+    return {w,h}
+}
+
+const renderImg = (x: number = 10, y: number = 10,w:number=42,h:number=30): void => {
+    ctx.drawImage(snowImg, x, y, w, h);
 };
 
 let readStatus: boolean = false;
@@ -31,18 +42,20 @@ interface snowType {
     stepX: number,
     stepY: number
 }
-
-
-let store: snowType[] = [];//存储雪花数据
+interface snow extends snowType,Size{}
+let store: snow[] = [];//存储雪花数据
 
 const add = (): void => {
     let num: number = snowNum * Math.random() | 0;
     while (num--) {
+        const {w,h}:Size = getSize();
         store.push({
             x: Math.random() * W | 0,
             y: 0,
             stepX: (Math.random() * 5 - 2) | 0,
-            stepY: ((Math.random() * 8) | 0) + 2
+            stepY: ((Math.random() * 8) | 0) + 2,
+            w,
+            h
         })
     }
 };//添加数据
@@ -55,8 +68,8 @@ const render = (): void => {
     clearBg();
     let length: number = store.length;
     while (length--) {
-        let {x, y, stepX, stepY}:snowType = store[length];
-        renderImg(x, y);
+        let {x, y, stepX, stepY,w,h}:snow = store[length];
+        renderImg(x, y,w,h);
         store[length].x += stepX;
         store[length].y += stepY;
         if (check(store[length])) {
