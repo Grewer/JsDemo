@@ -113,8 +113,9 @@ G.arr.push({
     r: 1
 })
 document.addEventListener('mousemove', function(e) {
-    G.arr[G.num].x = e.pageX || e.clientX;
-    G.arr[G.num].y = e.pageY || e.clientY;
+    G.arr[G.num].x = e.clientX - canvas.offsetLeft;
+    G.arr[G.num].y = e.clientY - canvas.offsetTop;
+
 }, false)
 Ganim();
 </script>
