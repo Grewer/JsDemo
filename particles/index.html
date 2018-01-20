@@ -5,18 +5,15 @@
     <title>demo</title>
 </head>
 <style type="text/css">
-html,
-body {
-    margin: 0;
-    padding: 0;
-    position: relative;
-}
-
-#canvas {
-    position: absolute;
-}
+    html,body{
+        margin:0;
+        padding: 0;
+        position: relative;
+    }
+    #canvas{
+        position: absolute;
+    }
 </style>
-
 <body>
     <canvas id="canvas"></canvas>
 </body>
@@ -67,10 +64,10 @@ var Grewer = {
             var particles = {
                 x: (Math.random() * this.w) | 0,
                 y: (Math.random() * this.h) | 0,
-                vx: (Math.random() - .5) * 1,
-                vy: (Math.random() - .5) * 1,
+                vx: (Math.random() - .5) * 2,
+                vy: (Math.random() - .5) * 2,
                 r: ((Math.random() * 2) | 0) + 1,
-                color: new Color()
+                color:new Color()
             }
             this.arr.push(particles);
         }
@@ -108,6 +105,7 @@ var Ganim = function() {
 
             var o2 = G.arr[j];
             if (G.checkDist(o1, o2, G.range)) {
+                // ctx.strokeStyle = '#cccccc';
                 ctx.strokeStyle = averageColorStyles(o1, o2);
                 ctx.beginPath();
                 ctx.moveTo(o1.x, o1.y);
@@ -118,43 +116,38 @@ var Ganim = function() {
 
     }
 }
-
 function colorValue(min) {
     return Math.floor(Math.random() * 255 + min);
-}
-
+  }
 function Color(min) {
     min = min || 0;
     this.r = colorValue(min);
     this.g = colorValue(min);
     this.b = colorValue(min);
     this.style = createColorStyle(this.r, this.g, this.b);
-}
-
-function createColorStyle(r, g, b) {
+  }
+  function createColorStyle(r,g,b) {
     return 'rgba(' + r + ',' + g + ',' + b + ', 0.8)';
-}
-
-function mixComponents(comp1, comp2) {
-    return (comp1 + comp2) / 2;
-}
-
+  }
+  function mixComponents(comp1, weight1, comp2, weight2) {
+    return (comp1 * weight1 + comp2 * weight2) / (weight1 + weight2);
+  }
 function averageColorStyles(dot1, dot2) {
     var color1 = dot1.color,
         color2 = dot2.color;
-
-    var r = mixComponents(color1.r, color2.r),
-        g = mixComponents(color1.g, color2.g),
-        b = mixComponents(color1.b, color2.b);
+    
+    var r = mixComponents(color1.r, dot1.x, color2.r, dot2.x),
+        g = mixComponents(color1.g, dot1.x, color2.g, dot2.x),
+        b = mixComponents(color1.b, dot1.x, color2.b, dot2.x);
     return createColorStyle(Math.floor(r), Math.floor(g), Math.floor(b));
-}
+  }
 G.arr.push({
     x: 1,
     y: 1,
     vx: 0,
     vy: 0,
-    r: 0,
-    color: new Color()
+    r: 1,
+    color:new Color()
 })
 document.addEventListener('mousemove', function(e) {
     G.arr[G.num].x = e.clientX - canvas.offsetLeft;
