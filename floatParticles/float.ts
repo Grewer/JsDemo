@@ -6,7 +6,7 @@ const H: number = canvas.height = window.innerHeight;
 ctx.fillStyle = "#fff";
 
 const mFound: number = H * 2.5;
-const mStr:number = H*1.5;
+const mStr: number = H * 1.5;
 
 const str: string = '404';
 ctx.textBaseline = 'bottom';
@@ -64,11 +64,11 @@ function getDots(imageData, isStr: boolean): dotsType[] {
     return newDots;
 }
 
-let dataStr = getDots(imageDataStr, true);
-let DataFound = getDots(imageDataFound, false);
+let dataStr:dotsType[] = getDots(imageDataStr, true);
+let DataFound:dotsType[] = getDots(imageDataFound, false);
 
 
-const data = [...dataStr, ...DataFound];
+const data:dotsType[] = [...dataStr, ...DataFound];
 
 function render(): void {
 
@@ -90,6 +90,11 @@ function render(): void {
 
 }
 
+
+const requestAnimFrame = window.requestAnimationFrame ||
+    window.webkitRequestAnimationFrame ||
+    window.mozRequestAnimationFrame;
+
 let startTime = 0;
 
 function animation(time: number = 0): void {
@@ -97,8 +102,8 @@ function animation(time: number = 0): void {
         render();
         startTime = time;
     }
-    window.requestAnimationFrame(animation)
-}
+    requestAnimFrame(animation)
+};
 
 animation();
 

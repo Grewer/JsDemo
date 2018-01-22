@@ -67,6 +67,9 @@ function render() {
         ctx.fill();
     }
 }
+var requestAnimFrame = window.requestAnimationFrame ||
+    window.webkitRequestAnimationFrame ||
+    window.mozRequestAnimationFrame;
 var startTime = 0;
 function animation(time) {
     if (time === void 0) { time = 0; }
@@ -74,7 +77,8 @@ function animation(time) {
         render();
         startTime = time;
     }
-    window.requestAnimationFrame(animation);
+    requestAnimFrame(animation);
 }
+;
 animation();
 //# sourceMappingURL=float.js.map
