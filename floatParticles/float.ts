@@ -8,18 +8,18 @@ const mFound: number = H * 2.5;
 const mStr: number = H * 1.5;
 
 
-ctx.textAlign="center";
+ctx.textAlign = "center";
 
 
 const str: string = '404';
 ctx.textBaseline = 'bottom';
 ctx.font = `${H / 2}px  'Arial', sans-serif`;
-ctx.fillText(str, W / 2, (H + H / 4) / 2, W );
+ctx.fillText(str, W / 2, (H + H / 4) / 2, W);
 
 const found: string = 'Not Found';
 ctx.textBaseline = 'top';
 ctx.font = `${H / 6}px  'Arial', sans-serif`;
-ctx.fillText(found, W / 2, (H + H / 4) / 2, W );
+ctx.fillText(found, W / 2, (H + H / 4) / 2, W);
 
 let imageDataStr = ctx.getImageData(0, 0, W, (H + H / 4) / 2);
 let imageDataFound = ctx.getImageData(0, (H + H / 4) / 2, W, (H - H / 4) / 2);
@@ -40,7 +40,7 @@ function getDots(imageData, isStr: boolean): dotsType[] {
     for (let i = 0; i < W; i += 2) {
         for (let j = 0; j < H; j += 2) {
             let k = 4 * (i + j * W);
-            if (imageData.data[k+3] > 0) {
+            if (imageData.data[k + 3] > 0) {
                 dots[index++] = {
                     x: i,
                     y: isStr ? j : j + (H + H / 4) / 2,
@@ -48,7 +48,7 @@ function getDots(imageData, isStr: boolean): dotsType[] {
                     a: Math.random(),
                     lx: isStr ? i - 4 : i - 2,
                     rx: isStr ? i + 4 : i + 2,
-                    v: (Math.random() - .5)* (isStr? .3:.15)
+                    v: (Math.random() - .5) * (isStr ? .8 : .4)
                 }
             }
         }
@@ -65,11 +65,11 @@ function getDots(imageData, isStr: boolean): dotsType[] {
     return newDots;
 }
 
-let dataStr:dotsType[] = getDots(imageDataStr, true);
-let DataFound:dotsType[] = getDots(imageDataFound, false);
+let dataStr: dotsType[] = getDots(imageDataStr, true);
+let DataFound: dotsType[] = getDots(imageDataFound, false);
 
 
-const data:dotsType[] = [...dataStr, ...DataFound];
+const data: dotsType[] = [...dataStr, ...DataFound];
 
 function render(): void {
     ctx.fillStyle = "#4db9ea";
@@ -89,6 +89,7 @@ function render(): void {
     }
 
 }
+
 render();
 
 const requestAnimFrame = window.requestAnimationFrame ||

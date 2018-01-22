@@ -29,7 +29,7 @@ function getDots(imageData, isStr) {
                     a: Math.random(),
                     lx: isStr ? i - 4 : i - 2,
                     rx: isStr ? i + 4 : i + 2,
-                    v: (Math.random() - .5) * (isStr ? .3 : .15)
+                    v: (Math.random() - .5) * (isStr ? .8 : .4)
                 };
             }
         }
