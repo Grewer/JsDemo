@@ -2,7 +2,6 @@ var canvas = document.getElementById('canvas');
 var ctx = canvas.getContext('2d');
 var W = canvas.width = window.innerWidth;
 var H = canvas.height = window.innerHeight;
-ctx.fillStyle = "#fff";
 var mFound = H * 2.5;
 var mStr = H * 1.5;
 ctx.textAlign = "center";
@@ -24,7 +23,7 @@ function getDots(imageData, isStr) {
     for (var i = 0; i < W; i += 2) {
         for (var j = 0; j < H; j += 2) {
             var k = 4 * (i + j * W);
-            if (imageData.data[k] > 0) {
+            if (imageData.data[k + 3] > 0) {
                 dots[index++] = {
                     x: i,
                     y: isStr ? j : j + (H + H / 4) / 2,
@@ -68,6 +67,7 @@ function render() {
         ctx.fill();
     }
 }
+render();
 var requestAnimFrame = window.requestAnimationFrame ||
     window.webkitRequestAnimationFrame ||
     window.mozRequestAnimationFrame;

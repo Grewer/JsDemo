@@ -3,7 +3,6 @@ let ctx: any = canvas.getContext('2d');
 const W: number = canvas.width = window.innerWidth;
 const H: number = canvas.height = window.innerHeight;
 
-ctx.fillStyle = "#fff";
 
 const mFound: number = H * 2.5;
 const mStr: number = H * 1.5;
@@ -43,7 +42,7 @@ function getDots(imageData, isStr: boolean): dotsType[] {
     for (let i = 0; i < W; i += 2) {
         for (let j = 0; j < H; j += 2) {
             let k = 4 * (i + j * W);
-            if (imageData.data[k] > 0) {
+            if (imageData.data[k+3] > 0) {
                 dots[index++] = {
                     x: i,
                     y: isStr ? j : j + (H + H / 4) / 2,
@@ -75,7 +74,6 @@ let DataFound:dotsType[] = getDots(imageDataFound, false);
 const data:dotsType[] = [...dataStr, ...DataFound];
 
 function render(): void {
-
     ctx.fillStyle = "#4db9ea";
     ctx.fillRect(0, 0, W, H);
     for (let i = 0; i < data.length; i++) {
@@ -93,7 +91,7 @@ function render(): void {
     }
 
 }
-
+render();
 
 const requestAnimFrame = window.requestAnimationFrame ||
     window.webkitRequestAnimationFrame ||
