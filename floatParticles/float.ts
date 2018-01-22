@@ -8,17 +8,21 @@ ctx.fillStyle = "#fff";
 const mFound: number = H * 2.5;
 const mStr: number = H * 1.5;
 
+
+ctx.textAlign="center";
+
+
 const str: string = '404';
 ctx.textBaseline = 'bottom';
 ctx.font = `${H / 2}px  'Arial', sans-serif`;
 const strWidth: number = ctx.measureText(str).width;
-ctx.fillText(str, (W - strWidth) / 2, (H + H / 4) / 2, W / 2);
+ctx.fillText(str, W / 2, (H + H / 4) / 2, W );
 
 const found: string = 'Not Found';
 ctx.textBaseline = 'top';
 ctx.font = `${H / 6}px  'Arial', sans-serif`;
 const foundWidth: number = ctx.measureText(found).width;
-ctx.fillText(found, (W - foundWidth) / 2, (H + H / 4) / 2, W / 2);
+ctx.fillText(found, W / 2, (H + H / 4) / 2, W );
 
 let imageDataStr = ctx.getImageData(0, 0, W, (H + H / 4) / 2);
 let imageDataFound = ctx.getImageData(0, (H + H / 4) / 2, W, (H - H / 4) / 2);
