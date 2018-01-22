@@ -51,7 +51,7 @@ function getDots(imageData, isStr: boolean): dotsType[] {
                     a: Math.random(),
                     lx: isStr ? i - 4 : i - 2,
                     rx: isStr ? i + 4 : i + 2,
-                    v: (Math.random() - .5) * .3
+                    v: (Math.random() - .5)* (isStr? .3:.2)
                 }
             }
         }
