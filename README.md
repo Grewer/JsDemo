@@ -54,6 +54,10 @@ demo:[点击查看](https://grewer.github.io/JsDemo/snow/)
 
 - 2048:  
 2048小游戏:  
-demo:[点击查看](https://grewer.github.io/JsDemo/2048/)
+demo:[点击查看](https://grewer.github.io/JsDemo/2048/)  
+
+- floatParticles:  
+404页面,浮动的粒子:  
+demo:[点击查看](https://grewer.github.io/JsDemo/floatParticles/)
 
 
