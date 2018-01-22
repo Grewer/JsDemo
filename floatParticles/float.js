@@ -8,12 +8,10 @@ ctx.textAlign = "center";
 var str = '404';
 ctx.textBaseline = 'bottom';
 ctx.font = H / 2 + "px  'Arial', sans-serif";
-var strWidth = ctx.measureText(str).width;
 ctx.fillText(str, W / 2, (H + H / 4) / 2, W);
 var found = 'Not Found';
 ctx.textBaseline = 'top';
 ctx.font = H / 6 + "px  'Arial', sans-serif";
-var foundWidth = ctx.measureText(found).width;
 ctx.fillText(found, W / 2, (H + H / 4) / 2, W);
 var imageDataStr = ctx.getImageData(0, 0, W, (H + H / 4) / 2);
 var imageDataFound = ctx.getImageData(0, (H + H / 4) / 2, W, (H - H / 4) / 2);
@@ -31,7 +29,7 @@ function getDots(imageData, isStr) {
                     a: Math.random(),
                     lx: isStr ? i - 4 : i - 2,
                     rx: isStr ? i + 4 : i + 2,
-                    v: (Math.random() - .5) * (isStr ? .3 : .2)
+                    v: (Math.random() - .5) * (isStr ? .3 : .15)
                 };
             }
         }

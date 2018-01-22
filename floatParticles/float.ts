@@ -14,13 +14,11 @@ ctx.textAlign="center";
 const str: string = '404';
 ctx.textBaseline = 'bottom';
 ctx.font = `${H / 2}px  'Arial', sans-serif`;
-const strWidth: number = ctx.measureText(str).width;
 ctx.fillText(str, W / 2, (H + H / 4) / 2, W );
 
 const found: string = 'Not Found';
 ctx.textBaseline = 'top';
 ctx.font = `${H / 6}px  'Arial', sans-serif`;
-const foundWidth: number = ctx.measureText(found).width;
 ctx.fillText(found, W / 2, (H + H / 4) / 2, W );
 
 let imageDataStr = ctx.getImageData(0, 0, W, (H + H / 4) / 2);
@@ -50,7 +48,7 @@ function getDots(imageData, isStr: boolean): dotsType[] {
                     a: Math.random(),
                     lx: isStr ? i - 4 : i - 2,
                     rx: isStr ? i + 4 : i + 2,
-                    v: (Math.random() - .5)* (isStr? .3:.2)
+                    v: (Math.random() - .5)* (isStr? .3:.15)
                 }
             }
         }
