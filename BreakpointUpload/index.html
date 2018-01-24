@@ -1,0 +1,84 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+    <title>demo</title>
+</head>
+
+<body>
+    <input type="file" id="file" accept="image/png,image/jpeg" name="upload">
+    <button onclick="submit()">点击上传</button>
+    <div>upload schedule: <span id="schedule">0%</span></div>
+</body>
+<script type="text/javascript">
+let fileObj = document.getElementById('file');
+let file,
+    eachSize = 1024,
+    totalSize,
+    chunks,
+    chunk = 0,
+    fileName
+let schedule = document.getElementById('schedule');
+
+function submit() {
+    file = fileObj.files[0];
+    if (file) {
+        totalSize = file.size;
+        chunks = Math.ceil(totalSize / eachSize);
+        fileName = file.name;
+        startUpload('first');
+    }
+}
+
+function startUpload(times) {
+    let isLastChunk = (chunk === (chunks - 1) ? 1 : 0);
+    // 如果第一次上传就为末分片，即文件已经上传完成，则重新覆盖上传
+    if (times === 'first' && isLastChunk === 1) {
+        window.localStorage.setItem(fileName + '_chunk', 0);
+        chunk = 0;
+        isLastChunk = 0;
+    }
+    let formData = new FormData();
+
+    let blobTo = (chunk + 1) * eachSize > totalSize ? totalSize : (chunk + 1) * eachSize,
+        percent = (100 * blobTo / totalSize).toFixed(1), // 已上传的百分比
+        blobFrom = eachSize * chunk;
+
+
+    formData.append('theFile', file.slice(blobFrom, blobTo)); // 分好段的文件
+    formData.append('fileName', fileName); // 文件名
+    formData.append('totalSize', totalSize); // 文件总大小
+    formData.append('isLastChunk', isLastChunk); // 是否为末段
+    formData.append('isFirstUpload', times === 'first' ? 1 : 0); // 是否是第一段（第一次上传
+    ajax('received.php', formData, function(data) {
+        let result = JSON.parse(data);
+        if (result.status == 200) {
+        	chunk += 1;
+            schedule.innerText = percent + '%'; //百分比
+            if (result.isLastChunk == 1) {
+                chunk = 0;
+            }else{
+            	startUpload();
+            }
+        }
+    })
+
+}
+
+function ajax(url, form, callback) {
+    var xhr = new XMLHttpRequest();
+    xhr.open('post', url, true);
+    xhr.send(form);
+    xhr.onreadystatechange = function() {
+        if (xhr.readyState == 4) {
+            if (xhr.status == 200) {
+                callback(xhr.responseText)
+            } else {
+                console.log('error')
+            }
+        }
+    };
+}
+</script>
+
+</html>
