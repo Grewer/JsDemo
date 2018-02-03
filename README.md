@@ -60,4 +60,6 @@ demo:[点击查看](https://grewer.github.io/JsDemo/2048/)
 404页面,浮动的粒子:  
 demo:[点击查看](https://grewer.github.io/JsDemo/floatParticles/)
 
-
+- clickEventAnimation:  
+简单的鼠标移动动画:  
+demo:[点击查看](https://grewer.github.io/JsDemo/clickEventAnimation/)
