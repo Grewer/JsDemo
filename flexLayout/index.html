@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>flex</title>
+</head>
+<style type="text/css">
+	.box {
+    display: -webkit-flex;
+    display: flex;
+    height: 100px;
+    background-color: #EBEE54
+}
+.item{
+	width: 100px;
+	background-color: #EFD7B9;
+	border:5px solid #fff;
+}
+*{
+	box-sizing: border-box;
+}
+</style>>
+<body>
+父元素:
+<div id="flexDirection">
+flex-direction:
+<button>row</button>
+<button>row-reverse</button>
+<button>column</button>
+<button>column-reverse</button>
+	<div class="box">
+		<div class="item">1</div>
+		<div class="item">2</div>
+		<div class="item">3</div>
+	</div>
+</div>
+
+<div id="flexWrap">
+flex-wrap:
+<button>nowrap</button>
+<button>wrap</button>
+<button>wrap-reverse</button>
+	<div class="box">
+		<div class="item">1</div>
+		<div class="item">2</div>
+		<div class="item">3</div>
+		<div class="item">4</div>
+		<div class="item">5</div>
+		<div class="item">6</div>
+		<div class="item">7</div>
+		<div class="item">8</div>
+		<div class="item">9</div>
+		<div class="item">10</div>
+		<div class="item">11</div>
+		<div class="item">12</div>
+		<div class="item">13</div>
+
+	</div>
+</div>
+<div class="flex-flow">
+	flex-flow:<br />
+	格式:flex-direction|| flex-wrap;<br />
+	如: flex-flow: row wrap;
+</div>
+<div id="justifyContent">
+	justify-content:
+	<button>flex-start</button>
+	<button>flex-end</button>
+	<button>center</button>
+	<button>space-between</button>
+	<button>space-around</button>
+	<div class="box">
+		<div class="item">1</div>
+		<div class="item">2</div>
+		<div class="item">3</div>
+	</div>
+</div>
+<div id="alignItems">
+	align-items:
+	<button>flex-start</button>
+	<button>flex-end</button>
+	<button>center</button>
+	<button>baseline</button>
+	<button>stretch</button>
+	<div class="box" style="height: 200px">
+		<div class="item">1</div>
+		<div class="item">2</div>
+		<div class="item">3</div>
+	</div>
+</div>
+
+<div id="alignContent">
+	align-content:
+	<button>flex-start</button>
+	<button>flex-end</button>
+	<button>center</button>
+	<button>space-between</button>
+	<button>space-around</button>
+	<button>stretch</button>
+		<div class="box" style="flex-wrap: wrap;">
+			<div class="item">1</div>
+			<div class="item">2</div>
+			<div class="item">3</div>
+			<div class="item">4</div>
+			<div class="item">5</div>
+			<div class="item">6</div>
+			<div class="item">7</div>
+			<div class="item">8</div>
+			<div class="item">9</div>
+			<div class="item">10</div>
+			<div class="item">11</div>
+			<div class="item">12</div>
+			<div class="item">13</div>
+		</div>	
+	
+</div>
+
+<div>
+	order:
+	<button id="addOrder">添加一个order在-5~5间的元素</button>
+	<button id="resetOrder">重置</button>
+	<div class="box" style="flex-wrap: wrap;">
+		<div class="item" style="order: 1">order:1</div>
+	</div>
+</div>
+
+<div>
+	flex-grow:
+	<button id="addFlexGrow">使第一个元素的 flex-frow +1</button>
+	<button id="resetFlexGrow"> 重置</button>
+	<div class="box" style="flex-wrap: wrap;">
+		<div class="item" style="flex-grow:1">flex-grow:1</div>
+		<div class="item" style="flex-grow:1">flex-grow:1</div>
+		<div class="item" style="flex-grow:1">flex-grow:1</div>
+	</div>
+</div>
+<div>
+	flex-shrink:(如果所有项目的flex-shrink属性都为1，当空间不足时，都将等比例缩小。如果一个项目的flex-shrink属性为0，其他项目都为1，则空间不足时，前者不缩小。
+负值对该属性无效。)
+	<button id="changeFlexShrink">改变第一个元素的 flex-shrink</button>
+	<div class="box">
+		<div class="item" style="flex-shrink:1">flex-shrink:1</div>
+		<div class="item" style="flex-shrink:1">flex-shrink:1</div>
+		<div class="item" style="flex-shrink:1">flex-shrink:1</div>
+		<div class="item" style="flex-shrink:1">flex-shrink:1</div>
+		<div class="item" style="flex-shrink:1">flex-shrink:1</div>
+		<div class="item" style="flex-shrink:1">flex-shrink:1</div>
+		<div class="item" style="flex-shrink:1">flex-shrink:1</div>
+		<div class="item" style="flex-shrink:1">flex-shrink:1</div>
+		<div class="item" style="flex-shrink:1">flex-shrink:1</div>
+		<div class="item" style="flex-shrink:1">flex-shrink:1</div>
+		<div class="item" style="flex-shrink:1">flex-shrink:1</div>
+		<div class="item" style="flex-shrink:1">flex-shrink:1</div>
+		<div class="item" style="flex-shrink:1">flex-shrink:1</div>
+		<div class="item" style="flex-shrink:1">flex-shrink:1</div>
+
+	</div>
+</div>
+<div>
+	flex-basis:
+	<button id="changeFlexBasis">改变第二个元素的flex-basis</button>
+	<div class="box">
+		<div class="item">1</div>
+		<div class="item" style="flex-basis: auto">flex-basis: auto</div>
+	</div>
+</div>
+
+<div>
+	flex:
+	可以为 none 也可以是由flex-grow flex-shrink  flex-basis这三个属性组合而成的;<br />
+	 当flex:auto时值为1 1 auto;<br />
+	 当flex:none时值为0 0 auto;<br />
+</div>
+
+<div>
+	align-self:(单个项目的对齐方式,可覆盖align-items)<br />
+	属性同 align-items 分为:auto | flex-start | flex-end | center | baseline | stretch;<br />
+	除了auto效果完全相同
+</div>
+博客:http://www.cnblogs.com/Grewer/p/7618096.html
+</body>
+<script type="text/javascript">
+	var boxClick = function(e,$this,style){
+	if(e.target.nodeName === 'BUTTON'){
+		var text = e.target.innerText;
+		var obj = $this.getElementsByClassName('box');
+		obj[0].style[style] = text;
+	}
+}
+
+var arr = ['flexDirection','flexWrap','justifyContent','alignItems','alignContent'];
+
+var i = arr.length;
+while(i--){
+	(function(i){
+		document.getElementById(arr[i]).onclick = function(e){
+				boxClick(e,this,arr[i]);
+			}
+	})(i);
+}
+
+document.getElementById('addOrder').onclick = function(){
+	var obj = this.parentNode.getElementsByClassName('box')[0],
+		div = document.createElement('div'),
+		orderNum = ((Math.random()*10)|0)-5;
+	div.style.order = orderNum;
+	div.className = 'item';
+	div.innerText = 'order:'+orderNum;
+	obj.appendChild(div);
+
+}
+document.getElementById('resetOrder').onclick = function(){
+	var obj = this.parentNode.getElementsByClassName('box')[0];
+	obj.innerHTML = '<div class="item" style="order:1">order:1</div>'
+}
+
+document.getElementById('addFlexGrow').onclick = function(){
+	var div = this.parentNode.getElementsByClassName('box')[0].childNodes[1];
+	var bar = Number(div.style.flexGrow);
+	bar += 1;
+	div.style.flexGrow = bar;
+	div.innerText = 'flex-grow:'+bar;
+}
+document.getElementById('resetFlexGrow').onclick = function(){
+	var div = this.parentNode.getElementsByClassName('box')[0].childNodes[1];
+	div.style.flexGrow = 1;
+	div.innerText = 'flex-grow:1';
+}
+document.getElementById('changeFlexShrink').onclick = function(){
+	var div = this.parentNode.getElementsByClassName('box')[0].childNodes[1];
+	var bar = div.style.flexShrink;
+	console.log(bar)
+	bar = (bar == 0) ? 1:0;
+	div.style.flexShrink = bar;
+	div.innerText = 'flex-shrink:'+bar
+
+}
+
+document.getElementById('changeFlexBasis').onclick = function(){
+	var div = this.parentNode.getElementsByClassName('box')[0].childNodes[3];
+	console.log(div)
+	var bar = div.style.flexBasis;
+
+	bar = (bar == 'auto') ? '500px' : 'auto';
+
+	div.style.flexBasis = bar;
+	div.innerText = 'flex-basis:'+bar;
+}
+</script>
+</html>
