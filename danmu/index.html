@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>danmu</title>
+    <style>
+        #canvas{
+            border: 1px solid #ddd;
+            margin-bottom: 30px;
+        }
+        html,body{
+            margin: 0;
+            padding: 0;
+            color:#333;
+            font-size: 16px;
+        }
+        .control{
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        button{
+            margin: 10px;
+            font-size: 16px;
+            line-height: 30px;
+            padding: 4px 20px;
+            background-color: #fff;
+            color:#333;
+            border: 1px solid #ddd;
+            border-radius: 3px;
+            cursor: pointer;
+            outline: 0;
+            width: 80px;
+            text-align: center;
+            -webkit-appearance: none;
+            transition: .3s;
+        }
+        input{
+            height: 30px;
+            border: 1px solid #ddd;
+            border-radius: 3px;
+            padding: 0px 10px;
+            font-size: 14px;
+            outline: 0;
+        }
+        input:hover{
+            border-color: #63ABDD;
+        }
+        input:focus{
+            border-color: #2c9edd;
+        }
+        button:hover{
+            border-color: #63ABDD;
+            color:#63ABDD;
+        }
+        button:focus{
+            border-color: #2c9edd;
+            color:#2c9edd;
+        }
+        .control label{
+            margin-right: 10px;
+            vertical-align: middle;
+        }
+    </style>
+</head>
+<body>
+<canvas id="canvas"></canvas>
+<div class="control">
+<div>
+    <label for="msg">发送信息:</label><input type="text" id="msg">
+</div>
+<button>发射</button>
+</div>
+</body>
+<script src="index.js"></script>
+</html>
