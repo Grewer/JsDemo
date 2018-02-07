@@ -24,10 +24,9 @@ interface dataType {
     location: number
     speed: number //根据 data 长度变化
     dataWidth: number
-    level:number
+    level?: number
 }
 
-// ctx.measureText(data).width
 let store: dataType[] = [
     {
         data: '测试,数量',
@@ -35,7 +34,6 @@ let store: dataType[] = [
         location: W,
         speed: 15,
         dataWidth: 85.27999877929688,
-        level:0
 
     },
     {
@@ -44,13 +42,19 @@ let store: dataType[] = [
         location: W,
         speed: 10,
         dataWidth: 97.27999877929688,
-        level:7
+    },
+    {
+        data: '测试,数量12312312312312',
+        color: '#000',
+        location: W,
+        speed: 20,
+        dataWidth: 110,
     }
 ];
 ctx.font = '20px  宋体';//根据高度分化出层次
 ctx.textBaseline = 'top';//文字 base
 
-const maxLevel:number = H/20/3 |0;
+const maxLevel: number = H / 20 / 3 | 0;
 //7.3999
 console.log(maxLevel);
 
@@ -60,10 +64,10 @@ const render = (): void => {
     while (i--) {
         let dm = store[i];
         ctx.fillStyle = dm.color;
-        if(!dm.level){
-                //todo
+        if (!dm.level && dm.level !== 0) {
+            addLevel(dm);//或者返回
         }
-        ctx.fillText(dm.data, dm.location, dm.level*30);
+        ctx.fillText(dm.data, dm.location, dm.level * 30);
         dm.location -= dm.speed;
         if (dm.location + dm.dataWidth < 0) {
             store.splice(i, 1);
@@ -71,9 +75,26 @@ const render = (): void => {
     }
 };
 
+const addLevel = (dm): void => {
+    let i = store.length;
+    let test = [];
+    while (i--) {
+        let sdm = store[i];
+        if (sdm.location + sdm.dataWidth > W) {
+            test[sdm.level] = sdm.location + sdm.dataWidth;
+        }
+    }
+    for (let i = 0; i < maxLevel; i++) {
+        if (!test[i]) {
+            dm.level = i;
+            break;
+        }
+        //TODO 所有行都被占据的情况
+    }
+};
 
-let startTime:number = 0;
-const animation = (timeStamp: number = 0):void => {
+let startTime: number = 0;
+const animation = (timeStamp: number = 0): void => {
     if (timeStamp - startTime > 50) {
         render();
         startTime = timeStamp;
@@ -84,11 +105,19 @@ const animation = (timeStamp: number = 0):void => {
 animation();
 
 
-const send:any = document.getElementById('send');
-const msg:any = document.getElementById('msg');
+const send: any = document.getElementById('send');
+const msg: any = document.getElementById('msg');
 
-send.onclick = ():void =>{
-    if(!msg.value) return;
-
+send.onclick = (): void => {
+    if (!msg.value) return;
+    const width = ctx.measureText(msg.value).width;
+    const speed = (W / width) < 10 ? 10 :W/width
+    store.push({
+        data: msg.value,
+        color: '#000',
+        location: W,
+        speed,
+        dataWidth: width,
+    })
 };
-
+//TODO 颜色选择器
