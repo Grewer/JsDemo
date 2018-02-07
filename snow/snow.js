@@ -1,8 +1,20 @@
 var canvas = document.getElementById('canvas');
 var ctx = canvas.getContext('2d');
-var H = canvas.height = window.innerHeight;
-var W = canvas.width = window.innerWidth;
+var H = window.innerHeight;
+var W = window.innerWidth;
 ctx.fillStyle = "#000";
+var pixelRatio = window.devicePixelRatio || 1;
+var backingStoreRatio = ctx.webkitBackingStorePixelRatio ||
+    ctx.mozBackingStorePixelRatio ||
+    ctx.msBackingStorePixelRatio ||
+    ctx.oBackingStorePixelRatio ||
+    ctx.backingStorePixelRatio || 1;
+var ratio = pixelRatio / backingStoreRatio;
+canvas.width = W * ratio;
+canvas.height = H * ratio;
+canvas.style.width = W + 'px';
+canvas.style.height = H + 'px';
+ctx.scale(ratio, ratio);
 var clearBg = function () {
     ctx.fillRect(0, 0, W, H);
 };
@@ -79,4 +91,3 @@ var animotion = function (timestamp) {
     }
 };
 animotion();
-//# sourceMappingURL=snow.js.map

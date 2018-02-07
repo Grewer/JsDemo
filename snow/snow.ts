@@ -1,8 +1,22 @@
 let canvas = <HTMLCanvasElement>document.getElementById('canvas');
 let ctx: any = canvas.getContext('2d');
-let H: number = canvas.height = window.innerHeight;
-let W: number = canvas.width = window.innerWidth;
+let H: number = window.innerHeight;
+let W: number  = window.innerWidth;
 ctx.fillStyle = "#000";
+const pixelRatio = window.devicePixelRatio || 1;
+const backingStoreRatio = ctx.webkitBackingStorePixelRatio ||
+    ctx.mozBackingStorePixelRatio ||
+    ctx.msBackingStorePixelRatio ||
+    ctx.oBackingStorePixelRatio ||
+    ctx.backingStorePixelRatio || 1;
+const ratio = pixelRatio / backingStoreRatio;
+
+canvas.width = W * ratio;
+canvas.height = H * ratio;
+canvas.style.width = W + 'px';
+canvas.style.height = H + 'px';
+
+ctx.scale(ratio, ratio);
 
 let clearBg = (): void => {
     ctx.fillRect(0, 0, W, H);
