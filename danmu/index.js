@@ -15,33 +15,21 @@ canvas.style.width = W + 'px';
 canvas.style.height = H * .6 + 'px';
 ctx.scale(ratio, ratio);
 var store = [
-    {
-        data: '测试,数量',
-        color: '#000',
-        location: W,
-        speed: 15,
-        dataWidth: 85.27999877929688,
-    },
-    {
-        data: '测试,数量2',
-        color: '#000',
-        location: W,
-        speed: 10,
-        dataWidth: 97.27999877929688,
-    },
-    {
-        data: '测试,数量12312312312312',
-        color: '#000',
-        location: W,
-        speed: 20,
-        dataWidth: 110,
-    }
+    { color: '#000', data: '真测试', dataWidth: 60, location: W, speed: 15 },
+    { data: '测试1号', color: '#ddd', location: W, speed: 15, dataWidth: 68.01998901367188 },
+    { data: '测试1号233', color: '#333', location: W, speed: 15, dataWidth: 104.01998901367188 },
+    { data: '测试1号23323', color: '#000', location: W, speed: 15, dataWidth: 128.01998901367188 },
+    { data: '测试1号2332334444', color: '#999', location: W, speed: 15, dataWidth: 188.01998901367188 },
+    { data: '测试1号2332334444', color: '#ddb974', location: W, speed: 15, dataWidth: 188.01998901367188 },
+    { data: '测试1号2332334444', color: '#D83424', location: W, speed: 15, dataWidth: 188.01998901367188 },
+    { data: '测试1号2332334444', color: '#6bcedd', location: W, speed: 15, dataWidth: 188.01998901367188 },
+    { data: '测试1号2332334444', color: '#dd4ba6', location: W, speed: 15, dataWidth: 188.01998901367188 },
+    { data: '测试1号2332334444', color: '#82dd75', location: W, speed: 15, dataWidth: 188.01998901367188 }
 ];
 ctx.font = '20px  宋体'; //根据高度分化出层次
 ctx.textBaseline = 'top'; //文字 base
 var maxLevel = H / 20 / 3 | 0;
 //7.3999
-console.log(maxLevel);
 var render = function () {
     ctx.clearRect(0, 0, W, H);
     var i = store.length;
@@ -67,12 +55,27 @@ var addLevel = function (dm) {
             test[sdm.level] = sdm.location + sdm.dataWidth;
         }
     }
+    var short = W;
+    var level = 0;
     for (var i_1 = 0; i_1 < maxLevel; i_1++) {
         if (!test[i_1]) {
             dm.level = i_1;
             break;
         }
-        //TODO 所有行都被占据的情况
+        // console.log(test);
+        if (i_1 === 0) {
+            short = test[0];
+        }
+        if (test[i_1] < short) {
+            // console.log('test',test[i],i,short)
+            short = test[i_1];
+            level = i_1;
+        }
+        if (i_1 === maxLevel - 1) {
+            // console.log(short,level);
+            dm.location = short + 50; //+50
+            dm.level = level;
+        }
     }
 };
 var startTime = 0;
@@ -91,7 +94,8 @@ send.onclick = function () {
     if (!msg.value)
         return;
     var width = ctx.measureText(msg.value).width;
-    var speed = (W / width) < 10 ? 10 : W / width;
+    // const speed = (W / width) < 10 ? 10 : W / width
+    var speed = 15; //暂为15
     store.push({
         data: msg.value,
         color: '#000',
