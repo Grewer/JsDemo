@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>colorPicker</title>
+    <style>
+        .pickBox{
+            width: 300px;
+            height: 200px;
+            border:1px solid #ddd;
+            border-radius: 3px;
+            box-shadow: 0 2px 12px 0 rgba(0,0,0,.1);
+            background-color: #fff;
+            padding: 6px;
+        }
+        .transparency{
+            position: relative;
+            width: 280px;
+            height: 12px;
+        }
+        .color{
+            position: relative;
+            width: 280px;
+            height: 180px;
+            float: left;
+        }
+        .color .white{
+            background: linear-gradient(90deg,#fff,hsla(0,0%,100%,0));
+            position: absolute;
+            width: 100%;
+            height: 100%;
+        }
+        .color .black{
+            background: linear-gradient(0deg,#000,transparent);
+            position: absolute;
+            width: 100%;
+            height: 100%;
+        }
+        .colorSelect{
+            width: 12px;
+            height: 180px;
+            padding: 2px 0;
+            float: right;
+            position: relative;
+            box-sizing: border-box;
+        }
+        .colorBar{
+            background: linear-gradient(180deg,red 0,#ff0 17%,lime 33%,cyan 50%,blue 67%,#f0f 83%,red);
+            height: 100%;
+        }
+        .colorBox{
+            overflow: hidden;
+            margin-bottom: 6px;
+        }
+        .colorSelect .thumb{
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 4px;
+            cursor: pointer;
+            box-sizing: border-box;
+            border-radius: 1px;
+            background: #fff;
+            border: 1px solid #f0f0f0;
+            box-shadow: 0 0 2px rgba(0,0,0,.6);
+            z-index: 1;
+        }
+        .color .point{
+            position: absolute;
+        }
+        .color .point>div{
+            width: 4px;
+            height: 4px;
+            box-shadow: 0 0 0 1.5px #fff, inset 0 0 1px 1px rgba(0,0,0,.3), 0 0 1px 2px rgba(0,0,0,.4);
+            border-radius: 50%;
+            transform: translate(-2px,-2px);
+            cursor: -webkit-grab;
+        }
+        .transparency .bar{
+            background: linear-gradient(90deg,hsla(0,0%,100%,0) 0,#fff);
+            height: 100%;
+        }
+
+    </style>
+</head>
+<body>
+<div class="pickBox">
+    <div class="colorBox">
+        <div class="color">
+            <div class="white"></div>
+            <div class="black"></div>
+            <div class="point">
+                <div></div>
+            </div>
+        </div>
+        <div class="colorSelect">
+            <div class="colorBar"></div>
+            <div class="thumb"></div>
+        </div>
+    </div>
+    <div class="transparency">
+        <div class="bar"></div>
+        <div class="thumb"></div>
+    </div>
+    <div class="operate"></div>
+</div>
+</body>
+<script src="index.js"></script>
+</html>
