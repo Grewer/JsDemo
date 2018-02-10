@@ -4,39 +4,44 @@
     <meta charset="UTF-8">
     <title>colorPicker</title>
     <style>
-        #pickBox{
+        #pickBox {
             width: 300px;
             height: 200px;
-            border:1px solid #ddd;
+            border: 1px solid #ddd;
             border-radius: 3px;
-            box-shadow: 0 2px 12px 0 rgba(0,0,0,.1);
+            box-shadow: 0 2px 12px 0 rgba(0, 0, 0, .1);
             background-color: #fff;
             padding: 6px;
         }
-        .transparency{
+
+        .transparency {
             position: relative;
             width: 280px;
             height: 12px;
         }
-        .color{
+
+        .color {
             position: relative;
             width: 280px;
             height: 150px;
             float: left;
         }
-        .color .white{
-            background: linear-gradient(90deg,#fff,hsla(0,0%,100%,0));
+
+        .color .white {
+            background: linear-gradient(90deg, #fff, hsla(0, 0%, 100%, 0));
             position: absolute;
             width: 100%;
             height: 100%;
         }
-        .color .black{
-            background: linear-gradient(0deg,#000,transparent);
+
+        .color .black {
+            background: linear-gradient(0deg, #000, transparent);
             position: absolute;
             width: 100%;
             height: 100%;
         }
-        .colorSelect{
+
+        .colorSelect {
             width: 12px;
             height: 150px;
             padding: 2px 0;
@@ -44,15 +49,18 @@
             position: relative;
             box-sizing: border-box;
         }
-        .colorBar{
-            background: linear-gradient(180deg,red 0,#ff0 17%,lime 33%,cyan 50%,blue 67%,#f0f 83%,red);
+
+        .colorBar {
+            background: linear-gradient(180deg, red 0, #ff0 17%, lime 33%, cyan 50%, blue 67%, #f0f 83%, red);
             height: 100%;
         }
-        .colorBox{
+
+        .colorBox {
             overflow: hidden;
             margin-bottom: 6px;
         }
-        .colorSelect .thumb{
+
+        .colorSelect .thumb {
             position: absolute;
             left: 0;
             top: 0;
@@ -63,10 +71,11 @@
             border-radius: 1px;
             background: #fff;
             border: 1px solid #f0f0f0;
-            box-shadow: 0 0 2px rgba(0,0,0,.6);
+            box-shadow: 0 0 2px rgba(0, 0, 0, .6);
             z-index: 1;
         }
-        .transparency .thumb{
+
+        .transparency .thumb {
             position: absolute;
             left: 0;
             top: 0;
@@ -77,38 +86,43 @@
             border-radius: 1px;
             background: #fff;
             border: 1px solid #f0f0f0;
-            box-shadow: 0 0 2px rgba(0,0,0,.6);
+            box-shadow: 0 0 2px rgba(0, 0, 0, .6);
             z-index: 1;
         }
-        .color .point{
+
+        .color .point {
             position: absolute;
         }
-        .color .point>div{
+
+        .color .point > div {
             width: 4px;
             height: 4px;
-            box-shadow: 0 0 0 1.5px #fff, inset 0 0 1px 1px rgba(0,0,0,.3), 0 0 1px 2px rgba(0,0,0,.4);
+            box-shadow: 0 0 0 1.5px #fff, inset 0 0 1px 1px rgba(0, 0, 0, .3), 0 0 1px 2px rgba(0, 0, 0, .4);
             border-radius: 50%;
-            transform: translate(-2px,-2px);
-            cursor: -webkit-grab;
+            transform: translate(-2px, -2px);
         }
-        .transparency .bar{
-            background: linear-gradient(90deg,hsla(0,0%,100%,0) 0,#fff);
+
+        .transparency .bar {
+            background: linear-gradient(90deg, hsla(0, 0%, 100%, 0) 0, #fff);
             height: 100%;
         }
-        .operate input{
+
+        .operate input {
             float: left;
             height: 24px;
             margin: 0;
             box-sizing: border-box;
             outline: 0;
         }
-        .operate{
+
+        .operate {
             margin-top: 6px;
             text-align: right;
         }
-        button{
+
+        button {
             background-color: #fff;
-            color:#333;
+            color: #333;
             border: 1px solid #ddd;
             border-radius: 3px;
             cursor: pointer;
@@ -118,21 +132,31 @@
             -webkit-appearance: none;
             transition: .3s;
         }
-        button:hover{
+
+        button:hover {
             border-color: #51bbdd;
-            color:#51bbdd;
+            color: #51bbdd;
         }
-        button:focus{
+
+        button:focus {
             border-color: #2c9edd;
-            color:#2c9edd;
+            color: #2c9edd;
         }
-        .operate button{
+
+        .operate button {
             height: 24px;
         }
 
+        #chooseColor {
+            width: 30px;
+            height: 30px;
+            border: 1px solid #ddd;
+            margin: 5px;
+        }
     </style>
 </head>
 <body>
+<div id="chooseColor"></div>
 <div id="pickBox">
     <div class="colorBox">
         <div class="color" style="background-color: rgb(255, 0, 0);">
@@ -152,7 +176,7 @@
         <div class="thumb"></div>
     </div>
     <div class="operate">
-        <input autocomplete="off"  type="text" >
+        <input autocomplete="off" type="text">
         <button>确认</button>
     </div>
 </div>
