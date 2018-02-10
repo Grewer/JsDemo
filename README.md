@@ -15,7 +15,8 @@ demo:[点击查看](https://grewer.github.io/JsDemo/complete_pic_edit/)
 demo:[点击查看](https://grewer.github.io/JsDemo/crop/crop.html)
 
 - js_modal:  
-使用 js 写的摸态框;
+纯 js 的 jquery 摸态框插件;  
+demo:[点击查看](https://grewer.github.io/JsDemo/js_modal/modal_box.html);  
 
 - jq_time:  
 jq时间计算插件;

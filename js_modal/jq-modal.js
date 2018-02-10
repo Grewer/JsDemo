@@ -1,7 +1,7 @@
 -(function(){
 	var Modal = function(){},modal
-	var version = 1.0;
-	
+	var version = 2.0;
+	var call;
 	Modal.prototype = {
 		init:function(str){
 			this.createEntity(str);
@@ -9,14 +9,13 @@
 		createEntity:function(str){
 			var bg = document.createElement('div');
 			bg.id = 'GrewerModal'
-			bg.style.opacity = 0.7
 			bg.style.position = 'fixed'
 			bg.style.top = 0
 			bg.style.right = 0
 			bg.style.bottom = 0
 			bg.style.left = 0;
 			bg.style.zIndex = 9998;
-			bg.style.backgroundColor = '#000000';
+			bg.style.backgroundColor = 'rgba(0, 0, 0,0.6)';
 			document.body.appendChild(bg);
 			this.addListen(bg);
 
@@ -51,6 +50,7 @@
 			close.style.float = 'right'
 			close.style.margin = '-10px -10px 0 0'
 			close.style.cursor = 'pointer'
+			close.style.outline = 0
 			E.appendChild(close);
 			this.addListen(close);
 
@@ -87,14 +87,20 @@
 			button.style.textDecoration = 'none'
 			button.style.border = '1px solid rgba(0,0,0,.2)'
 			button.style.borderRadius = '4px'
-			button.style.backgroundOrigin = 'border-box'
+			button.style.backgroundOrigin = 'border-box';
+			button.style.outline = 0;
 			E.appendChild(button);
 			this.addListen(button);
 		},
 		addListen:function(obj){
-			obj.addEventListener('click',function(){
-				$('#GrewerModal').hide();
-			})
+			obj.addEventListener('click',function(ev){
+				if(ev.target.id === 'GrewerModal' || ev.target.innerText === 'x' || ev.target.innerText === '确定'){
+                    ev.stopPropagation();
+					$('#GrewerModal').hide();
+					call && call();
+					call = null;
+                }
+			},false)
 		},
 		show:function(str){
 			$('#GrewerModal').show().find('h2').text(str);
@@ -102,8 +108,9 @@
 
 	}
 	$.extend({
-		alertMSG:function(str){
-			str = str || ''
+		alertMSG:function(str,callback){
+			str = str || '';
+			call = callback;
 			return typeof modal == 'object' ? modal.show(str):(modal = new Modal,modal.init(str));
 		}
 	})
