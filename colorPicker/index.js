@@ -4,6 +4,7 @@ var chooseColor = document.getElementById('chooseColor');
 var colorPoint = pick.querySelector('.point');
 var colorBar = pick.querySelector('.colorBar');
 var rgbaText = pick.querySelector('.rgbaText');
+var colorBarThumb = pick.querySelector('.colorSelect .thumb');
 //color长宽
 var colorWidth = colorElement.clientWidth;
 var colorHeight = colorElement.clientHeight;
@@ -39,11 +40,27 @@ var scaleChange = function (diff, scale) {
     }
 };
 var objToRGB = function (obj) {
-    return "rgb(" + obj.r + "," + obj.g + "," + obj.g + ")"; //后续加入透明度;
+    return "rgb(" + obj.r + "," + obj.g + "," + obj.b + ")"; //后续加入透明度;
 };
 var rgbToObj = function (rgbString) {
     var array = rgbString.split(',');
     return { r: Number(array[0].split('(')[1]), g: Number(array[1]), b: Number(array[2].slice(0, -1)) };
+};
+var colorBarRange = function (scale) {
+    switch (true) {
+        case scale < .17:
+            return { rank: scale / .17, arr: [{ r: 255, g: 0, b: 0 }, { r: 255, g: 255, b: 0 }] };
+        case scale < .33:
+            return { rank: (scale - .17) / .16, arr: [{ r: 255, g: 255, b: 0 }, { r: 0, g: 255, b: 0 }] };
+        case scale < .5:
+            return { rank: (scale - .33) / .17, arr: [{ r: 0, g: 255, b: 0 }, { r: 0, g: 255, b: 255 }] };
+        case scale < .67:
+            return { rank: (scale - .5) / .17, arr: [{ r: 0, g: 255, b: 255 }, { r: 0, g: 0, b: 255 }] };
+        case scale < .83:
+            return { rank: (scale - .67) / .16, arr: [{ r: 0, g: 0, b: 255 }, { r: 255, g: 0, b: 255 }] };
+        default:
+            return { rank: (scale - .83) / .17, arr: [{ r: 255, g: 0, b: 255 }, { r: 255, g: 0, b: 0 }] };
+    }
 };
 pick.addEventListener('mousedown', function (ev) {
     var target = ev.target;
@@ -60,10 +77,20 @@ pick.addEventListener('mousedown', function (ev) {
     if (target.className === 'colorBar') {
         // console.log(ev)
         var y = ev.offsetY;
+        colorBarThumb.style.top = y + 'px';
         var scale = y / colorHeight;
-        console.log(scale);
-        //scale 对 bar 颜色区间判断
-        //两个颜色中国 按比例获取 rgb
+        var range = colorBarRange(scale);
+        var rangeArr = range.arr;
+        var diff = {
+            r: rangeArr[0].r - rangeArr[1].r,
+            g: rangeArr[0].g - rangeArr[1].g,
+            b: rangeArr[0].b - rangeArr[1].b
+        };
+        var result = rangeArr[1];
+        for (var i in diff) {
+            result[i] = result[i] + diff[i] * (1 - range.rank) | 0;
+        }
+        colorElement.style.backgroundColor = objToRGB(result);
     }
 }, false);
 document.addEventListener('mousemove', function (ev) {
