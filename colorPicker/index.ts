@@ -4,20 +4,20 @@ const chooseColor = <HTMLElement>document.getElementById('chooseColor');
 const colorPoint = <HTMLElement>pick.querySelector('.point');
 const colorBar = <HTMLElement>pick.querySelector('.colorBar');
 const rgbaText = <HTMLInputElement>pick.querySelector('.rgbaText');
-const colorBarThumb = <HTMLElement>pick.querySelector('.colorSelect .thumb');
+const colorBarThumb = <HTMLElement>pick.querySelector('.bar.thumb');
+const transparency = <HTMLElement>pick.querySelector('.transparency');
+const transparencyBar = <HTMLElement>pick.querySelector('.transparencyBar');
+const transparencyThumb = <HTMLElement>pick.querySelector('.transparency .thumb');
 //color长宽
 const colorWidth: number = colorElement.clientWidth;
 const colorHeight: number = colorElement.clientHeight;
-const colorBarHeight: number = colorBar.clientHeight;
-console.log(colorWidth, colorHeight);
-
+const transparencyBarWidth: number = transparencyBar.clientWidth;
 
 let isMoveColor: boolean = false;
 
-const changeColor = (ev): void => {
+const changeColor = (x: number = 0, y: number = 0): void => {
     let {r, g, b} = rgbToObj(colorElement.style.backgroundColor);
     //右上 RGB;
-    const x = ev.offsetX, y = ev.offsetY;
     colorPoint.style.left = x + 'px';
     colorPoint.style.top = y + 'px';
     const difference = {
@@ -35,8 +35,11 @@ const changeColor = (ev): void => {
     const scaleY = y / colorHeight;
 
     scaleChange(result, 1 - scaleY);
-    chooseColor.style.backgroundColor = objToRGB(result);
-    rgbaText.value = objToRGB(result);//后续加入透明度
+    const RGBA = objToRGBA(result);
+    chooseColor.style.backgroundColor = RGBA;
+    rgbaText.value = RGBA;
+    transparency.style.backgroundColor = objToRGB(result);
+
 };
 
 interface rgb {
@@ -55,9 +58,16 @@ const scaleChange = (diff: rgb, scale: number): void => {
         diff[i] = (scale * diff[i]) | 0;
     }
 };
+const pxToNumber = (px: string = '0px'): number => {
+    return Number(px.slice(0, -2));
+}
+
+const objToRGBA = (obj: rgb): string => {
+    return `rgba(${obj.r},${obj.g},${obj.b},${getTransparency(transparencyThumb.style.left ? Number(transparencyThumb.style.left.slice(0, -2)) : 0)})`;
+};
 
 const objToRGB = (obj: rgb): string => {
-    return `rgb(${obj.r},${obj.g},${obj.b})`;//后续加入透明度;
+    return `rgb(${obj.r},${obj.g},${obj.b})`;
 };
 
 const rgbToObj = (rgbString: string): rgb => {
@@ -82,36 +92,48 @@ const colorBarRange = (scale: number): colorBarRangeType => {
     }
 };
 
+const getTransparency = (rank: number): number => {
+    return parseFloat((1 - rank / transparencyBarWidth).toFixed(2));
+};
+
 pick.addEventListener('mousedown', (ev) => {
     const target = <HTMLElement>ev.target;
     if (target.className === 'p') {
         console.log('移动坐标');
     }
     // console.log(ev);
+    // console.log(ev.target)
     // console.log(ev.offsetX, ev.offsetY);
     if (target.className === 'black') {
         isMoveColor = true;
-        changeColor(ev);
+        const x = ev.offsetX, y = ev.offsetY;
+        changeColor(x, y);
         return false;
     }
 
     if (target.className === 'colorBar') {
         // console.log(ev)
         const y = ev.offsetY;
-        colorBarThumb.style.top = y+'px';
+        colorBarThumb.style.top = y + 'px';
         const scale = y / colorHeight;
         const range = colorBarRange(scale);
-        let rangeArr:rgb[] = range.arr;
+        let rangeArr: rgb[] = range.arr;
         let diff: rgb = {
             r: rangeArr[0].r - rangeArr[1].r,
             g: rangeArr[0].g - rangeArr[1].g,
             b: rangeArr[0].b - rangeArr[1].b
         };
         let result = rangeArr[1];
-        for(let i in diff){
-            result[i] = result[i] + diff[i]* (1-range.rank)|0;
+        for (let i in diff) {
+            result[i] = result[i] + diff[i] * (1 - range.rank) | 0;
         }
         colorElement.style.backgroundColor = objToRGB(result);
+        changeColor(pxToNumber(colorPoint.style.left), pxToNumber(colorPoint.style.top));
+    }
+
+    if (target.className === 'transparencyBar') {
+        transparencyThumb.style.left = ev.offsetX + 'px';
+        changeColor(pxToNumber(colorPoint.style.left), pxToNumber(colorPoint.style.top));
     }
 
 
@@ -132,7 +154,7 @@ document.addEventListener('mousemove', (ev) => {
                 case y > colorHeight:
                     y = colorHeight;
             }
-            changeColor(ev);//TODO 在选择颜色区域外有错误情况
+            changeColor(x, y);//TODO 在选择颜色区域外有错误情况
             colorPoint.style.left = x + 'px';
             colorPoint.style.top = y + 'px';
             return false;

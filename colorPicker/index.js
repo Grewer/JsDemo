@@ -4,17 +4,20 @@ var chooseColor = document.getElementById('chooseColor');
 var colorPoint = pick.querySelector('.point');
 var colorBar = pick.querySelector('.colorBar');
 var rgbaText = pick.querySelector('.rgbaText');
-var colorBarThumb = pick.querySelector('.colorSelect .thumb');
+var colorBarThumb = pick.querySelector('.bar.thumb');
+var transparency = pick.querySelector('.transparency');
+var transparencyBar = pick.querySelector('.transparencyBar');
+var transparencyThumb = pick.querySelector('.transparency .thumb');
 //color长宽
 var colorWidth = colorElement.clientWidth;
 var colorHeight = colorElement.clientHeight;
-var colorBarHeight = colorBar.clientHeight;
-console.log(colorWidth, colorHeight);
+var transparencyBarWidth = transparencyBar.clientWidth;
 var isMoveColor = false;
-var changeColor = function (ev) {
+var changeColor = function (x, y) {
+    if (x === void 0) { x = 0; }
+    if (y === void 0) { y = 0; }
     var _a = rgbToObj(colorElement.style.backgroundColor), r = _a.r, g = _a.g, b = _a.b;
     //右上 RGB;
-    var x = ev.offsetX, y = ev.offsetY;
     colorPoint.style.left = x + 'px';
     colorPoint.style.top = y + 'px';
     var difference = {
@@ -31,16 +34,25 @@ var changeColor = function (ev) {
     };
     var scaleY = y / colorHeight;
     scaleChange(result, 1 - scaleY);
-    chooseColor.style.backgroundColor = objToRGB(result);
-    rgbaText.value = objToRGB(result); //后续加入透明度
+    var RGBA = objToRGBA(result);
+    chooseColor.style.backgroundColor = RGBA;
+    rgbaText.value = RGBA;
+    transparency.style.backgroundColor = objToRGB(result);
 };
 var scaleChange = function (diff, scale) {
     for (var i in diff) {
         diff[i] = (scale * diff[i]) | 0;
     }
 };
+var pxToNumber = function (px) {
+    if (px === void 0) { px = '0px'; }
+    return Number(px.slice(0, -2));
+};
+var objToRGBA = function (obj) {
+    return "rgba(" + obj.r + "," + obj.g + "," + obj.b + "," + getTransparency(transparencyThumb.style.left ? Number(transparencyThumb.style.left.slice(0, -2)) : 0) + ")";
+};
 var objToRGB = function (obj) {
-    return "rgb(" + obj.r + "," + obj.g + "," + obj.b + ")"; //后续加入透明度;
+    return "rgb(" + obj.r + "," + obj.g + "," + obj.b + ")";
 };
 var rgbToObj = function (rgbString) {
     var array = rgbString.split(',');
@@ -62,16 +74,21 @@ var colorBarRange = function (scale) {
             return { rank: (scale - .83) / .17, arr: [{ r: 255, g: 0, b: 255 }, { r: 255, g: 0, b: 0 }] };
     }
 };
+var getTransparency = function (rank) {
+    return parseFloat((1 - rank / transparencyBarWidth).toFixed(2));
+};
 pick.addEventListener('mousedown', function (ev) {
     var target = ev.target;
     if (target.className === 'p') {
         console.log('移动坐标');
     }
     // console.log(ev);
+    // console.log(ev.target)
     // console.log(ev.offsetX, ev.offsetY);
     if (target.className === 'black') {
         isMoveColor = true;
-        changeColor(ev);
+        var x = ev.offsetX, y = ev.offsetY;
+        changeColor(x, y);
         return false;
     }
     if (target.className === 'colorBar') {
@@ -91,6 +108,11 @@ pick.addEventListener('mousedown', function (ev) {
             result[i] = result[i] + diff[i] * (1 - range.rank) | 0;
         }
         colorElement.style.backgroundColor = objToRGB(result);
+        changeColor(pxToNumber(colorPoint.style.left), pxToNumber(colorPoint.style.top));
+    }
+    if (target.className === 'transparencyBar') {
+        transparencyThumb.style.left = ev.offsetX + 'px';
+        changeColor(pxToNumber(colorPoint.style.left), pxToNumber(colorPoint.style.top));
     }
 }, false);
 document.addEventListener('mousemove', function (ev) {
@@ -108,7 +130,7 @@ document.addEventListener('mousemove', function (ev) {
                 case y > colorHeight:
                     y = colorHeight;
             }
-            changeColor(ev); //TODO 在选择颜色区域外有错误情况
+            changeColor(x, y); //TODO 在选择颜色区域外有错误情况
             colorPoint.style.left = x + 'px';
             colorPoint.style.top = y + 'px';
             return false;

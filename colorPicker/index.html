@@ -101,7 +101,7 @@
             transform: translate(-2px, -2px);
         }
 
-        .transparency .bar {
+        .transparency .transparencyBar {
             background: linear-gradient(90deg, hsla(0, 0%, 100%, 0) 0, #fff);
             height: 100%;
         }
@@ -167,15 +167,15 @@
         </div>
         <div class="colorSelect">
             <div class="colorBar"></div>
-            <div class="thumb"></div>
+            <div class="thumb bar"></div>
         </div>
     </div>
-    <div class="transparency" style="background-color: rgb(255, 0, 0);">
-        <div class="bar"></div>
-        <div class="thumb"></div>
+    <div class="transparency" style="background-color: rgb(255, 255, 255);">
+        <div class="transparencyBar"></div>
+        <div class="thumb trans"></div>
     </div>
     <div class="operate">
-        <input autocomplete="off" class="rgbaText" type="text">
+        <input autocomplete="off" class="rgbaText" type="text" value="rgba(255,255,255,1)">
         <button>确认</button>
     </div>
 </div>
