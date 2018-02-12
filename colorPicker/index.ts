@@ -15,11 +15,12 @@ const transparencyBarWidth: number = transparencyBar.clientWidth;
 
 let isMoveColor: boolean = false;
 
+let transparencyCache: number = 1;
+
 const changeColor = (x: number = 0, y: number = 0): void => {
     let {r, g, b} = rgbToObj(colorElement.style.backgroundColor);
     //右上 RGB;
-    colorPoint.style.left = x + 'px';
-    colorPoint.style.top = y + 'px';
+
     const difference = {
         r: 255 - r,
         g: 255 - g,
@@ -60,10 +61,10 @@ const scaleChange = (diff: rgb, scale: number): void => {
 };
 const pxToNumber = (px: string = '0px'): number => {
     return Number(px.slice(0, -2));
-}
+};
 
 const objToRGBA = (obj: rgb): string => {
-    return `rgba(${obj.r},${obj.g},${obj.b},${getTransparency(transparencyThumb.style.left ? Number(transparencyThumb.style.left.slice(0, -2)) : 0)})`;
+    return `rgba(${obj.r},${obj.g},${obj.b},${transparencyCache})`;
 };
 
 const objToRGB = (obj: rgb): string => {
@@ -93,7 +94,7 @@ const colorBarRange = (scale: number): colorBarRangeType => {
 };
 
 const getTransparency = (rank: number): number => {
-    return parseFloat((1 - rank / transparencyBarWidth).toFixed(2));
+    return Number((1 - rank / transparencyBarWidth).toFixed(2));
 };
 
 pick.addEventListener('mousedown', (ev) => {
@@ -107,6 +108,8 @@ pick.addEventListener('mousedown', (ev) => {
     if (target.className === 'black') {
         isMoveColor = true;
         const x = ev.offsetX, y = ev.offsetY;
+        colorPoint.style.left = x + 'px';
+        colorPoint.style.top = y + 'px';
         changeColor(x, y);
         return false;
     }
@@ -132,8 +135,17 @@ pick.addEventListener('mousedown', (ev) => {
     }
 
     if (target.className === 'transparencyBar') {
+        const transparency = getTransparency(ev.offsetX);
         transparencyThumb.style.left = ev.offsetX + 'px';
-        changeColor(pxToNumber(colorPoint.style.left), pxToNumber(colorPoint.style.top));
+
+        transparencyCache = transparency;
+
+        let currentColor = rgbaText.value.split(',');
+        currentColor.splice(currentColor.length - 1, 1, transparency + ')');
+        const changeTransparencyColor = currentColor.join(',');
+
+        rgbaText.value = changeTransparencyColor;
+        chooseColor.style.backgroundColor = changeTransparencyColor;
     }
 
 

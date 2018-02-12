@@ -13,13 +13,12 @@ var colorWidth = colorElement.clientWidth;
 var colorHeight = colorElement.clientHeight;
 var transparencyBarWidth = transparencyBar.clientWidth;
 var isMoveColor = false;
+var transparencyCache = 1;
 var changeColor = function (x, y) {
     if (x === void 0) { x = 0; }
     if (y === void 0) { y = 0; }
     var _a = rgbToObj(colorElement.style.backgroundColor), r = _a.r, g = _a.g, b = _a.b;
     //右上 RGB;
-    colorPoint.style.left = x + 'px';
-    colorPoint.style.top = y + 'px';
     var difference = {
         r: 255 - r,
         g: 255 - g,
@@ -49,7 +48,7 @@ var pxToNumber = function (px) {
     return Number(px.slice(0, -2));
 };
 var objToRGBA = function (obj) {
-    return "rgba(" + obj.r + "," + obj.g + "," + obj.b + "," + getTransparency(transparencyThumb.style.left ? Number(transparencyThumb.style.left.slice(0, -2)) : 0) + ")";
+    return "rgba(" + obj.r + "," + obj.g + "," + obj.b + "," + transparencyCache + ")";
 };
 var objToRGB = function (obj) {
     return "rgb(" + obj.r + "," + obj.g + "," + obj.b + ")";
@@ -75,7 +74,7 @@ var colorBarRange = function (scale) {
     }
 };
 var getTransparency = function (rank) {
-    return parseFloat((1 - rank / transparencyBarWidth).toFixed(2));
+    return Number((1 - rank / transparencyBarWidth).toFixed(2));
 };
 pick.addEventListener('mousedown', function (ev) {
     var target = ev.target;
@@ -88,6 +87,8 @@ pick.addEventListener('mousedown', function (ev) {
     if (target.className === 'black') {
         isMoveColor = true;
         var x = ev.offsetX, y = ev.offsetY;
+        colorPoint.style.left = x + 'px';
+        colorPoint.style.top = y + 'px';
         changeColor(x, y);
         return false;
     }
@@ -111,8 +112,14 @@ pick.addEventListener('mousedown', function (ev) {
         changeColor(pxToNumber(colorPoint.style.left), pxToNumber(colorPoint.style.top));
     }
     if (target.className === 'transparencyBar') {
+        var transparency_1 = getTransparency(ev.offsetX);
         transparencyThumb.style.left = ev.offsetX + 'px';
-        changeColor(pxToNumber(colorPoint.style.left), pxToNumber(colorPoint.style.top));
+        transparencyCache = transparency_1;
+        var currentColor = rgbaText.value.split(',');
+        currentColor.splice(currentColor.length - 1, 1, transparency_1 + ')');
+        var changeTransparencyColor = currentColor.join(',');
+        rgbaText.value = changeTransparencyColor;
+        chooseColor.style.backgroundColor = changeTransparencyColor;
     }
 }, false);
 document.addEventListener('mousemove', function (ev) {
