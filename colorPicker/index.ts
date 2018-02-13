@@ -8,10 +8,48 @@ const colorBarThumb = <HTMLElement>pick.querySelector('.bar.thumb');
 const transparency = <HTMLElement>pick.querySelector('.transparency');
 const transparencyBar = <HTMLElement>pick.querySelector('.transparencyBar');
 const transparencyThumb = <HTMLElement>pick.querySelector('.transparency .thumb');
+
+
 //color长宽
 const colorWidth: number = colorElement.clientWidth;
 const colorHeight: number = colorElement.clientHeight;
 const transparencyBarWidth: number = transparencyBar.clientWidth;
+
+//pickBox 距离浏览器的left,top;
+
+const getPickBoxOffsetTop = (): number => {
+    let top: number = 0;
+    const topFunc = (element = pick) => {
+        if (element.offsetParent.nodeName === 'BODY') {
+            top = element.offsetTop;
+        } else {
+            top += element.offsetTop;
+            return topFunc(<HTMLElement>element.offsetParent);
+        }
+    };
+    topFunc();
+    return top;
+};
+
+const getPickBoxOffsetLeft = (): number => {
+    let left: number = 0;
+    const leftFunc = (element = pick) => {
+        if (element.offsetParent.nodeName === 'BODY') {
+            left = element.offsetLeft;
+        } else {
+            left += element.offsetLeft;
+            return leftFunc(<HTMLElement>element.offsetParent);
+        }
+    };
+    leftFunc();
+    return left;
+};
+
+let pickBoxOffsetTop = getPickBoxOffsetTop();
+
+let pickBoxOffsetLeft = getPickBoxOffsetLeft();
+
+console.log(pickBoxOffsetTop, pickBoxOffsetLeft);
 
 let isMoveColor: boolean = false;
 
@@ -156,6 +194,7 @@ document.addEventListener('mousemove', (ev) => {
         const target = <HTMLElement>ev.target;
         if (target.className !== 'p' && target.className !== 'point') {
             let x = ev.offsetX, y = ev.offsetY;
+            // console.log(ev.clientY);
             switch (true) {
                 case x < 0:
                     x = 0;

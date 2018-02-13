@@ -12,6 +12,40 @@ var transparencyThumb = pick.querySelector('.transparency .thumb');
 var colorWidth = colorElement.clientWidth;
 var colorHeight = colorElement.clientHeight;
 var transparencyBarWidth = transparencyBar.clientWidth;
+//pickBox 距离浏览器的left,top;
+var getPickBoxOffsetTop = function () {
+    var top = 0;
+    var topFunc = function (element) {
+        if (element === void 0) { element = pick; }
+        if (element.offsetParent.nodeName === 'BODY') {
+            top = element.offsetTop;
+        }
+        else {
+            top += element.offsetTop;
+            return topFunc(element.offsetParent);
+        }
+    };
+    topFunc();
+    return top;
+};
+var getPickBoxOffsetLeft = function () {
+    var left = 0;
+    var leftFunc = function (element) {
+        if (element === void 0) { element = pick; }
+        if (element.offsetParent.nodeName === 'BODY') {
+            left = element.offsetLeft;
+        }
+        else {
+            left += element.offsetLeft;
+            return leftFunc(element.offsetParent);
+        }
+    };
+    leftFunc();
+    return left;
+};
+var pickBoxOffsetTop = getPickBoxOffsetTop();
+var pickBoxOffsetLeft = getPickBoxOffsetLeft();
+console.log(pickBoxOffsetTop, pickBoxOffsetLeft);
 var isMoveColor = false;
 var transparencyCache = 1;
 var changeColor = function (x, y) {
@@ -127,6 +161,7 @@ document.addEventListener('mousemove', function (ev) {
         var target = ev.target;
         if (target.className !== 'p' && target.className !== 'point') {
             var x = ev.offsetX, y = ev.offsetY;
+            // console.log(ev.clientY);
             switch (true) {
                 case x < 0:
                     x = 0;
