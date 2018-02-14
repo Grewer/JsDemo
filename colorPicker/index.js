@@ -13,40 +13,41 @@ var colorWidth = colorElement.clientWidth;
 var colorHeight = colorElement.clientHeight;
 var transparencyBarWidth = transparencyBar.clientWidth;
 //pickBox 距离浏览器的left,top;
-var getPickBoxOffsetTop = function () {
-    var top = 0;
-    var topFunc = function (element) {
-        if (element === void 0) { element = pick; }
-        if (element.offsetParent.nodeName === 'BODY') {
-            top = element.offsetTop;
-        }
-        else {
-            top += element.offsetTop;
-            return topFunc(element.offsetParent);
-        }
-    };
-    topFunc();
-    return top;
-};
-var getPickBoxOffsetLeft = function () {
-    var left = 0;
-    var leftFunc = function (element) {
-        if (element === void 0) { element = pick; }
-        if (element.offsetParent.nodeName === 'BODY') {
-            left = element.offsetLeft;
-        }
-        else {
-            left += element.offsetLeft;
-            return leftFunc(element.offsetParent);
-        }
-    };
-    leftFunc();
-    return left;
-};
-var pickBoxOffsetTop = getPickBoxOffsetTop();
-var pickBoxOffsetLeft = getPickBoxOffsetLeft();
-console.log(pickBoxOffsetTop, pickBoxOffsetLeft);
+// const getPickBoxOffsetTop = (): number => {
+//     let top: number = 0;
+//     const topFunc = (element = pick) => {
+//         if (element.offsetParent.nodeName === 'BODY') {
+//             top = element.offsetTop;
+//         } else {
+//             top += element.offsetTop;
+//             return topFunc(<HTMLElement>element.offsetParent);
+//         }
+//     };
+//     topFunc();
+//     return top;
+// };
+//
+// const getPickBoxOffsetLeft = (): number => {
+//     let left: number = 0;
+//     const leftFunc = (element = pick) => {
+//         if (element.offsetParent.nodeName === 'BODY') {
+//             left = element.offsetLeft;
+//         } else {
+//             left += element.offsetLeft;
+//             return leftFunc(<HTMLElement>element.offsetParent);
+//         }
+//     };
+//     leftFunc();
+//     return left;
+// };
+//
+// let pickBoxOffsetTop = getPickBoxOffsetTop();
+//
+// let pickBoxOffsetLeft = getPickBoxOffsetLeft();
+//
+// console.log(pickBoxOffsetTop, pickBoxOffsetLeft);
 var isMoveColor = false;
+var isMoveColorBar = false;
 var transparencyCache = 1;
 var changeColor = function (x, y) {
     if (x === void 0) { x = 0; }
@@ -110,13 +111,28 @@ var colorBarRange = function (scale) {
 var getTransparency = function (rank) {
     return Number((1 - rank / transparencyBarWidth).toFixed(2));
 };
+var changeColorBar = function (scale) {
+    var range = colorBarRange(scale);
+    var rangeArr = range.arr;
+    var diff = {
+        r: rangeArr[0].r - rangeArr[1].r,
+        g: rangeArr[0].g - rangeArr[1].g,
+        b: rangeArr[0].b - rangeArr[1].b
+    };
+    var result = rangeArr[1];
+    for (var i in diff) {
+        result[i] = result[i] + diff[i] * (1 - range.rank) | 0;
+    }
+    return result;
+};
 pick.addEventListener('mousedown', function (ev) {
     var target = ev.target;
     if (target.className === 'p') {
-        console.log('移动坐标');
+        isMoveColor = true;
+        return false;
     }
     // console.log(ev);
-    // console.log(ev.target)
+    console.log(ev.target);
     // console.log(ev.offsetX, ev.offsetY);
     if (target.className === 'black') {
         isMoveColor = true;
@@ -128,22 +144,13 @@ pick.addEventListener('mousedown', function (ev) {
     }
     if (target.className === 'colorBar') {
         // console.log(ev)
+        isMoveColorBar = true;
         var y = ev.offsetY;
         colorBarThumb.style.top = y + 'px';
-        var scale = y / colorHeight;
-        var range = colorBarRange(scale);
-        var rangeArr = range.arr;
-        var diff = {
-            r: rangeArr[0].r - rangeArr[1].r,
-            g: rangeArr[0].g - rangeArr[1].g,
-            b: rangeArr[0].b - rangeArr[1].b
-        };
-        var result = rangeArr[1];
-        for (var i in diff) {
-            result[i] = result[i] + diff[i] * (1 - range.rank) | 0;
-        }
+        var result = changeColorBar(y / colorHeight);
         colorElement.style.backgroundColor = objToRGB(result);
         changeColor(pxToNumber(colorPoint.style.left), pxToNumber(colorPoint.style.top));
+        return false;
     }
     if (target.className === 'transparencyBar') {
         var transparency_1 = getTransparency(ev.offsetX);
@@ -154,11 +161,16 @@ pick.addEventListener('mousedown', function (ev) {
         var changeTransparencyColor = currentColor.join(',');
         rgbaText.value = changeTransparencyColor;
         chooseColor.style.backgroundColor = changeTransparencyColor;
+        return false;
+    }
+    if (target.className === 'thumb bar') {
+        isMoveColorBar = true;
+        return false;
     }
 }, false);
 document.addEventListener('mousemove', function (ev) {
+    var target = ev.target;
     if (isMoveColor === true) {
-        var target = ev.target;
         if (target.className !== 'p' && target.className !== 'point') {
             var x = ev.offsetX, y = ev.offsetY;
             // console.log(ev.clientY);
@@ -175,11 +187,35 @@ document.addEventListener('mousemove', function (ev) {
             changeColor(x, y); //TODO 在选择颜色区域外有错误情况
             colorPoint.style.left = x + 'px';
             colorPoint.style.top = y + 'px';
-            return false;
+        }
+        return false;
+    }
+    if (isMoveColorBar === true) {
+        console.log('run');
+        if (target.className !== 'thumb bar') {
+            var y = ev.offsetY;
+            switch (true) {
+                case y < 0:
+                    y = 0;
+                case y > colorHeight:
+                    y = colorHeight;
+            }
+            colorBarThumb.style.top = y + 'px';
+            var result = changeColorBar(y / colorHeight);
+            //todo 点击时出现能显示的小模块去除;
+            colorElement.style.backgroundColor = objToRGB(result);
+            changeColor(pxToNumber(colorPoint.style.left), pxToNumber(colorPoint.style.top));
         }
     }
 }, false);
+colorElement.addEventListener('mouseleave', function () {
+    isMoveColor = false;
+}, false);
+colorBar.addEventListener('mouseleave', function () {
+    isMoveColorBar = false;
+}, false);
 document.addEventListener('mouseup', function () {
     isMoveColor = false;
+    isMoveColorBar = false;
 }, false);
 //# sourceMappingURL=index.js.map
