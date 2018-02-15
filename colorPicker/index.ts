@@ -1,55 +1,71 @@
-const pick = <HTMLElement>document.getElementById('pickBox');
-const colorElement = <HTMLElement>pick.querySelector('.color');
-const chooseColor = <HTMLElement>document.getElementById('chooseColor');
-const colorPoint = <HTMLElement>pick.querySelector('.point');
-const colorBar = <HTMLElement>pick.querySelector('.colorBar');
-const rgbaText = <HTMLInputElement>pick.querySelector('.rgbaText');
-const colorBarThumb = <HTMLElement>pick.querySelector('.bar.thumb');
-const transparency = <HTMLElement>pick.querySelector('.transparency');
-const transparencyBar = <HTMLElement>pick.querySelector('.transparencyBar');
-const transparencyThumb = <HTMLElement>pick.querySelector('.transparency .thumb');
+let pick, colorElement, chooseColor, colorPoint, colorBar, rgbaText, colorBarThumb, transparency, transparencyBar,
+    transparencyThumb
 
 
 //color长宽
-const colorWidth: number = colorElement.clientWidth;
-const colorHeight: number = colorElement.clientHeight;
-const transparencyBarWidth: number = transparencyBar.clientWidth;
+let colorWidth: number, colorHeight: number, transparencyBarWidth: number;
+
+
+let pickBoxOffsetTop: number, pickBoxOffsetLeft: number;
+
 
 //pickBox 距离浏览器的left,top;
 
-// const getPickBoxOffsetTop = (): number => {
-//     let top: number = 0;
-//     const topFunc = (element = pick) => {
-//         if (element.offsetParent.nodeName === 'BODY') {
-//             top = element.offsetTop;
-//         } else {
-//             top += element.offsetTop;
-//             return topFunc(<HTMLElement>element.offsetParent);
-//         }
-//     };
-//     topFunc();
-//     return top;
-// };
-//
-// const getPickBoxOffsetLeft = (): number => {
-//     let left: number = 0;
-//     const leftFunc = (element = pick) => {
-//         if (element.offsetParent.nodeName === 'BODY') {
-//             left = element.offsetLeft;
-//         } else {
-//             left += element.offsetLeft;
-//             return leftFunc(<HTMLElement>element.offsetParent);
-//         }
-//     };
-//     leftFunc();
-//     return left;
-// };
-//
-// let pickBoxOffsetTop = getPickBoxOffsetTop();
-//
-// let pickBoxOffsetLeft = getPickBoxOffsetLeft();
-//
-// console.log(pickBoxOffsetTop, pickBoxOffsetLeft);
+const getPickBoxOffsetTop = (): number => {
+    let top: number = 0;
+    const topFunc = (element = pick) => {
+        if (element.offsetParent.nodeName === 'BODY') {
+            top = element.offsetTop;
+        } else {
+            top += element.offsetTop;
+            return topFunc(<HTMLElement>element.offsetParent);
+        }
+    };
+    topFunc();
+    return top;
+};
+
+const getPickBoxOffsetLeft = (): number => {
+    let left: number = 0;
+    const leftFunc = (element = pick) => {
+        if (element.offsetParent.nodeName === 'BODY') {
+            left = element.offsetLeft;
+        } else {
+            left += element.offsetLeft;
+            return leftFunc(<HTMLElement>element.offsetParent);
+        }
+    };
+    leftFunc();
+    return left;
+};
+
+
+const init = (): void => {
+    pick = <HTMLElement>document.getElementById('pickBox');
+    colorElement = <HTMLElement>pick.querySelector('.color');
+    chooseColor = <HTMLElement>document.getElementById('chooseColor');
+    colorPoint = <HTMLElement>pick.querySelector('.point');
+    colorBar = <HTMLElement>pick.querySelector('.colorBar');
+    rgbaText = <HTMLInputElement>pick.querySelector('.rgbaText');
+    colorBarThumb = <HTMLElement>pick.querySelector('.bar.thumb');
+    transparency = <HTMLElement>pick.querySelector('.transparency');
+    transparencyBar = <HTMLElement>pick.querySelector('.transparencyBar');
+    transparencyThumb = <HTMLElement>pick.querySelector('.transparency .thumb');
+
+
+    //color长宽
+    colorWidth = colorElement.clientWidth;
+    colorHeight = colorElement.clientHeight;
+    transparencyBarWidth = transparencyBar.clientWidth;
+
+
+    pickBoxOffsetTop = getPickBoxOffsetTop();
+
+    pickBoxOffsetLeft = getPickBoxOffsetLeft();
+};
+
+init();
+
 
 let isMoveColor: boolean = false;
 let isMoveColorBar: boolean = false;
@@ -201,44 +217,42 @@ pick.addEventListener('click', (ev) => {
 
 document.addEventListener('mousemove', (ev) => {
     const target = <HTMLElement>ev.target;
-    let x = ev.offsetX, y = ev.offsetY;
+    let cx = ev.clientX, cy = ev.clientY;
 
     switch (true) {
         case isMoveTransparency:
             if (target.className !== 'thumb trans') {
-                changeTransparency(x);
+                let diffX = cx - pickBoxOffsetLeft - 7;
+                if (diffX < 0) diffX = 0;
+                if (diffX > transparencyBarWidth) diffX = transparencyBarWidth;
+                changeTransparency(diffX);
             }
             return false;
         case isMoveColorBar:
             if (target.className !== 'thumb bar') {
-                switch (true) {
-                    case y < 0:
-                        y = 0;
-                    case y > colorHeight:
-                        y = colorHeight;
-                }
-                colorBarThumb.style.top = y + 'px';
-                const result = changeColorBar(y / colorHeight);
+                let diffY = cy - pickBoxOffsetTop - 7;
+                if (diffY < 0) diffY = 0;
+                if (diffY > colorHeight) diffY = colorHeight;
+
+                colorBarThumb.style.top = diffY + 'px';
+                const result = changeColorBar(diffY / colorHeight);
                 colorElement.style.backgroundColor = objToRGB(result);
                 changeColor(pxToNumber(colorPoint.style.left), pxToNumber(colorPoint.style.top));
             }
             return false;
         case isMoveColor:
             if (target.className !== 'p' && target.className !== 'point') {
-                // console.log(ev.clientY);
-                switch (true) {
-                    case x < 0:
-                        x = 0;
-                    case y < 0:
-                        y = 0;
-                    case x > colorWidth:
-                        x = colorWidth;
-                    case y > colorHeight:
-                        y = colorHeight;
-                }
-                changeColor(x, y);
-                colorPoint.style.left = x + 'px';
-                colorPoint.style.top = y + 'px';
+                let diffX = cx - pickBoxOffsetLeft - 7,
+                    diffY = cy - pickBoxOffsetTop - 7;
+
+                if (diffX < 0) diffX = 0;
+                if (diffY < 0) diffY = 0;
+                if (diffX > colorWidth) diffX = colorWidth;
+                if (diffY > colorHeight) diffY = colorHeight;
+
+                changeColor(diffX, diffY);
+                colorPoint.style.left = diffX + 'px';
+                colorPoint.style.top = diffY + 'px';
             }
             return false;
 
@@ -247,13 +261,7 @@ document.addEventListener('mousemove', (ev) => {
 
 }, false);
 
-//TODO 将 click  与 mouse 分开
-// colorElement.addEventListener('mouseleave', () => {
-//     isMoveColor = false;
-// }, false);
-// colorBar.addEventListener('mouseleave', () => {
-//     isMoveColorBar = false;
-// }, false);
+
 
 document.addEventListener('mouseup', () => {
     isMoveColor = false;

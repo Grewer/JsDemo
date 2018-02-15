@@ -1,51 +1,57 @@
-var pick = document.getElementById('pickBox');
-var colorElement = pick.querySelector('.color');
-var chooseColor = document.getElementById('chooseColor');
-var colorPoint = pick.querySelector('.point');
-var colorBar = pick.querySelector('.colorBar');
-var rgbaText = pick.querySelector('.rgbaText');
-var colorBarThumb = pick.querySelector('.bar.thumb');
-var transparency = pick.querySelector('.transparency');
-var transparencyBar = pick.querySelector('.transparencyBar');
-var transparencyThumb = pick.querySelector('.transparency .thumb');
+var pick, colorElement, chooseColor, colorPoint, colorBar, rgbaText, colorBarThumb, transparency, transparencyBar, transparencyThumb;
 //color长宽
-var colorWidth = colorElement.clientWidth;
-var colorHeight = colorElement.clientHeight;
-var transparencyBarWidth = transparencyBar.clientWidth;
+var colorWidth, colorHeight, transparencyBarWidth;
+var pickBoxOffsetTop, pickBoxOffsetLeft;
 //pickBox 距离浏览器的left,top;
-// const getPickBoxOffsetTop = (): number => {
-//     let top: number = 0;
-//     const topFunc = (element = pick) => {
-//         if (element.offsetParent.nodeName === 'BODY') {
-//             top = element.offsetTop;
-//         } else {
-//             top += element.offsetTop;
-//             return topFunc(<HTMLElement>element.offsetParent);
-//         }
-//     };
-//     topFunc();
-//     return top;
-// };
-//
-// const getPickBoxOffsetLeft = (): number => {
-//     let left: number = 0;
-//     const leftFunc = (element = pick) => {
-//         if (element.offsetParent.nodeName === 'BODY') {
-//             left = element.offsetLeft;
-//         } else {
-//             left += element.offsetLeft;
-//             return leftFunc(<HTMLElement>element.offsetParent);
-//         }
-//     };
-//     leftFunc();
-//     return left;
-// };
-//
-// let pickBoxOffsetTop = getPickBoxOffsetTop();
-//
-// let pickBoxOffsetLeft = getPickBoxOffsetLeft();
-//
-// console.log(pickBoxOffsetTop, pickBoxOffsetLeft);
+var getPickBoxOffsetTop = function () {
+    var top = 0;
+    var topFunc = function (element) {
+        if (element === void 0) { element = pick; }
+        if (element.offsetParent.nodeName === 'BODY') {
+            top = element.offsetTop;
+        }
+        else {
+            top += element.offsetTop;
+            return topFunc(element.offsetParent);
+        }
+    };
+    topFunc();
+    return top;
+};
+var getPickBoxOffsetLeft = function () {
+    var left = 0;
+    var leftFunc = function (element) {
+        if (element === void 0) { element = pick; }
+        if (element.offsetParent.nodeName === 'BODY') {
+            left = element.offsetLeft;
+        }
+        else {
+            left += element.offsetLeft;
+            return leftFunc(element.offsetParent);
+        }
+    };
+    leftFunc();
+    return left;
+};
+var init = function () {
+    pick = document.getElementById('pickBox');
+    colorElement = pick.querySelector('.color');
+    chooseColor = document.getElementById('chooseColor');
+    colorPoint = pick.querySelector('.point');
+    colorBar = pick.querySelector('.colorBar');
+    rgbaText = pick.querySelector('.rgbaText');
+    colorBarThumb = pick.querySelector('.bar.thumb');
+    transparency = pick.querySelector('.transparency');
+    transparencyBar = pick.querySelector('.transparencyBar');
+    transparencyThumb = pick.querySelector('.transparency .thumb');
+    //color长宽
+    colorWidth = colorElement.clientWidth;
+    colorHeight = colorElement.clientHeight;
+    transparencyBarWidth = transparencyBar.clientWidth;
+    pickBoxOffsetTop = getPickBoxOffsetTop();
+    pickBoxOffsetLeft = getPickBoxOffsetLeft();
+};
+init();
 var isMoveColor = false;
 var isMoveColorBar = false;
 var isMoveTransparency = false;
@@ -168,54 +174,49 @@ pick.addEventListener('click', function (ev) {
 }, false);
 document.addEventListener('mousemove', function (ev) {
     var target = ev.target;
-    var x = ev.offsetX, y = ev.offsetY;
+    var cx = ev.clientX, cy = ev.clientY;
     switch (true) {
         case isMoveTransparency:
             if (target.className !== 'thumb trans') {
-                changeTransparency(x);
+                var diffX = cx - pickBoxOffsetLeft - 7;
+                if (diffX < 0)
+                    diffX = 0;
+                if (diffX > transparencyBarWidth)
+                    diffX = transparencyBarWidth;
+                changeTransparency(diffX);
             }
             return false;
         case isMoveColorBar:
             if (target.className !== 'thumb bar') {
-                switch (true) {
-                    case y < 0:
-                        y = 0;
-                    case y > colorHeight:
-                        y = colorHeight;
-                }
-                colorBarThumb.style.top = y + 'px';
-                var result = changeColorBar(y / colorHeight);
+                var diffY = cy - pickBoxOffsetTop - 7;
+                if (diffY < 0)
+                    diffY = 0;
+                if (diffY > colorHeight)
+                    diffY = colorHeight;
+                colorBarThumb.style.top = diffY + 'px';
+                var result = changeColorBar(diffY / colorHeight);
                 colorElement.style.backgroundColor = objToRGB(result);
                 changeColor(pxToNumber(colorPoint.style.left), pxToNumber(colorPoint.style.top));
             }
             return false;
         case isMoveColor:
             if (target.className !== 'p' && target.className !== 'point') {
-                // console.log(ev.clientY);
-                switch (true) {
-                    case x < 0:
-                        x = 0;
-                    case y < 0:
-                        y = 0;
-                    case x > colorWidth:
-                        x = colorWidth;
-                    case y > colorHeight:
-                        y = colorHeight;
-                }
-                changeColor(x, y);
-                colorPoint.style.left = x + 'px';
-                colorPoint.style.top = y + 'px';
+                var diffX = cx - pickBoxOffsetLeft - 7, diffY = cy - pickBoxOffsetTop - 7;
+                if (diffX < 0)
+                    diffX = 0;
+                if (diffY < 0)
+                    diffY = 0;
+                if (diffX > colorWidth)
+                    diffX = colorWidth;
+                if (diffY > colorHeight)
+                    diffY = colorHeight;
+                changeColor(diffX, diffY);
+                colorPoint.style.left = diffX + 'px';
+                colorPoint.style.top = diffY + 'px';
             }
             return false;
     }
 }, false);
-//TODO 将 click  与 mouse 分开
-// colorElement.addEventListener('mouseleave', () => {
-//     isMoveColor = false;
-// }, false);
-// colorBar.addEventListener('mouseleave', () => {
-//     isMoveColorBar = false;
-// }, false);
 document.addEventListener('mouseup', function () {
     isMoveColor = false;
     isMoveColorBar = false;
