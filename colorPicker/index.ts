@@ -1,7 +1,7 @@
 let pick, colorElement, chooseColor, colorPoint, colorBar, rgbaText, colorBarThumb, transparency, transparencyBar,
     transparencyThumb
 
-
+chooseColor = <HTMLElement>document.getElementById('chooseColor');
 //color长宽
 let colorWidth: number, colorHeight: number, transparencyBarWidth: number;
 
@@ -11,39 +11,26 @@ let pickBoxOffsetTop: number, pickBoxOffsetLeft: number;
 
 //pickBox 距离浏览器的left,top;
 
-const getPickBoxOffsetTop = (): number => {
-    let top: number = 0;
-    const topFunc = (element = pick) => {
+const getPickBoxOffset = (type='Top'): number => {
+    let distance: number = 0;
+    const Func = (element = pick) => {
+        if(!element.offsetParent) return;
         if (element.offsetParent.nodeName === 'BODY') {
-            top = element.offsetTop;
+            distance = element['offset'+type];
         } else {
-            top += element.offsetTop;
-            return topFunc(<HTMLElement>element.offsetParent);
+            distance += element['offset'+type];
+            return Func(<HTMLElement>element.offsetParent);
         }
     };
-    topFunc();
-    return top;
-};
-
-const getPickBoxOffsetLeft = (): number => {
-    let left: number = 0;
-    const leftFunc = (element = pick) => {
-        if (element.offsetParent.nodeName === 'BODY') {
-            left = element.offsetLeft;
-        } else {
-            left += element.offsetLeft;
-            return leftFunc(<HTMLElement>element.offsetParent);
-        }
-    };
-    leftFunc();
-    return left;
+    Func();
+    return distance;
 };
 
 
 const init = (): void => {
     pick = <HTMLElement>document.getElementById('pickBox');
     colorElement = <HTMLElement>pick.querySelector('.color');
-    chooseColor = <HTMLElement>document.getElementById('chooseColor');
+
     colorPoint = <HTMLElement>pick.querySelector('.point');
     colorBar = <HTMLElement>pick.querySelector('.colorBar');
     rgbaText = <HTMLInputElement>pick.querySelector('.rgbaText');
@@ -59,9 +46,9 @@ const init = (): void => {
     transparencyBarWidth = transparencyBar.clientWidth;
 
 
-    pickBoxOffsetTop = getPickBoxOffsetTop();
+    pickBoxOffsetTop = getPickBoxOffset();
 
-    pickBoxOffsetLeft = getPickBoxOffsetLeft();
+    pickBoxOffsetLeft = getPickBoxOffset('Left');
 };
 
 init();
@@ -261,7 +248,14 @@ document.addEventListener('mousemove', (ev) => {
 
 }, false);
 
+chooseColor.addEventListener('click',()=>{
+    pick.style.display = 'block';
+    init();
+},false);
 
+document.getElementById('confirm').addEventListener('click',()=>{
+    pick.style.display = 'none';
+});
 
 document.addEventListener('mouseup', () => {
     isMoveColor = false;

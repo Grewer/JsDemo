@@ -1,42 +1,30 @@
 var pick, colorElement, chooseColor, colorPoint, colorBar, rgbaText, colorBarThumb, transparency, transparencyBar, transparencyThumb;
+chooseColor = document.getElementById('chooseColor');
 //color长宽
 var colorWidth, colorHeight, transparencyBarWidth;
 var pickBoxOffsetTop, pickBoxOffsetLeft;
 //pickBox 距离浏览器的left,top;
-var getPickBoxOffsetTop = function () {
-    var top = 0;
-    var topFunc = function (element) {
+var getPickBoxOffset = function (type) {
+    if (type === void 0) { type = 'Top'; }
+    var distance = 0;
+    var Func = function (element) {
         if (element === void 0) { element = pick; }
+        if (!element.offsetParent)
+            return;
         if (element.offsetParent.nodeName === 'BODY') {
-            top = element.offsetTop;
+            distance = element['offset' + type];
         }
         else {
-            top += element.offsetTop;
-            return topFunc(element.offsetParent);
+            distance += element['offset' + type];
+            return Func(element.offsetParent);
         }
     };
-    topFunc();
-    return top;
-};
-var getPickBoxOffsetLeft = function () {
-    var left = 0;
-    var leftFunc = function (element) {
-        if (element === void 0) { element = pick; }
-        if (element.offsetParent.nodeName === 'BODY') {
-            left = element.offsetLeft;
-        }
-        else {
-            left += element.offsetLeft;
-            return leftFunc(element.offsetParent);
-        }
-    };
-    leftFunc();
-    return left;
+    Func();
+    return distance;
 };
 var init = function () {
     pick = document.getElementById('pickBox');
     colorElement = pick.querySelector('.color');
-    chooseColor = document.getElementById('chooseColor');
     colorPoint = pick.querySelector('.point');
     colorBar = pick.querySelector('.colorBar');
     rgbaText = pick.querySelector('.rgbaText');
@@ -48,8 +36,8 @@ var init = function () {
     colorWidth = colorElement.clientWidth;
     colorHeight = colorElement.clientHeight;
     transparencyBarWidth = transparencyBar.clientWidth;
-    pickBoxOffsetTop = getPickBoxOffsetTop();
-    pickBoxOffsetLeft = getPickBoxOffsetLeft();
+    pickBoxOffsetTop = getPickBoxOffset();
+    pickBoxOffsetLeft = getPickBoxOffset('Left');
 };
 init();
 var isMoveColor = false;
@@ -217,6 +205,13 @@ document.addEventListener('mousemove', function (ev) {
             return false;
     }
 }, false);
+chooseColor.addEventListener('click', function () {
+    pick.style.display = 'block';
+    init();
+}, false);
+document.getElementById('confirm').addEventListener('click', function () {
+    pick.style.display = 'none';
+});
 document.addEventListener('mouseup', function () {
     isMoveColor = false;
     isMoveColorBar = false;

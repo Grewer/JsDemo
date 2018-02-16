@@ -151,12 +151,13 @@
             height: 30px;
             border: 1px solid #ddd;
             margin: 5px;
+            cursor: pointer;
         }
     </style>
 </head>
 <body>
-<div id="chooseColor"></div>
-<div id="pickBox">
+<div id="chooseColor" ></div>
+<div id="pickBox" style="display: none">
     <div class="colorBox">
         <div class="color" style="background-color: rgb(255, 0, 0);">
             <div class="white"></div>
@@ -176,7 +177,7 @@
     </div>
     <div class="operate">
         <input autocomplete="off" class="rgbaText" type="text" value="rgba(255,255,255,1)">
-        <button>确认</button>
+        <button id="confirm">确认</button>
     </div>
 </div>
 
