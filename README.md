@@ -64,3 +64,7 @@ demo:[点击查看](https://grewer.github.io/JsDemo/floatParticles/)
 - clickEventAnimation:  
 简单的鼠标移动动画:  
 demo:[点击查看](https://grewer.github.io/JsDemo/clickEventAnimation/)
+
+- colorPicker:  
+颜色选择器:  
+demo:[点击查看](https://grewer.github.io/JsDemo/colorPicker/)
