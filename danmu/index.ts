@@ -5,6 +5,7 @@ const H: number = window.innerHeight;
 
 const add10 = document.getElementById('random10');
 
+const chooseColor = <HTMLElement>document.getElementById('chooseColor');
 
 const pixelRatio = window.devicePixelRatio || 1;
 const backingStoreRatio = ctx.webkitBackingStorePixelRatio ||
@@ -70,57 +71,51 @@ const render = (): void => {
     }
 };
 
-interface testType {
-    location: number
+interface levelArrayType {
     speed: number
-    short:number
+    short: number
 }
 
 const addLevel = (dm): void => {
     let i: number = store.length;
-    let test: testType[] = [];
+    let levelArray: levelArrayType[] = [];
     while (i--) {
         let sdm = store[i];
-        if (sdm.location + sdm.dataWidth > W) {
-            // test[sdm.level] = sdm.location + sdm.dataWidth;
-            test[sdm.level] = {location: sdm.location, speed: sdm.speed,short:sdm.location + sdm.dataWidth};
-
+        if(levelArray[sdm.level]){
+            if(levelArray[sdm.level].short < sdm.location +sdm.dataWidth){
+                levelArray[sdm.level] = { speed: sdm.speed, short: sdm.location + sdm.dataWidth};
+            }
+        }else{
+            levelArray[sdm.level] = { speed: sdm.speed, short: sdm.location + sdm.dataWidth};
         }
     }
     let short: number = W;
     let level: number = 0;
     let speed: number = 10;
     for (let i = 0; i < maxLevel; i++) {
-        if (!test[i]) {
+        if (!levelArray[i]) {
             dm.level = i;
             break;
         }
-        // console.log(test);
         if (i === 0) {
-            console.log(short);
-            short = test[0].location;
+            short = levelArray[0].short;
         }
-        if (test[i].location < W) { //TODO 未触发的 bug
-            // console.log('test',test[i],i,short)
-            short = test[i].short;
-            speed = test[i].speed;
+        if (levelArray[i].short < short) {
+            short = levelArray[i].short;
+            speed = levelArray[i].speed;
             level = i;
         }
         if (i === maxLevel - 1) {
-            // console.log(short,level);
-            console.log(dm);
-            console.log(speed,short);
-
             if (dm.speed > speed) {
-                dm.location = short + (short / 10) * (dm.speed - speed);
+                dm.location = short + (short / 10) * (dm.speed - speed) + 50;
             } else {
                 dm.location = short + 50;
             }
+            if(dm.location < W) dm.location = W;
             dm.level = level;
         }
     }
 };
-// TODO 获取 store 中 1-7 列中 每一列中最长的 对比其他列最短的那一条;  在那一条后加入;
 
 let startTime: number = 0;
 const animation = (timeStamp: number = 0): void => {
@@ -137,15 +132,21 @@ animation();
 const send: any = document.getElementById('send');
 const msg: any = document.getElementById('msg');
 
+const getColor = ():string=>{
+    const color = chooseColor.style.backgroundColor;
+    return color || '#000';
+};
+
 send.onclick = (): void => {
     if (!msg.value) return;
     const width = ctx.measureText(msg.value).width;
     let speed = W / width;
     if (speed > 20) speed = 20;
     if (speed < 10) speed = 10;
+
     store.push({
         data: msg.value,
-        color: '#000',
+        color: getColor(),
         location: W,
         speed,
         dataWidth: width,
@@ -153,20 +154,21 @@ send.onclick = (): void => {
 };
 
 
-const resources = [1,2,3,4,5,6,7,8,9,0,"A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","X","Y","Z","a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"]
+const resources = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0, "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "X", "Y", "Z", "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"]
 
-const getOne = ():string=>{
-  const length:number = Math.random()*10|2 +2;
-  let result = '';
-  for(let i=0;i<length;i++){
-      result += resources[Math.random()*resources.length|0];
-  }
+const getOne = (): string => {
+    const length: number = Math.random() * 10 | 2 + 2;
+    let result = '';
+    for (let i = 0; i < length; i++) {
+        result += resources[Math.random() * resources.length | 0];
+    }
 
-  return result;
+    return result;
 };
 
-add10.onclick = ():void =>{
-    for(let i=0;i<10;i++){
+add10.onclick = (): void => {
+    const color = getColor();
+    for (let i = 0; i < 10; i++) {
         const word = getOne();
         const width = ctx.measureText(word).width;
         let speed = W / width;
@@ -174,7 +176,7 @@ add10.onclick = ():void =>{
         if (speed < 10) speed = 10;
         store.push({
             data: word,
-            color: '#000',
+            color: color,
             location: W,
             speed,
             dataWidth: width,
@@ -183,6 +185,4 @@ add10.onclick = ():void =>{
 };
 
 
-//TODO 颜色选择器待加入
-
-// TODO 加入一个10速,靠近左边时,再加入速度20的, 会追上;
+//颜色选择器 移动 待修复

@@ -61,17 +61,44 @@
             vertical-align: middle;
         }
     </style>
+    <link rel="stylesheet" href="../colorPicker/colorPicker.css">
 </head>
 <body>
 <canvas id="canvas"></canvas>
 <div class="control">
 <div>
     <label for="msg">发送信息:</label><input type="text" id="msg" placeholder="type something">
-    <span><input type="color" /></span>
+    <span style="margin-top: -5px;float:right;">
+        <div id="chooseColor" ></div>
+<div id="pickBox" style="display: none">
+    <div class="colorBox">
+        <div class="color" style="background-color: rgb(255, 0, 0);">
+            <div class="white"></div>
+            <div class="black"></div>
+            <div class="point">
+                <div class="p"></div>
+            </div>
+        </div>
+        <div class="colorSelect">
+            <div class="colorBar"></div>
+            <div class="thumb bar"></div>
+        </div>
+    </div>
+    <div class="transparency" style="background-color: rgb(255, 255, 255);">
+        <div class="transparencyBar"></div>
+        <div class="thumb trans"></div>
+    </div>
+    <div class="operate">
+        <input autocomplete="off" class="rgbaText" type="text" value="rgba(255,255,255,1)">
+        <button id="confirm">确认</button>
+    </div>
+</div>
+    </span>
 </div>
 <button id="send">发射</button>
     <button id="random10">任意十个</button>
 </div>
 </body>
 <script src="index.js"></script>
+<script src="../colorPicker/index.js"></script>
 </html>

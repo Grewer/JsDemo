@@ -102,6 +102,7 @@
 
 .operate input {
     float: left;
+    font-size: 12px;
     height: 24px;
     margin: 0;
     box-sizing: border-box;
@@ -114,6 +115,9 @@
 }
 
 #pickBox button {
+        margin: 0;
+    font-size: 12px;
+    line-height: 0;
     background-color: #fff;
     color: #333;
     border: 1px solid #ddd;

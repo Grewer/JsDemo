@@ -262,3 +262,5 @@ document.addEventListener('mouseup', () => {
     isMoveColorBar = false;
     isMoveTransparency = false;
 }, false);
+
+//TODO 在页面移下去一个界面后  鼠标的坐标获取 任然是到当前点 到头的距离

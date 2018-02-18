@@ -3,6 +3,7 @@ var ctx = canvas.getContext('2d');
 var W = window.innerWidth;
 var H = window.innerHeight;
 var add10 = document.getElementById('random10');
+var chooseColor = document.getElementById('chooseColor');
 var pixelRatio = window.devicePixelRatio || 1;
 var backingStoreRatio = ctx.webkitBackingStorePixelRatio ||
     ctx.mozBackingStorePixelRatio ||
@@ -54,48 +55,47 @@ var render = function () {
 };
 var addLevel = function (dm) {
     var i = store.length;
-    var test = [];
+    var levelArray = [];
     while (i--) {
         var sdm = store[i];
-        if (sdm.location + sdm.dataWidth > W) {
-            // test[sdm.level] = sdm.location + sdm.dataWidth;
-            test[sdm.level] = { location: sdm.location, speed: sdm.speed, short: sdm.location + sdm.dataWidth };
+        if (levelArray[sdm.level]) {
+            if (levelArray[sdm.level].short < sdm.location + sdm.dataWidth) {
+                levelArray[sdm.level] = { speed: sdm.speed, short: sdm.location + sdm.dataWidth };
+            }
+        }
+        else {
+            levelArray[sdm.level] = { speed: sdm.speed, short: sdm.location + sdm.dataWidth };
         }
     }
     var short = W;
     var level = 0;
     var speed = 10;
     for (var i_1 = 0; i_1 < maxLevel; i_1++) {
-        if (!test[i_1]) {
+        if (!levelArray[i_1]) {
             dm.level = i_1;
             break;
         }
-        // console.log(test);
         if (i_1 === 0) {
-            console.log(short);
-            short = test[0].location;
+            short = levelArray[0].short;
         }
-        if (test[i_1].location < W) {
-            // console.log('test',test[i],i,short)
-            short = test[i_1].short;
-            speed = test[i_1].speed;
+        if (levelArray[i_1].short < short) {
+            short = levelArray[i_1].short;
+            speed = levelArray[i_1].speed;
             level = i_1;
         }
         if (i_1 === maxLevel - 1) {
-            // console.log(short,level);
-            console.log(dm);
-            console.log(speed, short);
             if (dm.speed > speed) {
-                dm.location = short + (short / 10) * (dm.speed - speed);
+                dm.location = short + (short / 10) * (dm.speed - speed) + 50;
             }
             else {
                 dm.location = short + 50;
             }
+            if (dm.location < W)
+                dm.location = W;
             dm.level = level;
         }
     }
 };
-// TODO 获取 store 中 1-7 列中 每一列中最长的 对比其他列最短的那一条;  在那一条后加入;
 var startTime = 0;
 var animation = function (timeStamp) {
     if (timeStamp === void 0) { timeStamp = 0; }
@@ -108,6 +108,10 @@ var animation = function (timeStamp) {
 animation();
 var send = document.getElementById('send');
 var msg = document.getElementById('msg');
+var getColor = function () {
+    var color = chooseColor.style.backgroundColor;
+    return color || '#000';
+};
 send.onclick = function () {
     if (!msg.value)
         return;
@@ -119,7 +123,7 @@ send.onclick = function () {
         speed = 10;
     store.push({
         data: msg.value,
-        color: '#000',
+        color: getColor(),
         location: W,
         speed: speed,
         dataWidth: width,
@@ -135,6 +139,7 @@ var getOne = function () {
     return result;
 };
 add10.onclick = function () {
+    var color = getColor();
     for (var i = 0; i < 10; i++) {
         var word = getOne();
         var width = ctx.measureText(word).width;
@@ -145,13 +150,12 @@ add10.onclick = function () {
             speed = 10;
         store.push({
             data: word,
-            color: '#000',
+            color: color,
             location: W,
             speed: speed,
             dataWidth: width,
         });
     }
 };
-//TODO 颜色选择器待加入
-// TODO 加入一个10速,靠近左边时,再加入速度20的, 会追上;
+//颜色选择器 移动 待修复
 //# sourceMappingURL=index.js.map
