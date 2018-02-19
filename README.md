@@ -67,4 +67,8 @@ demo:[点击查看](https://grewer.github.io/JsDemo/clickEventAnimation/)
 
 - colorPicker:  
 颜色选择器:  
-demo:[点击查看](https://grewer.github.io/JsDemo/colorPicker/)
+demo:[点击查看](https://grewer.github.io/JsDemo/colorPicker/)  
+
+- danmu:  
+弹幕发射器:  
+demo:[点击查看](https://grewer.github.io/JsDemo/danmu/)
