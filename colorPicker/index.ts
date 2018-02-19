@@ -16,7 +16,7 @@ const getPickBoxOffset = (type='Top'): number => {
     const Func = (element = pick) => {
         if(!element.offsetParent) return;
         if (element.offsetParent.nodeName === 'BODY') {
-            distance = element['offset'+type];
+            distance += element['offset'+type];
         } else {
             distance += element['offset'+type];
             return Func(<HTMLElement>element.offsetParent);
@@ -49,6 +49,7 @@ const init = (): void => {
     pickBoxOffsetTop = getPickBoxOffset();
 
     pickBoxOffsetLeft = getPickBoxOffset('Left');
+
 };
 
 init();
@@ -204,8 +205,7 @@ pick.addEventListener('click', (ev) => {
 
 document.addEventListener('mousemove', (ev) => {
     const target = <HTMLElement>ev.target;
-    let cx = ev.clientX, cy = ev.clientY;
-
+    let cx = ev.clientX+document.documentElement.scrollLeft || window.pageXOffset || document.body.scrollLeft, cy = ev.clientY+document.documentElement.scrollTop ||  window.pageYOffset || document.body.scrollTop;
     switch (true) {
         case isMoveTransparency:
             if (target.className !== 'thumb trans') {

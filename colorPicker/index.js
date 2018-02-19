@@ -12,7 +12,7 @@ var getPickBoxOffset = function (type) {
         if (!element.offsetParent)
             return;
         if (element.offsetParent.nodeName === 'BODY') {
-            distance = element['offset' + type];
+            distance += element['offset' + type];
         }
         else {
             distance += element['offset' + type];
@@ -162,7 +162,7 @@ pick.addEventListener('click', function (ev) {
 }, false);
 document.addEventListener('mousemove', function (ev) {
     var target = ev.target;
-    var cx = ev.clientX, cy = ev.clientY;
+    var cx = ev.clientX + document.documentElement.scrollLeft || window.pageXOffset || document.body.scrollLeft, cy = ev.clientY + document.documentElement.scrollTop || window.pageYOffset || document.body.scrollTop;
     switch (true) {
         case isMoveTransparency:
             if (target.className !== 'thumb trans') {
@@ -217,4 +217,5 @@ document.addEventListener('mouseup', function () {
     isMoveColorBar = false;
     isMoveTransparency = false;
 }, false);
+//TODO 在页面移下去一个界面后  鼠标的坐标获取 任然是到当前点 到头的距离
 //# sourceMappingURL=index.js.map
