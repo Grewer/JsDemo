@@ -71,4 +71,8 @@ demo:[点击查看](https://grewer.github.io/JsDemo/colorPicker/)
 
 - danmu:  
 弹幕发射器:  
-demo:[点击查看](https://grewer.github.io/JsDemo/danmu/)
+demo:[点击查看](https://grewer.github.io/JsDemo/danmu/)  
+
+- caculator:  
+仿 IOS 计算器:  
+demo:[点击查看](https://grewer.github.io/JsDemo/caculator/)
