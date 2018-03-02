@@ -3,25 +3,6 @@ chooseColor = document.getElementById('chooseColor');
 //color长宽
 var colorWidth, colorHeight, transparencyBarWidth;
 var pickBoxOffsetTop, pickBoxOffsetLeft;
-//pickBox 距离浏览器的left,top;
-var getPickBoxOffset = function (type) {
-    if (type === void 0) { type = 'Top'; }
-    var distance = 0;
-    var Func = function (element) {
-        if (element === void 0) { element = pick; }
-        if (!element.offsetParent)
-            return;
-        if (element.offsetParent.nodeName === 'BODY') {
-            distance += element['offset' + type];
-        }
-        else {
-            distance += element['offset' + type];
-            return Func(element.offsetParent);
-        }
-    };
-    Func();
-    return distance;
-};
 var init = function () {
     pick = document.getElementById('pickBox');
     colorElement = pick.querySelector('.color');
@@ -36,8 +17,8 @@ var init = function () {
     colorWidth = colorElement.clientWidth;
     colorHeight = colorElement.clientHeight;
     transparencyBarWidth = transparencyBar.clientWidth;
-    pickBoxOffsetTop = getPickBoxOffset();
-    pickBoxOffsetLeft = getPickBoxOffset('Left');
+    pickBoxOffsetTop = pick.getBoundingClientRect().top;
+    pickBoxOffsetLeft = pick.getBoundingClientRect().left;
 };
 init();
 var isMoveColor = false;
@@ -217,5 +198,4 @@ document.addEventListener('mouseup', function () {
     isMoveColorBar = false;
     isMoveTransparency = false;
 }, false);
-//TODO 在页面移下去一个界面后  鼠标的坐标获取 任然是到当前点 到头的距离
 //# sourceMappingURL=index.js.map

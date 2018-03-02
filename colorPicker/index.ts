@@ -9,23 +9,6 @@ let colorWidth: number, colorHeight: number, transparencyBarWidth: number;
 let pickBoxOffsetTop: number, pickBoxOffsetLeft: number;
 
 
-//pickBox 距离浏览器的left,top;
-
-const getPickBoxOffset = (type='Top'): number => {
-    let distance: number = 0;
-    const Func = (element = pick) => {
-        if(!element.offsetParent) return;
-        if (element.offsetParent.nodeName === 'BODY') {
-            distance += element['offset'+type];
-        } else {
-            distance += element['offset'+type];
-            return Func(<HTMLElement>element.offsetParent);
-        }
-    };
-    Func();
-    return distance;
-};
-
 
 const init = (): void => {
     pick = <HTMLElement>document.getElementById('pickBox');
@@ -46,9 +29,8 @@ const init = (): void => {
     transparencyBarWidth = transparencyBar.clientWidth;
 
 
-    pickBoxOffsetTop = getPickBoxOffset();
-
-    pickBoxOffsetLeft = getPickBoxOffset('Left');
+    pickBoxOffsetTop = pick.getBoundingClientRect().top;
+    pickBoxOffsetLeft = pick.getBoundingClientRect().left;
 
 };
 
