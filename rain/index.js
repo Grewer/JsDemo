@@ -15,10 +15,14 @@
     canvas.style.width = W + 'px';
     canvas.style.height = H + 'px';
     ctx.scale(ratio, ratio);
+    var halfWidth = W / 2;
+    var offsetAngle = 0;
     var grad = ctx.createLinearGradient(0, 0, 0, H);
     /* 指定几个颜色 */
     grad.addColorStop(0, '#688896');
-    grad.addColorStop(1, '#423d38');
+    grad.addColorStop(1, '#2b2623');
+    var rainFrequency = H / 6;
+    var leftOrRight = 1; // -1->left  1->right
     var store = [];
     var dropsStore = [];
     var dropsCache = {};
@@ -38,10 +42,10 @@
         return dropsCache[px + "-" + py + "-" + x + "-" + y];
     };
     var addDrops = function (x) {
-        var i = Math.random() * 10 + 2 | 0;
+        var i = Math.random() * 5 + 5 | 0;
         while (i--) {
             var offsetX = Math.random() * 50 - 25;
-            var speed = offsetX > 0 ? 2 : -2;
+            var speed = offsetX > 0 ? 1.5 : -1.5;
             dropsStore.push({
                 pos: { x: x, y: H },
                 fn: getParabolaFunc({ px: offsetX + x, py: H - Math.random() * 40 - 10 }, { x: x, y: H }),
@@ -61,18 +65,19 @@
                 continue;
             ctx.beginPath();
             if (storeCase.pos.y > H) {
-                //报错
                 store.splice(i, 1);
                 continue;
             }
             ctx.moveTo(storeCase.pos.x, storeCase.pos.y);
-            ctx.lineTo(storeCase.pos.x, storeCase.pos.y + storeCase.height);
-            storeCase.pos.y += 12;
+            var offsetX = offsetAngle * storeCase.height * leftOrRight;
+            ctx.lineTo(storeCase.pos.x + offsetX, storeCase.pos.y + storeCase.height);
+            storeCase.pos.y += storeCase.speed;
+            storeCase.pos.x += storeCase.speed * offsetAngle * leftOrRight;
+            ctx.stroke();
             if (storeCase.pos.y + storeCase.height > H && !storeCase.drops) {
                 addDrops(storeCase.pos.x);
                 storeCase.drops = true;
             }
-            ctx.stroke();
         }
         for (var i = 0, l = dropsStore.length; i < l; i++) {
             var drop = dropsStore[i];
@@ -89,20 +94,27 @@
             drop.pos.x += drop.speed;
             drop.pos.y = drop.fn(drop.pos.x);
         }
-        if (timeStamp - startTime > 200) {
+        if (timeStamp - startTime > rainFrequency) {
             store.push({
                 pos: {
                     x: Math.random() * W,
                     y: 0
                 },
-                height: 50 * Math.random() + 20,
-                drops: false
+                height: 30 * Math.random() + 20,
+                drops: false,
+                speed: Math.random() * 2 + H / 40
             });
             startTime = timeStamp;
         }
-        // console.log(timeStamp);
         window.requestAnimationFrame(render);
     };
     render();
+    console.log(W, H);
+    canvas.addEventListener('mousemove', function (ev) {
+        var offsetX = ev.offsetX;
+        var distance = Math.abs(offsetX - halfWidth);
+        leftOrRight = offsetX - halfWidth > 0 ? 1 : -1;
+        offsetAngle = distance / H;
+    });
 })();
 //# sourceMappingURL=index.js.map
