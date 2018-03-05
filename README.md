@@ -76,3 +76,7 @@ demo:[点击查看](https://grewer.github.io/JsDemo/danmu/)
 - caculator:  
 仿 IOS 计算器:  
 demo:[点击查看](https://grewer.github.io/JsDemo/caculator/)
+ 
+- rain:  
+下雨效果(待完善):  
+demo:[点击查看](https://grewer.github.io/JsDemo/rain/)

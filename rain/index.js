@@ -45,6 +45,8 @@
         var i = Math.random() * 5 + 5 | 0;
         while (i--) {
             var offsetX = Math.random() * 50 - 25;
+            // TODO 添加规则:越接近0 几率越趋近50%
+            //绝对值大于1 则几率等于1
             var speed = offsetX > 0 ? 1.5 : -1.5;
             dropsStore.push({
                 pos: { x: x, y: H },
@@ -54,6 +56,7 @@
             });
         }
     };
+    ctx.lineWidth = 2;
     var startTime = 0;
     var render = function (timeStamp) {
         if (timeStamp === void 0) { timeStamp = 0; }
@@ -75,7 +78,7 @@
             storeCase.pos.x += storeCase.speed * offsetAngle * leftOrRight;
             ctx.stroke();
             if (storeCase.pos.y + storeCase.height > H && !storeCase.drops) {
-                addDrops(storeCase.pos.x);
+                addDrops(storeCase.pos.x + offsetX);
                 storeCase.drops = true;
             }
         }
@@ -109,12 +112,12 @@
         window.requestAnimationFrame(render);
     };
     render();
-    console.log(W, H);
     canvas.addEventListener('mousemove', function (ev) {
         var offsetX = ev.offsetX;
         var distance = Math.abs(offsetX - halfWidth);
         leftOrRight = offsetX - halfWidth > 0 ? 1 : -1;
         offsetAngle = distance / H;
+        console.log(offsetAngle);
     });
 })();
 //# sourceMappingURL=index.js.map

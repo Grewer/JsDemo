@@ -23,7 +23,7 @@
 
 
     const halfWidth = W / 2;
-    let offsetAngle = 0;
+    let offsetAngle: number = 0;
 
     const grad = ctx.createLinearGradient(0, 0, 0, H);
     /* 指定几个颜色 */
@@ -76,9 +76,11 @@
     };
 
     const addDrops = (x) => {
-        let i = Math.random() *5  + 5 | 0;
+        let i = Math.random() * 5 + 5 | 0;
         while (i--) {
             const offsetX = Math.random() * 50 - 25;
+            // TODO 添加规则:越接近0 几率越趋近50%
+            //绝对值大于1 则几率等于1
             const speed = offsetX > 0 ? 1.5 : -1.5;
             dropsStore.push(
                 {
@@ -92,6 +94,7 @@
 
     };
 
+    ctx.lineWidth = 2;
     let startTime: number = 0;
     const render = (timeStamp = 0): void => {
         ctx.fillStyle = grad;
@@ -116,7 +119,7 @@
             ctx.stroke();
 
             if (storeCase.pos.y + storeCase.height > H && !storeCase.drops) {
-                addDrops(storeCase.pos.x);
+                addDrops(storeCase.pos.x + offsetX);
                 storeCase.drops = true;
             }
 
@@ -148,7 +151,7 @@
                     },//坐标
                     height: 30 * Math.random() + 20,//长度
                     drops: false,
-                    speed: Math.random() * 2 + H/40
+                    speed: Math.random() * 2 + H / 40
                 },
             )
             startTime = timeStamp;
@@ -157,7 +160,6 @@
         window.requestAnimationFrame(render);
     };
     render();
-    console.log(W, H);
     canvas.addEventListener('mousemove', (ev) => {
         const offsetX = ev.offsetX;
 
@@ -166,6 +168,7 @@
         leftOrRight = offsetX - halfWidth > 0 ? 1 : -1;
 
         offsetAngle = distance / H;
+        console.log(offsetAngle)
 
     })
 })()
