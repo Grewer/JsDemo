@@ -78,5 +78,5 @@ demo:[点击查看](https://grewer.github.io/JsDemo/danmu/)
 demo:[点击查看](https://grewer.github.io/JsDemo/caculator/)
  
 - rain:  
-下雨效果(待完善):  
+下雨效果:  
 demo:[点击查看](https://grewer.github.io/JsDemo/rain/)
