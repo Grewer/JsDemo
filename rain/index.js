@@ -41,18 +41,17 @@
         };
         return dropsCache[px + "-" + py + "-" + x + "-" + y];
     };
-    var addDrops = function (x) {
+    var addDrops = function (x, time) {
         var i = Math.random() * 5 + 5 | 0;
         while (i--) {
             var offsetX = Math.random() * 50 - 25;
-            // TODO 添加规则:越接近0 几率越趋近50%
-            //绝对值大于1 则几率等于1
-            var speed = offsetX > 0 ? 1.5 : -1.5;
+            var speed = offsetX > 0 ? 0.15 : -0.15;
             dropsStore.push({
                 pos: { x: x, y: H },
-                fn: getParabolaFunc({ px: offsetX + x, py: H - Math.random() * 40 - 10 }, { x: x, y: H }),
+                fn: getParabolaFunc({ px: offsetX + x, py: H - Math.random() * 20 - 10 }, { x: x, y: H }),
                 speed: speed,
-                radius: Math.random() + 1
+                radius: Math.random() + 1,
+                path: time * 0.15
             });
         }
     };
@@ -78,7 +77,7 @@
             storeCase.pos.x += storeCase.speed * offsetAngle * leftOrRight;
             ctx.stroke();
             if (storeCase.pos.y + storeCase.height > H && !storeCase.drops) {
-                addDrops(storeCase.pos.x + offsetX);
+                addDrops(storeCase.pos.x + offsetX, storeCase.height / storeCase.speed);
                 storeCase.drops = true;
             }
         }
@@ -94,6 +93,13 @@
             ctx.fillStyle = "#6EACEC";
             ctx.arc(drop.pos.x, drop.pos.y, drop.radius, 0, 2 * Math.PI);
             ctx.fill();
+            if (Math.abs(drop.speed) < 1 && drop.path < 0) {
+                drop.speed *= 10;
+                drop.path = 0;
+            }
+            else {
+                drop.path -= Math.abs(drop.speed);
+            }
             drop.pos.x += drop.speed;
             drop.pos.y = drop.fn(drop.pos.x);
         }
@@ -117,7 +123,6 @@
         var distance = Math.abs(offsetX - halfWidth);
         leftOrRight = offsetX - halfWidth > 0 ? 1 : -1;
         offsetAngle = distance / H;
-        console.log(offsetAngle);
     });
 })();
 //# sourceMappingURL=index.js.map
