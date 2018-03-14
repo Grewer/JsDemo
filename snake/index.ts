@@ -24,7 +24,7 @@ let store = [];
 
 
 for(let i=0,l=store.length;i<l;i++){
-    
+    console.log(store[i])
 }
 
 
