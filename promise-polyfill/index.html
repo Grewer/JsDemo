@@ -10,5 +10,11 @@
 <script src="index.js"></script>
 <script>
 console.log(Promise)
+
+var P = new Promise(function(resolve,reject){
+    setTimeout(function(){
+        resolve('wait 1s')
+    },1000)
+})
 </script>
 </html>
