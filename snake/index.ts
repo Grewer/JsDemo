@@ -1,8 +1,8 @@
 const canvas = <HTMLCanvasElement>document.getElementById('canvas');
 const ctx = canvas.getContext('2d');
 
-const W: number = window.innerWidth;
-const H: number = window.innerHeight;
+const W: number = 400;
+const H: number = 400;
 
 const pixelRatio = window.devicePixelRatio || 1;
 const backingStoreRatio = ctx.webkitBackingStorePixelRatio ||
@@ -19,13 +19,56 @@ canvas.style.height = H  + 'px';
 ctx.scale(ratio, ratio);
 
 
-let store = [];
+let store = [{x:200,y:200}];
+
+let curDirection = 'right';
 
 
+const render = (timeStamp = 0):void =>{
+    ctx.clearRect(0,0,W,H);
+    // console.log(timeStamp)
+    switch (curDirection){
+        case 'right':
+            store[0].x += 1;
+            break;
+        case 'left':
+            store[0].x -= 1;
+            break;
+        case 'up':
+            store[0].y -= 1;
+            break;
+        case 'down':
+            store[0].y += 1;
+            break;
+    }
 
-for(let i=0,l=store.length;i<l;i++){
-    console.log(store[i]);
+    for(let i=0,l=store.length;i<l;i++){
+        const cur = store[i]
+        // console.log(cur)
+        ctx.fillRect(cur.x,cur.y,20,20);
+    }
+    requestAnimationFrame(render)
 }
 
+render()
 
-ctx.fillRect(100,100,20,20);
+document.addEventListener('keydown',function (ev) {
+    switch (ev.keyCode){
+        case 39:
+            curDirection = 'right';
+            break;
+        case 37:
+            curDirection = 'left';
+            break;
+        case 38:
+            curDirection = 'up';
+            break;
+        case 40:
+            curDirection = 'down';
+            break;
+    }
+})
+
+
+
+
