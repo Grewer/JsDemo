@@ -5,6 +5,7 @@ const W: number = 400;
 const H: number = 400;
 
 const pixelRatio = window.devicePixelRatio || 1;
+
 const backingStoreRatio = ctx.webkitBackingStorePixelRatio ||
     ctx.mozBackingStorePixelRatio ||
     ctx.msBackingStorePixelRatio ||
@@ -13,21 +14,57 @@ const backingStoreRatio = ctx.webkitBackingStorePixelRatio ||
 const ratio = pixelRatio / backingStoreRatio;
 
 canvas.width = W * ratio;
-canvas.height = H  * ratio;
+canvas.height = H * ratio;
 canvas.style.width = W + 'px';
-canvas.style.height = H  + 'px';
+canvas.style.height = H + 'px';
 ctx.scale(ratio, ratio);
 
+interface bodyType {
+    x: number
+    y: number
+}
 
-let store = [{x:200,y:200}];
+let store: bodyType[] = [{x: 180, y: 180}];
 
 let curDirection = 'right';
 
+//每段身体20px长宽 坐标为左上角
 
-const render = (timeStamp = 0):void =>{
-    ctx.clearRect(0,0,W,H);
-    // console.log(timeStamp)
-    switch (curDirection){
+
+const checkIsFail = (): boolean => {
+    const head: bodyType = store[0]
+    //是否碰到边
+    if (head.x + 20 > W) return false
+
+    if (head.x < 0) return false
+
+    if (head.y < 0) return false
+
+    if (head.y + 20 > H) return false
+
+
+    // TODO 是否碰到身体
+    for (let i = 0, l = store.length; i < l; i++) {
+    }
+    return true
+}
+
+let point: bodyType;
+
+
+const generate = () => {
+    // 每大概一秒钟生成一个点
+    let x = (W - 20) * Math.random() | 0
+    let y = (W - 20) * Math.random() | 0
+    point = {x, y}
+}
+generate()
+
+let time = 0;
+const render = (timeStamp = 0): void => {
+    ctx.clearRect(0, 0, W, H);
+
+    switch (curDirection) {
         case 'right':
             store[0].x += 1;
             break;
@@ -42,18 +79,28 @@ const render = (timeStamp = 0):void =>{
             break;
     }
 
-    for(let i=0,l=store.length;i<l;i++){
+    if (JSON.stringify(point) === '{}') {
+        generate()
+    }
+
+    if (!checkIsFail()) return alert('fail')
+
+    for (let i = 0, l = store.length; i < l; i++) {
         const cur = store[i]
         // console.log(cur)
-        ctx.fillRect(cur.x,cur.y,20,20);
+        ctx.fillRect(cur.x, cur.y, 20, 20);
     }
+
+
+    ctx.fillRect(point.x, point.y, 20, 20);
+
     requestAnimationFrame(render)
 }
 
 render()
 
-document.addEventListener('keydown',function (ev) {
-    switch (ev.keyCode){
+document.addEventListener('keydown', function (ev) {
+    switch (ev.keyCode) {
         case 39:
             curDirection = 'right';
             break;
