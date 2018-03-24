@@ -51,8 +51,34 @@ const checkIsFail = (): boolean => {
 
 let point: bodyType;
 
+const checkIsEat = () => {
+    const head: bodyType = store[0]
 
-const generate = () => {
+    if (head.x < point.x + 20 && head.x > point.x) {
+        if (head.y < point.y + 20 && head.y > point.y) {
+            // 左上角
+            return true
+        }
+
+        if (head.y + 20 < point.y + 20 && head.y + 20 > point.y) {
+            // 左下
+            return true
+        }
+    }
+    if (head.x + 20 < point.x + 20 && head.x + 20 > point.x) {
+        if (head.y < point.y + 20 && head.y > point.y) {
+            return true
+        }
+
+        if (head.y + 20 < point.y + 20 && head.y + 20 > point.y) {
+            return true
+        }
+    }
+
+    // 待优化
+}
+
+const generate = (): void => {
     // 每大概一秒钟生成一个点
     let x = (W - 20) * Math.random() | 0
     let y = (W - 20) * Math.random() | 0
@@ -78,6 +104,7 @@ const render = (timeStamp = 0): void => {
             store[0].y += 1;
             break;
     }
+    // TODO 速度根据长度决定
 
     if (JSON.stringify(point) === '{}') {
         generate()
@@ -93,6 +120,10 @@ const render = (timeStamp = 0): void => {
 
 
     ctx.fillRect(point.x, point.y, 20, 20);
+
+    if (checkIsEat()) {
+        generate()
+    }
 
     requestAnimationFrame(render)
 }

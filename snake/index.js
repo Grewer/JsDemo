@@ -34,6 +34,28 @@ var checkIsFail = function () {
     return true;
 };
 var point;
+var checkIsEat = function () {
+    var head = store[0];
+    if (head.x < point.x + 20 && head.x > point.x) {
+        if (head.y < point.y + 20 && head.y > point.y) {
+            // 左上角
+            return true;
+        }
+        if (head.y + 20 < point.y + 20 && head.y + 20 > point.y) {
+            // 左下
+            return true;
+        }
+    }
+    if (head.x + 20 < point.x + 20 && head.x + 20 > point.x) {
+        if (head.y < point.y + 20 && head.y > point.y) {
+            return true;
+        }
+        if (head.y + 20 < point.y + 20 && head.y + 20 > point.y) {
+            return true;
+        }
+    }
+    // 待优化
+};
 var generate = function () {
     // 每大概一秒钟生成一个点
     var x = (W - 20) * Math.random() | 0;
@@ -59,6 +81,7 @@ var render = function (timeStamp) {
             store[0].y += 1;
             break;
     }
+    // TODO 速度根据长度决定
     if (JSON.stringify(point) === '{}') {
         generate();
     }
@@ -70,6 +93,9 @@ var render = function (timeStamp) {
         ctx.fillRect(cur.x, cur.y, 20, 20);
     }
     ctx.fillRect(point.x, point.y, 20, 20);
+    if (checkIsEat()) {
+        generate();
+    }
     requestAnimationFrame(render);
 };
 render();
