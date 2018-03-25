@@ -69,6 +69,37 @@ const generate = (): void => {
 }
 generate()
 
+const addBody = () => {
+    const last: bodyType = store[store.length - 1]
+    console.log(last, store.length - 1, store[0])
+    switch (curDirection) {
+        case 'right':
+            store.push({
+                x: last.x - 20,
+                y: last.y
+            })
+            break;
+        case 'left':
+            store.push({
+                x: last.x + 20,
+                y: last.y
+            })
+            break;
+        case 'up':
+            store.push({
+                x: last.x,
+                y: last.y + 20
+            })
+            break;
+        case 'down':
+            store.push({
+                x: last.x,
+                y: last.y - 20
+            })
+            break;
+    }
+}
+
 let time = 0;
 const render = (timeStamp = 0): void => {
     ctx.clearRect(0, 0, W, H);
@@ -87,6 +118,7 @@ const render = (timeStamp = 0): void => {
             store[0].y += 1;
             break;
     }
+
     // TODO 速度根据长度决定
 
     if (JSON.stringify(point) === '{}') {
@@ -97,7 +129,27 @@ const render = (timeStamp = 0): void => {
 
     for (let i = 0, l = store.length; i < l; i++) {
         const cur = store[i]
-        // console.log(cur)
+        if (i !== 0) {
+            switch (true) {
+                case cur.x < store[i - 1].x :
+                    store[i].x += 1
+                    break;
+
+                case cur.x > store[i - 1].x:
+                    store[i].x -= 1
+                    break;
+
+                case cur.y > store[i - 1].y:
+                    store[i].y -= 1
+                    break;
+
+                case cur.y < store[i - 1].y:
+                    store[i].y += 1
+                    break;
+            }
+
+        }
+        // TODO 待完善
         ctx.fillRect(cur.x, cur.y, 20, 20);
     }
 
@@ -106,7 +158,7 @@ const render = (timeStamp = 0): void => {
 
     if (checkIsEat()) {
         generate()
-        // todo body ++
+        addBody()
     }
 
     requestAnimationFrame(render)

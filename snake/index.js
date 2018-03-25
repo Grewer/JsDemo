@@ -49,6 +49,36 @@ var generate = function () {
     point = { x: x, y: y };
 };
 generate();
+var addBody = function () {
+    var last = store[store.length - 1];
+    console.log(last, store.length - 1, store[0]);
+    switch (curDirection) {
+        case 'right':
+            store.push({
+                x: last.x - 20,
+                y: last.y
+            });
+            break;
+        case 'left':
+            store.push({
+                x: last.x + 20,
+                y: last.y
+            });
+            break;
+        case 'up':
+            store.push({
+                x: last.x,
+                y: last.y + 20
+            });
+            break;
+        case 'down':
+            store.push({
+                x: last.x,
+                y: last.y - 20
+            });
+            break;
+    }
+};
 var time = 0;
 var render = function (timeStamp) {
     if (timeStamp === void 0) { timeStamp = 0; }
@@ -75,13 +105,29 @@ var render = function (timeStamp) {
         return alert('fail');
     for (var i = 0, l = store.length; i < l; i++) {
         var cur = store[i];
-        // console.log(cur)
+        if (i !== 0) {
+            switch (true) {
+                case cur.x < store[i - 1].x:
+                    store[i].x += 1;
+                    break;
+                case cur.x > store[i - 1].x:
+                    store[i].x -= 1;
+                    break;
+                case cur.y > store[i - 1].y:
+                    store[i].y -= 1;
+                    break;
+                case cur.y < store[i - 1].y:
+                    store[i].y += 1;
+                    break;
+            }
+        }
+        // TODO 待完善
         ctx.fillRect(cur.x, cur.y, 20, 20);
     }
     ctx.fillRect(point.x, point.y, 20, 20);
     if (checkIsEat()) {
         generate();
-        // todo body ++
+        addBody();
     }
     requestAnimationFrame(render);
 };
