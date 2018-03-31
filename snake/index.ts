@@ -1,5 +1,5 @@
 const canvas = <HTMLCanvasElement>document.getElementById('canvas');
-const ctx = canvas.getContext('2d');
+const ctx: any = canvas.getContext('2d');
 
 const W: number = 400;
 const H: number = 400;
@@ -121,35 +121,46 @@ const render = (timeStamp = 0): void => {
 
     // TODO 速度根据长度决定
 
-    if (JSON.stringify(point) === '{}') {
-        generate()
-    }
+    if (!checkIsFail()) return alert('fail') // 检测是否失败
 
-    if (!checkIsFail()) return alert('fail')
+
+    // TODO 渲染思路:  首先判断方向 若为左或右 则先判断和上一个对象纵坐标是否相等,若相等,则像左或右运动,若不相等,则横坐标相减,纵向运动
 
     for (let i = 0, l = store.length; i < l; i++) {
         const cur = store[i]
         if (i !== 0) {
-            switch (true) {
-                case cur.x < store[i - 1].x :
-                    store[i].x += 1
-                    break;
-
-                case cur.x > store[i - 1].x:
-                    store[i].x -= 1
-                    break;
-
-                case cur.y > store[i - 1].y:
-                    store[i].y -= 1
-                    break;
-
-                case cur.y < store[i - 1].y:
-                    store[i].y += 1
-                    break;
+            if (curDirection === 'left' || curDirection === 'right') {
+                if (cur.y === store[i - 1].y) {
+                    if (cur.x < store[i - 1].x) {
+                        store[i].x += 1
+                    } else {
+                        store[i].x -= 1
+                    }
+                } else {
+                    if (cur.y > store[i - 1].y) {
+                        store[i].y -= 1
+                    } else {
+                        store[i].y += 1
+                    }
+                }
+            } else {
+                if (cur.x === store[i - 1].x) {
+                    if (cur.y > store[i - 1].y) {
+                        store[i].y -= 1
+                    } else {
+                        store[i].y += 1
+                    }
+                } else {
+                    if (cur.x < store[i - 1].x) {
+                        store[i].x += 1
+                    } else {
+                        store[i].x -= 1
+                    }
+                }
             }
+            // todo 转弯2次后的问题
 
         }
-        // TODO 待完善
         ctx.fillRect(cur.x, cur.y, 20, 20);
     }
 
@@ -169,20 +180,24 @@ render()
 document.addEventListener('keydown', function (ev) {
     switch (ev.keyCode) {
         case 39:
-            curDirection = 'right';
+            if (curDirection !== 'left') {
+                curDirection = 'right';
+            }
             break;
         case 37:
-            curDirection = 'left';
+            if (curDirection !== 'right') {
+                curDirection = 'left';
+            }
             break;
         case 38:
-            curDirection = 'up';
+            if (curDirection !== 'down') {
+                curDirection = 'up';
+            }
             break;
         case 40:
-            curDirection = 'down';
+            if (curDirection !== 'up') {
+                curDirection = 'down';
+            }
             break;
     }
 })
-
-
-
-
