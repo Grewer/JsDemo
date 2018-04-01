@@ -9,12 +9,25 @@
 </body>
 <script src="index.js"></script>
 <script>
-console.log(Promise)
+    // console.log(Promise)
 
-var P = new Promise(function(resolve,reject){
-    setTimeout(function(){
-        resolve('wait 1s')
-    },1000)
-})
+    var P = new Promise(function (resolve, reject) {
+        setTimeout(function () {
+            var num = Math.random()
+            console.log(num)
+            if (num < .5) {
+                resolve('成功的信息')
+            } else {
+                reject('失败的信息')
+            }
+        }, 1000)
+    })
+
+
+    P.then(function (value) {
+        console.log('success:', value)
+    }).catch(function (reason) {
+        console.log('fail:', reason)
+    })
 </script>
 </html>

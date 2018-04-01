@@ -52,6 +52,7 @@ generate();
 var addBody = function () {
     var last = store[store.length - 1];
     console.log(last, store.length - 1, store[0]);
+    // 待完善根据最后2个节点确定位置
     switch (curDirection) {
         case 'right':
             store.push({
@@ -104,6 +105,22 @@ var render = function (timeStamp) {
     for (var i = 0, l = store.length; i < l; i++) {
         var cur = store[i];
         if (i !== 0) {
+            // if (cur.y === store[i - 1].y) {
+            //     if (cur.x < store[i - 1].x) {
+            //         store[i].x += 1
+            //     } else {
+            //         store[i].x -= 1
+            //     }
+            // }
+            // if (cur.x === store[i - 1].x) {
+            //     if (cur.y > store[i - 1].y) {
+            //         store[i].y -= 1
+            //     } else {
+            //         store[i].y += 1
+            //     }
+            // }
+            //x 和 y 相等时 是直行
+            // 转弯时的状态 待解决
             if (curDirection === 'left' || curDirection === 'right') {
                 if (cur.y === store[i - 1].y) {
                     if (cur.x < store[i - 1].x) {
