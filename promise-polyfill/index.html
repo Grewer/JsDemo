@@ -11,23 +11,73 @@
 <script>
     // console.log(Promise)
 
+    // Promise 情况1:
+    // var P = new Promise((resolve,reject)=>{
+    //     setTimeout(()=>{
+    //     resolve('this is a msg!')
+    // },1000)
+    // })
+    //
+    // P.then(data=>{
+    //     console.log('1:'+data)
+    // }).then(data=>{
+    //     console.log('2:'+data)
+    // })
+    //
+    // result 情况
+    // 1:this is a msg!
+    // 2:undefined
+
+    // 情况2
+    // var P = new Promise((resolve,reject)=>{
+    //     setTimeout(()=>{
+    //     reject('this is a msg!')
+    // },1000)
+    // })
+    //
+    // P.catch(data=>{
+    //     console.log('1:'+data)
+    // }).catch(data=>{
+    //     console.log('2:'+data)
+    // })
+    // result
+    // 只会出现第一个 catch 的结果
+    // 1:this is a msg!
+
+
+    // 情况3
+    // var P = new Promise((resolve,reject)=>{
+    //     setTimeout(()=>{
+    //     reject('this is a msg!')
+    // },1000)
+    // })
+    //
+    // P.catch(data=>{
+    //     console.log('1:'+data)
+    // }).then(data=>{
+    //     console.log('2:'+data)
+    // })
+    // result
+    // 1:this is a msg!
+    // 2:undefined
     var P = new Promise(function (resolve, reject) {
         setTimeout(function () {
             var num = Math.random()
             console.log(num)
-            if (num < .5) {
-                resolve('成功的信息')
-            } else {
-                reject('失败的信息')
-            }
+            reject('传递信息')
+            // if (num < .5) {
+            //     resolve('成功的信息')
+            // } else {
+            //     reject('失败的信息')
+            // }
         }, 1000)
     })
 
-
-    P.then(function (value) {
-        console.log('success:', value)
-    }).catch(function (reason) {
-        console.log('fail:', reason)
+    P.catch(function (value) {
+        console.log('1:', value)
+    }).then(function (reason) {
+        console.log('2:', reason)
     })
+    console.log(P)
 </script>
 </html>
