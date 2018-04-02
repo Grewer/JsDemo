@@ -60,6 +60,43 @@
     // result
     // 1:this is a msg!
     // 2:undefined
+
+    // 情况 4
+    // var P = new Promise((resolve,reject)=>{
+    //     setTimeout(()=>{
+    //     resolve('this is a msg!')
+    // },1000)
+    // })
+    //
+    // P.then(data=>{
+    //     console.log('1:'+data)
+    // }).catch(data=>{
+    //     console.log('2:'+data)
+    // }).then(data=>{
+    //     console.log('3:'+data)
+    // })
+    // result:
+    // 1:this is a msg!
+    // 3:undefined
+
+
+
+    // 情况5:
+    // var P = new Promise((resolve,reject)=>{
+    //     setTimeout(()=>{
+    //     reject('this is a msg!')
+    // },1000)
+    // })
+    //
+    // P.then(data=>{
+    //     console.log('1:'+data)
+    // }).catch(data=>{
+    //     console.log('2:'+data)
+    // }).then(data=>{
+    //     console.log('3:'+data)
+    // })
+    // 2:this is a msg!
+    // 3:undefined
     var P = new Promise(function (resolve, reject) {
         setTimeout(function () {
             var num = Math.random()
@@ -73,10 +110,12 @@
         }, 1000)
     })
 
-    P.catch(function (value) {
+    P.then(function (value) {
         console.log('1:', value)
-    }).then(function (reason) {
+    }).catch(function (reason) {
         console.log('2:', reason)
+    }).then(function (value) {
+        console.log('3:', value)
     })
     console.log(P)
 </script>
