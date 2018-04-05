@@ -81,8 +81,8 @@ demo:[点击查看](https://grewer.github.io/JsDemo/caculator/)
 下雨效果:  
 demo:[点击查看](https://grewer.github.io/JsDemo/rain/)
 
-- BreakpointUpload:
+- BreakpointUpload:  
 断点续传 demo  
 
-- promise-polyfill:
+- promise-polyfill:  
 实现情况:进入文件或[点击此处](https://github.com/Grewer/JsDemo/tree/master/promise-polyfill)
