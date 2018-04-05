@@ -97,26 +97,44 @@
     // })
     // 2:this is a msg!
     // 3:undefined
-    var P = new Promise(function (resolve, reject) {
-        setTimeout(function () {
-            var num = Math.random()
-            console.log(num)
-            reject('传递信息')
-            // if (num < .5) {
-            //     resolve('成功的信息')
-            // } else {
-            //     reject('失败的信息')
-            // }
-        }, 1000)
+
+
+
+
+    var promise1 = Promise.resolve(3);
+    var promise2 = 42;
+    var promise3 = new Promise(function (resolve, reject) {
+        setTimeout(resolve, 2000, 'foo');
+    });
+    var promise4 = new Promise(function (resolve, reject) {
+        setTimeout(resolve, 1000, 'foo2');
+    });
+    Promise.all([promise1, promise2, promise3, promise4]).then(function (values) {
+        console.log('run finished:',values);
+    }).catch(function (val) {
+        console.log(val)
     })
 
-    P.then(function (value) {
-        console.log('1:', value)
-    }).catch(function (reason) {
-        console.log('2:', reason)
-    }).then(function (value) {
-        console.log('3:', value)
-    })
-    console.log(P)
+    // var P = new Promise(function (resolve, reject) {
+    //     setTimeout(function () {
+    //         var num = Math.random()
+    //         console.log(num)
+    //         resolve('传递信息')
+    //         // if (num < .5) {
+    //         //     resolve('成功的信息')
+    //         // } else {
+    //         //     reject('失败的信息')
+    //         // }
+    //     }, 1000)
+    // })
+    //
+    // P.then(function (value) {
+    //     console.log('1:', value)
+    // }).catch(function (reason) {
+    //     console.log('2:', reason)
+    // }).then(function (value) {
+    //     console.log('3:', value)
+    // })
+    // console.log(P)
 </script>
 </html>
