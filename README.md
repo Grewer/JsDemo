@@ -8,7 +8,7 @@ demo:[点击查看](https://grewer.github.io/JsDemo/Js-drag/)
 demo:[点击查看](https://grewer.github.io/JsDemo/complete_pic_edit/)
 
 - jquery_reproduction:  
-仿 jquery 项目;
+实现一个 jquery 的主要功能;  
 
 - crop:  
 使用h5的canvas写的图片上传操作,包含图片的缩放,移动,剪裁;  
@@ -80,3 +80,9 @@ demo:[点击查看](https://grewer.github.io/JsDemo/caculator/)
 - rain:  
 下雨效果:  
 demo:[点击查看](https://grewer.github.io/JsDemo/rain/)
+
+- BreakpointUpload:
+断点续传 demo  
+
+- promise-polyfill:
+实现情况:进入文件或[点击此处](https://github.com/Grewer/JsDemo/tree/master/promise-polyfill)

@@ -8,26 +8,26 @@ const show = <HTMLElement>caculator.querySelector('.show');
 let isCalculate: boolean = false;
 let lastResult: number = 0;
 let lastSigns: string = '';
-let hasClickNumber:boolean = false;
+let hasClickNumber: boolean = false;
 
-const plus = (num1,num2):string=>{
+const plus = (num1, num2): string => {
     let num1Arr = num1.split('.');
     let num2Arr = num2.split('.');
-    let result = (Number(num1)+Number(num2));
-    if(num1Arr.length >1 || num2Arr.length >1){
-        const length = Math.max(num1Arr[1]&&num1Arr[1].length||0,num2Arr[1]&&num2Arr[1].length||0);
+    let result = (Number(num1) + Number(num2));
+    if (num1Arr.length > 1 || num2Arr.length > 1) {
+        const length = Math.max(num1Arr[1] && num1Arr[1].length || 0, num2Arr[1] && num2Arr[1].length || 0);
         result = Number(result.toFixed(length));
     }
     return String(result);
 
 };
 
-const multiply = (num1,num2):string=>{
+const multiply = (num1, num2): string => {
     const num1Arr = num1.split('.');
     const num2Arr = num2.split('.');
-    const digits1 = num1Arr[1]&&num1Arr[1].length*10||1;
-    const digits2 = num2Arr[1]&&num2Arr[1].length*10||1;
-    return String(Number(num1)*Number(num2)*digits1*digits2/digits1/digits2);
+    const digits1 = num1Arr[1] && num1Arr[1].length * 10 || 1;
+    const digits2 = num2Arr[1] && num2Arr[1].length * 10 || 1;
+    return String(Number(num1) * Number(num2) * digits1 * digits2 / digits1 / digits2);
 };
 
 operation.addEventListener('click', (ev) => {
@@ -38,19 +38,19 @@ operation.addEventListener('click', (ev) => {
             const bar = Number(show.innerText);
             switch (lastSigns) {
                 case '+':
-                    show.innerText = plus(String(lastResult),show.innerText);
+                    show.innerText = plus(String(lastResult), show.innerText);
                     break;
                 case '-':
-                    show.innerText = (lastResult-bar).toString();
+                    show.innerText = (hasClickNumber ? lastResult - bar : bar - lastResult).toString();
                     break;
                 case '*':
-                    show.innerText = multiply(show.innerText,String(lastResult));
+                    show.innerText = multiply(show.innerText, String(lastResult));
                     break;
                 case '/':
-                    show.innerText = (hasClickNumber ? lastResult/bar : bar/lastResult).toString();
+                    show.innerText = (hasClickNumber ? lastResult / bar : bar / lastResult).toString();
                     break;
             }
-            if(hasClickNumber){
+            if (hasClickNumber) {
                 lastResult = bar;
             }
             hasClickNumber = false;

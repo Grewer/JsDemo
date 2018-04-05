@@ -33,7 +33,7 @@ operation.addEventListener('click', function (ev) {
                     show.innerText = plus(String(lastResult), show.innerText);
                     break;
                 case '-':
-                    show.innerText = (lastResult - bar).toString();
+                    show.innerText = (hasClickNumber ? lastResult - bar : bar - lastResult).toString();
                     break;
                 case '*':
                     show.innerText = multiply(show.innerText, String(lastResult));
