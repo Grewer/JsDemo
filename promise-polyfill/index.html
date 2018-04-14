@@ -100,20 +100,20 @@
 
 
 
-
-    var promise1 = Promise.resolve(3);
-    var promise2 = 42;
-    var promise3 = new Promise(function (resolve, reject) {
-        setTimeout(resolve, 2000, 'foo');
-    });
-    var promise4 = new Promise(function (resolve, reject) {
-        setTimeout(resolve, 1000, 'foo2');
-    });
-    Promise.all([promise1, promise2, promise3, promise4]).then(function (values) {
-        console.log('run finished:',values);
-    }).catch(function (val) {
-        console.log(val)
-    })
+    //
+    // var promise1 = Promise.resolve(3);
+    // var promise2 = 42;
+    // var promise3 = new Promise(function (resolve, reject) {
+    //     setTimeout(resolve, 2000, 'foo');
+    // });
+    // var promise4 = new Promise(function (resolve, reject) {
+    //     setTimeout(resolve, 1000, 'foo2');
+    // });
+    // Promise.all([promise1, promise2, promise3, promise4]).then(function (values) {
+    //     console.log('run finished:',values);
+    // }).catch(function (val) {
+    //     console.log(val)
+    // })
 
     // var P = new Promise(function (resolve, reject) {
     //     setTimeout(function () {

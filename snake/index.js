@@ -80,6 +80,9 @@ var addBody = function () {
             break;
     }
 };
+var abs = function (num) {
+    return Math.abs(num);
+};
 var time = 0;
 var render = function (timeStamp) {
     if (timeStamp === void 0) { timeStamp = 0; }
@@ -102,6 +105,8 @@ var render = function (timeStamp) {
     if (!checkIsFail())
         return alert('fail'); // 检测是否失败
     // TODO 渲染思路:  首先判断方向 若为左或右 则先判断和上一个对象纵坐标是否相等,若相等,则像左或右运动,若不相等,则横坐标相减,纵向运动
+    // 转弯思路1 根据两点之间组成三角形,根据边长选择 x,y +1  //需要解决 x=y 是当前点在前一点中心时,继续向原来位置前进的 问题
+    // 转弯思路2 当前点 x,y 某一点不等于上一点的x, y 时 记录上一点的 x,y 值,让其继续接近该点
     for (var i = 0, l = store.length; i < l; i++) {
         var cur = store[i];
         if (i !== 0) {
@@ -121,6 +126,7 @@ var render = function (timeStamp) {
             // }
             //x 和 y 相等时 是直行
             // 转弯时的状态 待解决
+            //
             if (curDirection === 'left' || curDirection === 'right') {
                 if (cur.y === store[i - 1].y) {
                     if (cur.x < store[i - 1].x) {
@@ -130,13 +136,56 @@ var render = function (timeStamp) {
                         store[i].x -= 1;
                     }
                 }
-                else {
+                else if (cur.x === store[i - 1].x) {
                     if (cur.y > store[i - 1].y) {
                         store[i].y -= 1;
                     }
                     else {
                         store[i].y += 1;
                     }
+                }
+                else {
+                    if (cur.prevY) {
+                        if (cur.y < cur.prevY) {
+                            cur.y++;
+                        }
+                        else {
+                            cur.y--;
+                        }
+                        // if(curDirection === 'left'){
+                        //     cur.y--
+                        // }else{
+                        //     cur.y++
+                        // }
+                        if (cur.y === store[i - 1].y) {
+                            cur.prevY = undefined;
+                        }
+                    }
+                    else {
+                        cur.prevY = store[i - 1].y;
+                    }
+                    // let xLen = cur.x - store[i - 1].x
+                    // let yLen = cur.y - store[i - 1].y
+                    // if (abs(xLen) > abs(yLen)) {
+                    //
+                    // }else{
+                    // }
+                    // let xLen = cur.x - store[i - 1].x
+                    // let yLen = cur.y - store[i - 1].y
+                    // console.log('no')
+                    // if (abs(xLen) > abs(yLen)) {
+                    //     if(curDirection === 'left'){
+                    //         cur.x--
+                    //     }else{
+                    //         cur.x++
+                    //     }
+                    // }else{
+                    //     if(curDirection === 'left') {
+                    //         cur.y--
+                    //     }else{
+                    //         cur.y++
+                    //     }
+                    // }
                 }
             }
             else {
@@ -148,13 +197,53 @@ var render = function (timeStamp) {
                         store[i].y += 1;
                     }
                 }
-                else {
+                else if (cur.y === store[i - 1].y) {
                     if (cur.x < store[i - 1].x) {
                         store[i].x += 1;
                     }
                     else {
                         store[i].x -= 1;
                     }
+                }
+                else {
+                    if (cur.prevX) {
+                        if (cur.prevX < cur.x) {
+                            cur.x--;
+                        }
+                        else {
+                            cur.y++;
+                        }
+                        // if(curDirection === 'up'){
+                        //     cur.x--
+                        // }else{
+                        //     cur.x++
+                        // }
+                        if (cur.x === store[i - 1].x) {
+                            cur.prevX = undefined;
+                        }
+                    }
+                    else {
+                        cur.prevX = store[i - 1].x;
+                        //渲染+1
+                    }
+                    // let xLen = cur.x - store[i - 1].x
+                    // let yLen = cur.y - store[i - 1].y
+                    // console.log('no2')
+                    // if (abs(xLen) > abs(yLen)) {
+                    //     console.log('>')
+                    //     if(curDirection === 'up'){
+                    //         cur.x--
+                    //     }else{
+                    //         cur.x++
+                    //     }
+                    // }else{
+                    //     console.log('<')
+                    //     if(curDirection === 'up'){
+                    //         cur.y--
+                    //     }else{
+                    //         cur.y++
+                    //     }
+                    // }
                 }
             }
             // todo 转弯2次后的问题
