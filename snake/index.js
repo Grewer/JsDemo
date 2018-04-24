@@ -107,6 +107,8 @@ var render = function (timeStamp) {
     // TODO 渲染思路:  首先判断方向 若为左或右 则先判断和上一个对象纵坐标是否相等,若相等,则像左或右运动,若不相等,则横坐标相减,纵向运动
     // 转弯思路1 根据两点之间组成三角形,根据边长选择 x,y +1  //需要解决 x=y 是当前点在前一点中心时,继续向原来位置前进的 问题
     // 转弯思路2 当前点 x,y 某一点不等于上一点的x, y 时 记录上一点的 x,y 值,让其继续接近该点
+    // 慢速转弯正常
+    // 频繁转弯时出现问题 后面的身体跟不上
     for (var i = 0, l = store.length; i < l; i++) {
         var cur = store[i];
         if (i !== 0) {
@@ -145,45 +147,24 @@ var render = function (timeStamp) {
                     }
                 }
                 else {
-                    if (cur.prevY) {
-                        if (cur.y < cur.prevY) {
-                            cur.y++;
-                        }
-                        else {
-                            cur.y--;
-                        }
-                        // if(curDirection === 'left'){
-                        //     cur.y--
-                        // }else{
-                        //     cur.y++
-                        // }
-                        if (cur.y === store[i - 1].y) {
-                            cur.prevY = undefined;
-                        }
-                    }
-                    else {
-                        cur.prevY = store[i - 1].y;
-                    }
-                    // let xLen = cur.x - store[i - 1].x
-                    // let yLen = cur.y - store[i - 1].y
-                    // if (abs(xLen) > abs(yLen)) {
-                    //
-                    // }else{
-                    // }
-                    // let xLen = cur.x - store[i - 1].x
-                    // let yLen = cur.y - store[i - 1].y
-                    // console.log('no')
-                    // if (abs(xLen) > abs(yLen)) {
-                    //     if(curDirection === 'left'){
-                    //         cur.x--
+                    // 记录一整个点
+                    // 向该点趋近
+                    // 必须 ? 完全等于该点时,取消该点 ?
+                    // if(cur.prevY){
+                    //     if(cur.y<cur.prevY){
+                    //         cur.y++
                     //     }else{
-                    //         cur.x++
+                    //         cur.y--
+                    //     }
+                    //     if(cur.y === store[i-1].y){
+                    //         cur.prevY = undefined
                     //     }
                     // }else{
-                    //     if(curDirection === 'left') {
-                    //         cur.y--
-                    //     }else{
+                    //     cur.prevY =  store[i-1].y
+                    //     if(cur.y<store[i-1].y){
                     //         cur.y++
+                    //     }else{
+                    //         cur.y--
                     //     }
                     // }
                 }
@@ -211,39 +192,21 @@ var render = function (timeStamp) {
                             cur.x--;
                         }
                         else {
-                            cur.y++;
+                            cur.x++;
                         }
-                        // if(curDirection === 'up'){
-                        //     cur.x--
-                        // }else{
-                        //     cur.x++
-                        // }
                         if (cur.x === store[i - 1].x) {
                             cur.prevX = undefined;
                         }
                     }
                     else {
                         cur.prevX = store[i - 1].x;
-                        //渲染+1
+                        if (cur.x < store[i - 1].x) {
+                            cur.x++;
+                        }
+                        else {
+                            cur.x--;
+                        }
                     }
-                    // let xLen = cur.x - store[i - 1].x
-                    // let yLen = cur.y - store[i - 1].y
-                    // console.log('no2')
-                    // if (abs(xLen) > abs(yLen)) {
-                    //     console.log('>')
-                    //     if(curDirection === 'up'){
-                    //         cur.x--
-                    //     }else{
-                    //         cur.x++
-                    //     }
-                    // }else{
-                    //     console.log('<')
-                    //     if(curDirection === 'up'){
-                    //         cur.y--
-                    //     }else{
-                    //         cur.y++
-                    //     }
-                    // }
                 }
             }
             // todo 转弯2次后的问题
