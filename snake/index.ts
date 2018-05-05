@@ -20,13 +20,18 @@ canvas.style.height = H + 'px';
 ctx.scale(ratio, ratio);
 
 
+interface prevType {
+    x?: number
+    y?: number
+}
+
 interface bodyType {
     x: number
     y: number
-
+    prev: prevType
 }
 
-let store: bodyType[] = [{x: 180, y: 180}];
+let store: bodyType[] = [{x: 180, y: 180, prev: {}}];
 
 let curDirection = 'right';
 
@@ -64,10 +69,10 @@ const checkIsEat = () => {
 }
 
 const generate = (): void => {
-    // 每大概一秒钟生成一个点
+    // 每一秒钟生成一个点
     let x = (W - 20) * Math.random() | 0
     let y = (W - 20) * Math.random() | 0
-    point = {x, y}
+    point = {x, y, prev: {}}
 }
 generate()
 
@@ -79,31 +84,35 @@ const addBody = () => {
         case 'right':
             store.push({
                 x: last.x - 20,
-                y: last.y
+                y: last.y,
+                prev: {}
             })
             break;
         case 'left':
             store.push({
                 x: last.x + 20,
-                y: last.y
+                y: last.y,
+                prev: {}
             })
             break;
         case 'up':
             store.push({
                 x: last.x,
-                y: last.y + 20
+                y: last.y + 20,
+                prev: {}
             })
             break;
         case 'down':
             store.push({
                 x: last.x,
-                y: last.y - 20
+                y: last.y - 20,
+                prev: {}
             })
             break;
     }
 }
 
-const abs = (num:number): number => {
+const abs = (num: number): number => {
     return Math.abs(num)
 }
 let time = 0;
@@ -167,35 +176,37 @@ const render = (timeStamp = 0): void => {
                     } else {
                         store[i].x -= 1
                     }
-                }else if(cur.x === store[i - 1].x){
+                } else if (cur.x === store[i - 1].x) {
                     if (cur.y > store[i - 1].y) {
                         store[i].y -= 1
                     } else {
                         store[i].y += 1
                     }
                 } else {
-
+                    // 当前点和上一点 在不同的 x 轴时 即从 刚从上下方向 转到 左右方向
                     // 记录一整个点
                     // 向该点趋近
                     // 必须 ? 完全等于该点时,取消该点 ?
 
-                    // if(cur.prevY){
-                    //     if(cur.y<cur.prevY){
-                    //         cur.y++
-                    //     }else{
-                    //         cur.y--
-                    //     }
-                    //     if(cur.y === store[i-1].y){
-                    //         cur.prevY = undefined
-                    //     }
-                    // }else{
-                    //     cur.prevY =  store[i-1].y
-                    //     if(cur.y<store[i-1].y){
-                    //         cur.y++
-                    //     }else{
-                    //         cur.y--
-                    //     }
-                    // }
+                    if (cur.prev.y) {
+                        if (cur.y < cur.prev.y) {
+                            cur.y++
+                        } else {
+                            cur.y--
+                        }
+                        if (cur.y === store[i - 1].y) {
+                            cur.prev.y = undefined
+                            cur.prev.x = undefined
+                        }
+                    } else {
+                        cur.prev.x = store[i - 1].x
+                        cur.prev.y = store[i - 1].y
+                        if (cur.y < store[i - 1].y) {
+                            cur.y++
+                        } else {
+                            cur.y--
+                        }
+                    }
 
                 }
             } else {
@@ -205,27 +216,29 @@ const render = (timeStamp = 0): void => {
                     } else {
                         store[i].y += 1
                     }
-                } else if(cur.y === store[i - 1].y){
+                } else if (cur.y === store[i - 1].y) {
                     if (cur.x < store[i - 1].x) {
                         store[i].x += 1
                     } else {
                         store[i].x -= 1
                     }
-                }else{
-                    if(cur.prevX){
-                        if(cur.prevX<cur.x){
+                } else {
+                    if (cur.prev.x) {
+                        if (cur.prev.x < cur.x) {
                             cur.x--
-                        }else{
+                        } else {
                             cur.x++
                         }
-                        if(cur.x === store[i-1].x){
-                            cur.prevX = undefined
+                        if (cur.x === store[i - 1].x) {
+                            cur.prev.y = undefined
+                            cur.prev.x = undefined
                         }
-                    }else{
-                        cur.prevX =  store[i-1].x
-                        if(cur.x<store[i-1].x){
+                    } else {
+                        cur.prev.x = store[i - 1].x
+                        cur.prev.y = store[i - 1].y
+                        if (cur.x < store[i - 1].x) {
                             cur.x++
-                        }else{
+                        } else {
                             cur.x--
                         }
                     }

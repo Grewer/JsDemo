@@ -14,7 +14,7 @@ canvas.height = H * ratio;
 canvas.style.width = W + 'px';
 canvas.style.height = H + 'px';
 ctx.scale(ratio, ratio);
-var store = [{ x: 180, y: 180 }];
+var store = [{ x: 180, y: 180, prev: {} }];
 var curDirection = 'right';
 //每段身体20px长宽 坐标为左上角
 var checkIsFail = function () {
@@ -43,10 +43,10 @@ var checkIsEat = function () {
     }
 };
 var generate = function () {
-    // 每大概一秒钟生成一个点
+    // 每一秒钟生成一个点
     var x = (W - 20) * Math.random() | 0;
     var y = (W - 20) * Math.random() | 0;
-    point = { x: x, y: y };
+    point = { x: x, y: y, prev: {} };
 };
 generate();
 var addBody = function () {
@@ -57,25 +57,29 @@ var addBody = function () {
         case 'right':
             store.push({
                 x: last.x - 20,
-                y: last.y
+                y: last.y,
+                prev: {}
             });
             break;
         case 'left':
             store.push({
                 x: last.x + 20,
-                y: last.y
+                y: last.y,
+                prev: {}
             });
             break;
         case 'up':
             store.push({
                 x: last.x,
-                y: last.y + 20
+                y: last.y + 20,
+                prev: {}
             });
             break;
         case 'down':
             store.push({
                 x: last.x,
-                y: last.y - 20
+                y: last.y - 20,
+                prev: {}
             });
             break;
     }
@@ -147,26 +151,32 @@ var render = function (timeStamp) {
                     }
                 }
                 else {
+                    // 当前点和上一点 在不同的 x 轴时 即从 刚从上下方向 转到 左右方向
                     // 记录一整个点
                     // 向该点趋近
                     // 必须 ? 完全等于该点时,取消该点 ?
-                    // if(cur.prevY){
-                    //     if(cur.y<cur.prevY){
-                    //         cur.y++
-                    //     }else{
-                    //         cur.y--
-                    //     }
-                    //     if(cur.y === store[i-1].y){
-                    //         cur.prevY = undefined
-                    //     }
-                    // }else{
-                    //     cur.prevY =  store[i-1].y
-                    //     if(cur.y<store[i-1].y){
-                    //         cur.y++
-                    //     }else{
-                    //         cur.y--
-                    //     }
-                    // }
+                    if (cur.prev.y) {
+                        if (cur.y < cur.prev.y) {
+                            cur.y++;
+                        }
+                        else {
+                            cur.y--;
+                        }
+                        if (cur.y === store[i - 1].y) {
+                            cur.prev.y = undefined;
+                            cur.prev.x = undefined;
+                        }
+                    }
+                    else {
+                        cur.prev.x = store[i - 1].x;
+                        cur.prev.y = store[i - 1].y;
+                        if (cur.y < store[i - 1].y) {
+                            cur.y++;
+                        }
+                        else {
+                            cur.y--;
+                        }
+                    }
                 }
             }
             else {
@@ -187,19 +197,21 @@ var render = function (timeStamp) {
                     }
                 }
                 else {
-                    if (cur.prevX) {
-                        if (cur.prevX < cur.x) {
+                    if (cur.prev.x) {
+                        if (cur.prev.x < cur.x) {
                             cur.x--;
                         }
                         else {
                             cur.x++;
                         }
                         if (cur.x === store[i - 1].x) {
-                            cur.prevX = undefined;
+                            cur.prev.y = undefined;
+                            cur.prev.x = undefined;
                         }
                     }
                     else {
-                        cur.prevX = store[i - 1].x;
+                        cur.prev.x = store[i - 1].x;
+                        cur.prev.y = store[i - 1].y;
                         if (cur.x < store[i - 1].x) {
                             cur.x++;
                         }
