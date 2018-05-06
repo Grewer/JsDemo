@@ -118,7 +118,6 @@ var render = function (timeStamp) {
         if (i !== 0) {
             if (curDirection === 'left' || curDirection === 'right') {
                 if (cur.prev.y && cur.prev.x) {
-                    // 完全和上一个点重合才进行下一个点
                     if (cur.x !== cur.prev.x) {
                         if (cur.prev.x < cur.x) {
                             cur.x--;
@@ -165,6 +164,12 @@ var render = function (timeStamp) {
                         }
                         else {
                             cur.y--;
+                        }
+                        if (cur.x < store[i - 1].x) {
+                            cur.x++;
+                        }
+                        else {
+                            cur.x--;
                         }
                     }
                 }
@@ -217,6 +222,12 @@ var render = function (timeStamp) {
                         }
                         else {
                             cur.x--;
+                        }
+                        if (cur.y < store[i - 1].y) {
+                            cur.y++;
+                        }
+                        else {
+                            cur.y--;
                         }
                     }
                 }
