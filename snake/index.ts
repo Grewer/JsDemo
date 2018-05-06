@@ -170,6 +170,20 @@ const render = (timeStamp = 0): void => {
                     } else {
                         cur.prev.y = undefined
                         cur.prev.x = undefined
+                        if(cur.x === store[i-1].x){
+                            if (cur.y < store[i - 1].y) {
+                                cur.y++
+                            } else {
+                                cur.y--
+                            }
+                        }else{
+                            if (cur.x < store[i - 1].x) {
+                                cur.x++
+                            } else {
+                                cur.x--
+                            }
+                        }
+
                     }
                 } else {
                     if (cur.y === store[i - 1].y) {
@@ -187,15 +201,18 @@ const render = (timeStamp = 0): void => {
                     } else {
                         cur.prev.x = store[i - 1].x
                         cur.prev.y = store[i - 1].y
-                        if (cur.y < store[i - 1].y) {
-                            cur.y++
+                        if (abs(cur.y - store[i - 1].y) > abs(cur.x - store[i - 1].x)) {
+                            if (cur.y < store[i - 1].y) {
+                                cur.y++
+                            } else {
+                                cur.y--
+                            }
                         } else {
-                            cur.y--
-                        }
-                        if (cur.x < store[i - 1].x) {
-                            cur.x++
-                        } else {
-                            cur.x--
+                            if (cur.x < store[i - 1].x) {
+                                cur.x++
+                            } else {
+                                cur.x--
+                            }
                         }
                     }
                 }
@@ -216,6 +233,19 @@ const render = (timeStamp = 0): void => {
                     } else {
                         cur.prev.y = undefined
                         cur.prev.x = undefined
+                        if(cur.x === store[i-1].x){
+                            if (cur.y < store[i - 1].y) {
+                                cur.y++
+                            } else {
+                                cur.y--
+                            }
+                        }else{
+                            if (cur.x < store[i - 1].x) {
+                                cur.x++
+                            } else {
+                                cur.x--
+                            }
+                        }
                     }
                 } else {
                     if (cur.x === store[i - 1].x) {
@@ -233,15 +263,18 @@ const render = (timeStamp = 0): void => {
                     } else {
                         cur.prev.x = store[i - 1].x
                         cur.prev.y = store[i - 1].y
-                        if (cur.x < store[i - 1].x) {
-                            cur.x++
+                        if (abs(cur.y - store[i - 1].y) > abs(cur.x - store[i - 1].x)) {
+                            if (cur.y < store[i - 1].y) {
+                                cur.y++
+                            } else {
+                                cur.y--
+                            }
                         } else {
-                            cur.x--
-                        }
-                        if (cur.y < store[i - 1].y) {
-                            cur.y++
-                        } else {
-                            cur.y--
+                            if (cur.x < store[i - 1].x) {
+                                cur.x++
+                            } else {
+                                cur.x--
+                            }
                         }
 
                     }
@@ -251,11 +284,11 @@ const render = (timeStamp = 0): void => {
 
 
         }
-        ctx.fillRect(cur.x, cur.y, 20, 20);
+        ctx.fillRect(cur.x, cur.y, 20, 20); // body
     }
 
 
-    ctx.fillRect(point.x, point.y, 20, 20);
+    ctx.fillRect(point.x, point.y, 20, 20); // to eat point
 
     if (checkIsEat()) {
         generate()
@@ -264,7 +297,6 @@ const render = (timeStamp = 0): void => {
     requestAnimationFrame(render)
 
 }
-
 
 
 render()

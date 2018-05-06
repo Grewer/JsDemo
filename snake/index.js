@@ -137,6 +137,22 @@ var render = function (timeStamp) {
                     else {
                         cur.prev.y = undefined;
                         cur.prev.x = undefined;
+                        if (cur.x === store[i - 1].x) {
+                            if (cur.y < store[i - 1].y) {
+                                cur.y++;
+                            }
+                            else {
+                                cur.y--;
+                            }
+                        }
+                        else {
+                            if (cur.x < store[i - 1].x) {
+                                cur.x++;
+                            }
+                            else {
+                                cur.x--;
+                            }
+                        }
                     }
                 }
                 else {
@@ -159,17 +175,21 @@ var render = function (timeStamp) {
                     else {
                         cur.prev.x = store[i - 1].x;
                         cur.prev.y = store[i - 1].y;
-                        if (cur.y < store[i - 1].y) {
-                            cur.y++;
+                        if (abs(cur.y - store[i - 1].y) > abs(cur.x - store[i - 1].x)) {
+                            if (cur.y < store[i - 1].y) {
+                                cur.y++;
+                            }
+                            else {
+                                cur.y--;
+                            }
                         }
                         else {
-                            cur.y--;
-                        }
-                        if (cur.x < store[i - 1].x) {
-                            cur.x++;
-                        }
-                        else {
-                            cur.x--;
+                            if (cur.x < store[i - 1].x) {
+                                cur.x++;
+                            }
+                            else {
+                                cur.x--;
+                            }
                         }
                     }
                 }
@@ -195,6 +215,22 @@ var render = function (timeStamp) {
                     else {
                         cur.prev.y = undefined;
                         cur.prev.x = undefined;
+                        if (cur.x === store[i - 1].x) {
+                            if (cur.y < store[i - 1].y) {
+                                cur.y++;
+                            }
+                            else {
+                                cur.y--;
+                            }
+                        }
+                        else {
+                            if (cur.x < store[i - 1].x) {
+                                cur.x++;
+                            }
+                            else {
+                                cur.x--;
+                            }
+                        }
                     }
                 }
                 else {
@@ -217,25 +253,29 @@ var render = function (timeStamp) {
                     else {
                         cur.prev.x = store[i - 1].x;
                         cur.prev.y = store[i - 1].y;
-                        if (cur.x < store[i - 1].x) {
-                            cur.x++;
+                        if (abs(cur.y - store[i - 1].y) > abs(cur.x - store[i - 1].x)) {
+                            if (cur.y < store[i - 1].y) {
+                                cur.y++;
+                            }
+                            else {
+                                cur.y--;
+                            }
                         }
                         else {
-                            cur.x--;
-                        }
-                        if (cur.y < store[i - 1].y) {
-                            cur.y++;
-                        }
-                        else {
-                            cur.y--;
+                            if (cur.x < store[i - 1].x) {
+                                cur.x++;
+                            }
+                            else {
+                                cur.x--;
+                            }
                         }
                     }
                 }
             }
         }
-        ctx.fillRect(cur.x, cur.y, 20, 20);
+        ctx.fillRect(cur.x, cur.y, 20, 20); // body
     }
-    ctx.fillRect(point.x, point.y, 20, 20);
+    ctx.fillRect(point.x, point.y, 20, 20); // to eat point
     if (checkIsEat()) {
         generate();
         addBody();
