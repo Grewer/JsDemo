@@ -78,7 +78,7 @@ generate()
 
 const addBody = () => {
     const last: bodyType = store[store.length - 1]
-    console.log(last, store.length - 1, store[0])
+    // console.log(last, store.length - 1, store[0])
     // 待完善根据最后2个节点确定位置
     switch (curDirection) {
         case 'right':
@@ -152,51 +152,39 @@ const render = (timeStamp = 0): void => {
     for (let i = 0, l = store.length; i < l; i++) {
         const cur = store[i]
         if (i !== 0) {
-            // if (cur.y === store[i - 1].y) {
-            //     if (cur.x < store[i - 1].x) {
-            //         store[i].x += 1
-            //     } else {
-            //         store[i].x -= 1
-            //     }
-            // }
-            // if (cur.x === store[i - 1].x) {
-            //     if (cur.y > store[i - 1].y) {
-            //         store[i].y -= 1
-            //     } else {
-            //         store[i].y += 1
-            //     }
-            // }
-            //x 和 y 相等时 是直行
-            // 转弯时的状态 待解决
-            //
             if (curDirection === 'left' || curDirection === 'right') {
-                if (cur.y === store[i - 1].y) {
-                    if (cur.x < store[i - 1].x) {
-                        store[i].x += 1
-                    } else {
-                        store[i].x -= 1
-                    }
-                } else if (cur.x === store[i - 1].x) {
-                    if (cur.y > store[i - 1].y) {
-                        store[i].y -= 1
-                    } else {
-                        store[i].y += 1
-                    }
-                } else {
-                    // 当前点和上一点 在不同的 x 轴时 即从 刚从上下方向 转到 左右方向
-                    // 记录一整个点
-                    // 向该点趋近
-                    // 必须 ? 完全等于该点时,取消该点 ?
 
-                    if (cur.prev.y) {
+                if (cur.prev.y && cur.prev.x) {
+                    // 完全和上一个点重合才进行下一个点
+
+                    if (cur.x !== cur.prev.x) {
+                        if (cur.prev.x < cur.x) {
+                            cur.x--
+                        } else {
+                            cur.x++
+                        }
+                    } else if (cur.y !== cur.prev.y) {
                         if (cur.y < cur.prev.y) {
                             cur.y++
                         } else {
                             cur.y--
                         }
-                        if (cur.y === store[i - 1].y) {
-                            cur.prev.y = undefined
-                            cur.prev.x = undefined
+                    } else {
+                        cur.prev.y = undefined
+                        cur.prev.x = undefined
+                    }
+                } else {
+                    if (cur.y === store[i - 1].y) {
+                        if (cur.x < store[i - 1].x) {
+                            store[i].x += 1
+                        } else {
+                            store[i].x -= 1
+                        }
+                    } else if (cur.x === store[i - 1].x) {
+                        if (cur.y > store[i - 1].y) {
+                            store[i].y -= 1
+                        } else {
+                            store[i].y += 1
                         }
                     } else {
                         cur.prev.x = store[i - 1].x
@@ -207,31 +195,37 @@ const render = (timeStamp = 0): void => {
                             cur.y--
                         }
                     }
-
                 }
             } else {
-                if (cur.x === store[i - 1].x) {
-                    if (cur.y > store[i - 1].y) {
-                        store[i].y -= 1
-                    } else {
-                        store[i].y += 1
-                    }
-                } else if (cur.y === store[i - 1].y) {
-                    if (cur.x < store[i - 1].x) {
-                        store[i].x += 1
-                    } else {
-                        store[i].x -= 1
-                    }
-                } else {
-                    if (cur.prev.x) {
+                if (cur.prev.x && cur.prev.y) {
+                    if (cur.y !== cur.prev.y) {
+                        if (cur.y < cur.prev.y) {
+                            cur.y++
+                        } else {
+                            cur.y--
+                        }
+                    } else if (cur.x !== cur.prev.x) {
                         if (cur.prev.x < cur.x) {
                             cur.x--
                         } else {
                             cur.x++
                         }
-                        if (cur.x === store[i - 1].x) {
-                            cur.prev.y = undefined
-                            cur.prev.x = undefined
+                    } else {
+                        cur.prev.y = undefined
+                        cur.prev.x = undefined
+                    }
+                } else {
+                    if (cur.x === store[i - 1].x) {
+                        if (cur.y > store[i - 1].y) {
+                            store[i].y -= 1
+                        } else {
+                            store[i].y += 1
+                        }
+                    } else if (cur.y === store[i - 1].y) {
+                        if (cur.x < store[i - 1].x) {
+                            store[i].x += 1
+                        } else {
+                            store[i].x -= 1
                         }
                     } else {
                         cur.prev.x = store[i - 1].x
@@ -245,7 +239,7 @@ const render = (timeStamp = 0): void => {
 
                 }
             }
-            // todo 转弯2次后的问题
+
 
         }
         ctx.fillRect(cur.x, cur.y, 20, 20);
@@ -258,9 +252,11 @@ const render = (timeStamp = 0): void => {
         generate()
         addBody()
     }
-
     requestAnimationFrame(render)
+
 }
+
+
 
 render()
 
