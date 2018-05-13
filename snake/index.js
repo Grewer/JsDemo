@@ -53,6 +53,7 @@ var addBody = function () {
     var last = store[store.length - 1];
     // console.log(last, store.length - 1, store[0])
     // 待完善根据最后2个节点确定位置
+    // 添加方式错误,会有重叠的bug
     switch (curDirection) {
         case 'right':
             store.push({
@@ -116,18 +117,28 @@ var render = function (timeStamp) {
     for (var i = 0, l = store.length; i < l; i++) {
         var cur = store[i];
         if (i !== 0) {
-            if (curDirection === 'left' || curDirection === 'right') {
-                if (cur.prev.y && cur.prev.x) {
-                    if (cur.x !== cur.prev.x) {
-                        if (cur.prev.x < cur.x) {
-                            cur.x--;
-                        }
-                        else {
-                            cur.x++;
-                        }
+            if (cur.prev.y && cur.prev.x) {
+                if (cur.x !== cur.prev.x) {
+                    if (cur.prev.x < cur.x) {
+                        cur.x--;
                     }
-                    else if (cur.y !== cur.prev.y) {
-                        if (cur.y < cur.prev.y) {
+                    else {
+                        cur.x++;
+                    }
+                }
+                else if (cur.y !== cur.prev.y) {
+                    if (cur.y < cur.prev.y) {
+                        cur.y++;
+                    }
+                    else {
+                        cur.y--;
+                    }
+                }
+                else {
+                    cur.prev.y = undefined;
+                    cur.prev.x = undefined;
+                    if (cur.x === store[i - 1].x) {
+                        if (cur.y < store[i - 1].y) {
                             cur.y++;
                         }
                         else {
@@ -135,139 +146,49 @@ var render = function (timeStamp) {
                         }
                     }
                     else {
-                        cur.prev.y = undefined;
-                        cur.prev.x = undefined;
-                        if (cur.x === store[i - 1].x) {
-                            if (cur.y < store[i - 1].y) {
-                                cur.y++;
-                            }
-                            else {
-                                cur.y--;
-                            }
-                        }
-                        else {
-                            if (cur.x < store[i - 1].x) {
-                                cur.x++;
-                            }
-                            else {
-                                cur.x--;
-                            }
-                        }
-                    }
-                }
-                else {
-                    if (cur.y === store[i - 1].y) {
                         if (cur.x < store[i - 1].x) {
-                            store[i].x += 1;
+                            cur.x++;
                         }
                         else {
-                            store[i].x -= 1;
-                        }
-                    }
-                    else if (cur.x === store[i - 1].x) {
-                        if (cur.y > store[i - 1].y) {
-                            store[i].y -= 1;
-                        }
-                        else {
-                            store[i].y += 1;
-                        }
-                    }
-                    else {
-                        cur.prev.x = store[i - 1].x;
-                        cur.prev.y = store[i - 1].y;
-                        if (abs(cur.y - store[i - 1].y) > abs(cur.x - store[i - 1].x)) {
-                            if (cur.y < store[i - 1].y) {
-                                cur.y++;
-                            }
-                            else {
-                                cur.y--;
-                            }
-                        }
-                        else {
-                            if (cur.x < store[i - 1].x) {
-                                cur.x++;
-                            }
-                            else {
-                                cur.x--;
-                            }
+                            cur.x--;
                         }
                     }
                 }
             }
             else {
-                if (cur.prev.x && cur.prev.y) {
-                    if (cur.y !== cur.prev.y) {
-                        if (cur.y < cur.prev.y) {
+                if (cur.y === store[i - 1].y) {
+                    if (cur.x < store[i - 1].x) {
+                        cur.x++;
+                    }
+                    else {
+                        cur.x--;
+                    }
+                }
+                else if (cur.x === store[i - 1].x) {
+                    if (cur.y > store[i - 1].y) {
+                        cur.y--;
+                    }
+                    else {
+                        cur.y++;
+                    }
+                }
+                else {
+                    cur.prev.x = store[i - 1].x;
+                    cur.prev.y = store[i - 1].y;
+                    if (abs(cur.y - store[i - 1].y) > abs(cur.x - store[i - 1].x)) {
+                        if (cur.y < store[i - 1].y) {
                             cur.y++;
                         }
                         else {
                             cur.y--;
                         }
                     }
-                    else if (cur.x !== cur.prev.x) {
-                        if (cur.prev.x < cur.x) {
-                            cur.x--;
-                        }
-                        else {
+                    else {
+                        if (cur.x < store[i - 1].x) {
                             cur.x++;
                         }
-                    }
-                    else {
-                        cur.prev.y = undefined;
-                        cur.prev.x = undefined;
-                        if (cur.x === store[i - 1].x) {
-                            if (cur.y < store[i - 1].y) {
-                                cur.y++;
-                            }
-                            else {
-                                cur.y--;
-                            }
-                        }
                         else {
-                            if (cur.x < store[i - 1].x) {
-                                cur.x++;
-                            }
-                            else {
-                                cur.x--;
-                            }
-                        }
-                    }
-                }
-                else {
-                    if (cur.x === store[i - 1].x) {
-                        if (cur.y > store[i - 1].y) {
-                            store[i].y -= 1;
-                        }
-                        else {
-                            store[i].y += 1;
-                        }
-                    }
-                    else if (cur.y === store[i - 1].y) {
-                        if (cur.x < store[i - 1].x) {
-                            store[i].x += 1;
-                        }
-                        else {
-                            store[i].x -= 1;
-                        }
-                    }
-                    else {
-                        cur.prev.x = store[i - 1].x;
-                        cur.prev.y = store[i - 1].y;
-                        if (abs(cur.y - store[i - 1].y) > abs(cur.x - store[i - 1].x)) {
-                            if (cur.y < store[i - 1].y) {
-                                cur.y++;
-                            }
-                            else {
-                                cur.y--;
-                            }
-                        }
-                        else {
-                            if (cur.x < store[i - 1].x) {
-                                cur.x++;
-                            }
-                            else {
-                                cur.x--;
-                            }
+                            cur.x--;
                         }
                     }
                 }
