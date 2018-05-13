@@ -28,8 +28,14 @@ var checkIsFail = function () {
         return false;
     if (head.y + 20 > H)
         return false;
-    // TODO 是否碰到身体
-    for (var i = 0, l = store.length; i < l; i++) {
+    // 是否碰到 body
+    for (var i = 3, l = store.length; i < l; i++) {
+        var cur = store[i];
+        if (head.x > cur.x && head.x < cur.x + 20) {
+            if (head.y > cur.y && head.y < cur.y + 20) {
+                return false;
+            }
+        }
     }
     return true;
 };
@@ -112,8 +118,6 @@ var render = function (timeStamp) {
     // TODO 渲染思路:  首先判断方向 若为左或右 则先判断和上一个对象纵坐标是否相等,若相等,则像左或右运动,若不相等,则横坐标相减,纵向运动
     // 转弯思路1 根据两点之间组成三角形,根据边长选择 x,y +1  //需要解决 x=y 是当前点在前一点中心时,继续向原来位置前进的 问题
     // 转弯思路2 当前点 x,y 某一点不等于上一点的x, y 时 记录上一点的 x,y 值,让其继续接近该点
-    // 慢速转弯正常
-    // 频繁转弯时出现问题 后面的身体跟不上
     for (var i = 0, l = store.length; i < l; i++) {
         var cur = store[i];
         if (i !== 0) {
