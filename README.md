@@ -86,3 +86,7 @@ demo:[点击查看](https://grewer.github.io/JsDemo/rain/)
 
 - promise-polyfill:  
 实现情况:进入文件或[点击此处](https://github.com/Grewer/JsDemo/tree/master/promise-polyfill)
+
+- snake:  
+canvas 贪吃蛇小游戏:  
+demo:[点击此处](https://grewer.github.io/JsDemo/snake/)
