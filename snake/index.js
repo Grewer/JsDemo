@@ -57,46 +57,90 @@ var generate = function () {
 generate();
 var addBody = function () {
     var last = store[store.length - 1];
-    // console.log(last, store.length - 1, store[0])
-    // 待完善根据最后2个节点确定位置
-    // 添加方式错误,会有重叠的bug
-    switch (curDirection) {
-        case 'right':
-            store.push({
-                x: last.x - 20,
-                y: last.y,
-                prev: {}
-            });
-            break;
-        case 'left':
-            store.push({
-                x: last.x + 20,
-                y: last.y,
-                prev: {}
-            });
-            break;
-        case 'up':
-            store.push({
-                x: last.x,
-                y: last.y + 20,
-                prev: {}
-            });
-            break;
-        case 'down':
-            store.push({
-                x: last.x,
-                y: last.y - 20,
-                prev: {}
-            });
-            break;
+    // 偶尔会有重叠的bug
+    if (store.length < 2) {
+        switch (curDirection) {
+            case 'right':
+                store.push({
+                    x: last.x - 20,
+                    y: last.y,
+                    prev: {}
+                });
+                break;
+            case 'left':
+                store.push({
+                    x: last.x + 20,
+                    y: last.y,
+                    prev: {}
+                });
+                break;
+            case 'up':
+                store.push({
+                    x: last.x,
+                    y: last.y + 20,
+                    prev: {}
+                });
+                break;
+            case 'down':
+                store.push({
+                    x: last.x,
+                    y: last.y - 20,
+                    prev: {}
+                });
+                break;
+        }
+    }
+    else {
+        var prev = last.prev;
+        var x = last.x;
+        var y = last.y;
+        if (last.prev.x && last.prev.y) {
+            prev = last.prev;
+        }
+        else {
+            prev = store[store.length - 2];
+        }
+        if (prev.x === last.x) {
+            if (prev.y < last.y) {
+                y = last.y + 20;
+            }
+            else {
+                y = last.y - 20;
+            }
+        }
+        else if (prev.y === last.y) {
+            if (prev.x < last.x) {
+                x = last.x + 20;
+            }
+            else {
+                x = last.x - 20;
+            }
+        }
+        else {
+            if (last.x + 20 === prev.x) {
+                x -= 20;
+            }
+            else if (last.x - 20 === prev.x) {
+                x += 20;
+            }
+            else if (last.y + 20 === prev.y) {
+                y -= 20;
+            }
+            else {
+                y += 20;
+            }
+        }
+        store.push({
+            x: x,
+            y: y,
+            prev: {}
+        });
     }
 };
 var abs = function (num) {
     return Math.abs(num);
 };
-var time = 0;
-var render = function (timeStamp) {
-    if (timeStamp === void 0) { timeStamp = 0; }
+var render = function () {
     ctx.clearRect(0, 0, W, H);
     switch (curDirection) {
         case 'right':
@@ -112,12 +156,10 @@ var render = function (timeStamp) {
             store[0].y += 1;
             break;
     }
-    // TODO 速度根据长度决定
     if (!checkIsFail())
-        return alert('fail'); // 检测是否失败
-    // TODO 渲染思路:  首先判断方向 若为左或右 则先判断和上一个对象纵坐标是否相等,若相等,则像左或右运动,若不相等,则横坐标相减,纵向运动
-    // 转弯思路1 根据两点之间组成三角形,根据边长选择 x,y +1  //需要解决 x=y 是当前点在前一点中心时,继续向原来位置前进的 问题
-    // 转弯思路2 当前点 x,y 某一点不等于上一点的x, y 时 记录上一点的 x,y 值,让其继续接近该点
+        return false; // 检测是否失败
+    // 渲染思路:  首先判断坐标 纵坐标是否相等,若相等,则像左或右运动,若不相等,则横坐标相减,纵向运动
+    // 转弯思路:  当前点 x,y 某一点不等于上一点的x, y 时 记录上一点的 x,y 值,让其继续接近该点
     for (var i = 0, l = store.length; i < l; i++) {
         var cur = store[i];
         if (i !== 0) {
@@ -205,9 +247,29 @@ var render = function (timeStamp) {
         generate();
         addBody();
     }
-    requestAnimationFrame(render);
+    return true;
 };
-render();
+var myrAF;
+var animation = function (timeStamp) {
+    if (timeStamp === void 0) { timeStamp = 0; }
+    myrAF = requestAnimationFrame(animation);
+    if (!render()) {
+        alert('fail');
+        cancelAnimationFrame(myrAF);
+    }
+};
+var start = function () {
+    if (!myrAF) {
+        animation();
+    }
+};
+var reset = function () {
+    if (myrAF) {
+        cancelAnimationFrame(myrAF);
+    }
+    store = [{ x: 180, y: 180, prev: {} }];
+    animation();
+};
 document.addEventListener('keydown', function (ev) {
     switch (ev.keyCode) {
         case 39:

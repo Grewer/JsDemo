@@ -4,18 +4,48 @@
     <meta charset="UTF-8">
     <title>Title</title>
     <style>
-        html,body{
+        html, body {
             margin: 0;
             padding: 0;
         }
-        canvas{
+
+        canvas {
             border: 1px solid #eee;
             margin: 50px;
+        }
+
+        button {
+            font-size: 14px;
+            background-color: #fff;
+            color: #333;
+            border: 1px solid #ddd;
+            border-radius: 3px;
+            cursor: pointer;
+            outline: 0;
+            text-align: center;
+            -webkit-appearance: none;
+            transition: .3s;
+            display: inline-block;
+            width: 200px;
+            padding: 5px 60px;
+            margin: 10px;
+        }
+
+        button:hover {
+            border-color: #51bbdd;
+            color: #51bbdd;
+        }
+
+        button:focus {
+            border-color: #2c9edd;
+            color: #2c9edd;
         }
     </style>
 </head>
 <body>
 <canvas id="canvas"></canvas>
+<button onclick="start()">开始</button>
+<button onclick="reset()">重置</button>
 </body>
 <script src="index.js"></script>
 </html>
