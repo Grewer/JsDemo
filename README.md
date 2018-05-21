@@ -25,6 +25,10 @@ jq时间计算插件;
 canvas 最最最基础小游戏,初始手;  
 demo:[点击查看](https://grewer.github.io/JsDemo/game/canvasGame.html)  
 
+- scrollToTop:
+从页面底部逐渐滚动直头部;
+demo:[点击查看](https://grewer.github.io/JsDemo/scrolltoTop/)  
+
 - particle:  
 canvas particle:  
 demo:[点击查看](https://grewer.github.io/JsDemo/particles/)  
@@ -89,4 +93,4 @@ demo:[点击查看](https://grewer.github.io/JsDemo/rain/)
 
 - snake:  
 canvas 贪吃蛇小游戏:  
-demo:[点击此处](https://grewer.github.io/JsDemo/snake/)
+demo:[点击查看](https://grewer.github.io/JsDemo/snake/)
