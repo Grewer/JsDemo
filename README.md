@@ -27,7 +27,7 @@ demo:[点击查看](https://grewer.github.io/JsDemo/game/canvasGame.html)
 
 - scrollToTop:
 从页面底部逐渐滚动直头部;
-demo:[点击查看](https://grewer.github.io/JsDemo/scrolltoTop/)  
+demo:[点击查看](https://grewer.github.io/JsDemo/scrolltoTop/)
 
 - particle:  
 canvas particle:  
