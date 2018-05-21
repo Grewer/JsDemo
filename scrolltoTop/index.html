@@ -25,12 +25,12 @@
 <script type="text/javascript">
     function scrollToTop() {
         var curTop = document.documentElement.scrollTop || document.body.scrollTop
-        var all = curTop
+        var each = curTop/50
         var timer = setInterval(function () {
             // 假设所有的页面都需0.5s到头部
             // 那么 .5s/10 ms = 50 次
             // 总长度/50 = 每次长度
-            curTop -= all/50
+            curTop -= each
             if (curTop < 0) {
                 clearInterval(timer)
             }
