@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>scrollToTop</title>
+    <style>
+        .block {
+            height: 1000px;
+            border: 1px solid #222;
+            width: 200px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="block" style="background-color: #ff0002">1</div>
+<div class="block" style="background-color: #ff7b00">2</div>
+<div class="block" style="background-color: #fff700">3</div>
+<div class="block" style="background-color: #00ff02">4</div>
+<div class="block" style="background-color: #00fcff">5</div>
+<div class="block" style="background-color: #0100ff">6</div>
+<div class="block" id="7" style="background-color: #ff00dc">7</div>
+<button onclick="scrollToTop()">向上滚动</button>
+</body>
+<script type="text/javascript">
+    function scrollToTop() {
+        var curTop = document.documentElement.scrollTop || document.body.scrollTop
+        var all = curTop
+        var timer = setInterval(function () {
+            // 假设所有的页面都需0.5s到头部
+            // 那么 .5s/10 ms = 50 次
+            // 总长度/50 = 每次长度
+            curTop -= all/50
+            if (curTop < 0) {
+                clearInterval(timer)
+            }
+            window.scrollTo(0, curTop)
+        }, 10)
+    }
+</script>
+</html>
