@@ -48,11 +48,15 @@ const minL = width > height ? height : width
 
 for (let i = 0, l = store.length; i < l; i++) {
 
-  let radius = minL * (+store[i].percent) / 2
+  // let radius = minL * (+store[i].percent) / 2
+  let o = Math.random()
+  o = o < 0.3 ? 0.3 : o
+  let radius = minL * (o) / 2
   let pX = Math.floor(Math.random() * (width - radius))
   let pY = Math.floor(Math.random() * (height - radius))
 
   showResult(i,radius,radius,pX,pY)
+  // TODO 两个个圆的边距考量
 }
 
 function showResult(i, elementSize, elementRadius, elementLeft, elementTop) {
@@ -65,7 +69,7 @@ function showResult(i, elementSize, elementRadius, elementLeft, elementTop) {
   treeElement.style.borderRadius = elementRadius + "px";
   treeElement.style.left = elementLeft + "px";
   treeElement.style.top = elementTop + "px";
-  treeElement.style.backgroundColor = "rgba(" + Math.floor(Math.random() * 256) + "," + Math.floor(Math.random() * 256) + "," + Math.floor(Math.random() * 256) + "," + "0.9)";
+  treeElement.style.backgroundColor = "rgba(" + Math.floor(Math.random() * 256) + "," + Math.floor(Math.random() * 256) + "," + Math.floor(Math.random() * 256) + "," + "0.8)";
 
   obj.appendChild(treeElement);
 }
