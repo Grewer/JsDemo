@@ -94,3 +94,6 @@ demo:[点击查看](https://grewer.github.io/JsDemo/rain/)
 - snake:  
 canvas 贪吃蛇小游戏:  
 demo:[点击查看](https://grewer.github.io/JsDemo/snake/)
+
+- overlap-circle:  
+圆形渲染,在圆心不会占据到另一个圆的情况下的渲染算法
