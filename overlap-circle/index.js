@@ -146,26 +146,72 @@ function check(px, py, radius, i) {
   return true
 }
 
-
-
+let defs = document.querySelector('#print defs')
+let docfrag = document.createDocumentFragment();
 store.forEach((item, index) => {
-  let radius = item.radius * 2
-  showResult(index, radius, radius, item.px, item.py)
+  let mainColor = `rgba(${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)} , ${Math.floor(Math.random() * 256)},${(Math.random() * 0.5 + 0.5).toFixed(2)})`
+  createColor(index, mainColor)
+  addTag(index, item.radius, item.px, item.py, item.score)
 })
+console.dir(docfrag)
+obj.appendChild(docfrag)
+
+function createSvgElement(name, kv) {
+  let svgEle = document.createElementNS('http://www.w3.org/2000/svg', name)
+  const keys = Object.keys(kv || {})
+  keys.forEach(i => {
+    svgEle.setAttribute(i, kv[i])
+  })
+  return svgEle
+}
+
+function addTag(index, radius, x, y, value) {
+  let g = createSvgElement('g', {
+    'text-anchor': 'middle',
+    'dominant-baseline': 'middle'
+  })
+  let circle = createSvgElement('circle', {
+    'r': radius,
+    'cx': x,
+    'cy': y,
+    'fill': `url(#grewer-${index})`
+  })
+  let text = createSvgElement('text', {
+    x, y, 'fill': 'white'
+  })
+  let t = document.createTextNode(value)
+  text.appendChild(t)
+  g.appendChild(circle)
+  g.appendChild(text)
+  docfrag.appendChild(g)
+}
 
 
-function showResult(i, elementSize, elementRadius, elementLeft, elementTop) {
+function createColor(index, mainColor) {
+  const radialGradient = createSvgElement('radialGradient', {
+    'id': `grewer-${index}`,
+    'cx': '0.5',
+    'cy': '0.23',
+    'r': '0.95',
+    'fy': '0.05'
+  })
 
-  let treeElement = document.createElement("div");
+  const addAttr = [{
+    'offset': '0%',
+    'stop-color': 'rgba(255, 255, 255, .9)'
+  }, {
+    'offset': '70%',
+    'stop-color': mainColor
+  }, {
+    'offset': '100%',
+    'stop-color': '#575300',
+    'stop-opacity': '0.9'
+  }]
 
-  treeElement.setAttribute("id", "tree" + i);
-  treeElement.style.width = elementSize + "px";
-  treeElement.style.height = elementSize + "px";
-  treeElement.style.borderRadius = elementRadius + "px";
-  treeElement.style.left = elementLeft + "px";
-  treeElement.style.top = elementTop + "px";
-  treeElement.style.backgroundColor = "rgba(" + Math.floor(Math.random() * 256) + "," + Math.floor(Math.random() * 256) + "," + Math.floor(Math.random() * 256) + "," + "0.8)";
-
-  obj.appendChild(treeElement);
+  for (let i = 0; i < 3; i++) {
+    let stop = createSvgElement('stop', addAttr[i])
+    radialGradient.appendChild(stop)
+  }
+  defs.appendChild(radialGradient)
 }
 
