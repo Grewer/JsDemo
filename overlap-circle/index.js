@@ -153,7 +153,6 @@ store.forEach((item, index) => {
   createColor(index, mainColor)
   addTag(index, item.radius, item.px, item.py, item.score)
 })
-console.dir(docfrag)
 obj.appendChild(docfrag)
 
 function createSvgElement(name, kv) {
@@ -190,22 +189,22 @@ function addTag(index, radius, x, y, value) {
 function createColor(index, mainColor) {
   const radialGradient = createSvgElement('radialGradient', {
     'id': `grewer-${index}`,
-    'cx': '0.5',
-    'cy': '0.23',
+    'cx': '0.7',
+    'cy': '0.33',
     'r': '0.95',
-    'fy': '0.05'
+    'fy': '0.25',
+    'fx': '0.8'
   })
 
   const addAttr = [{
     'offset': '0%',
-    'stop-color': 'rgba(255, 255, 255, .9)'
+    'stop-color': 'rgba(255, 255, 255)'
   }, {
-    'offset': '70%',
+    'offset': '50%',
     'stop-color': mainColor
   }, {
     'offset': '100%',
-    'stop-color': '#575300',
-    'stop-opacity': '0.9'
+    'stop-color': '#000'
   }]
 
   for (let i = 0; i < 3; i++) {
