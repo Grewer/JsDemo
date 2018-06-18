@@ -149,8 +149,11 @@ function check(px, py, radius, i) {
 let docfrag = document.createDocumentFragment();
 store.forEach((item, index) => {
   let radius = item.radius * 2
-  let mainColor = `rgba(${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)} , ${Math.floor(Math.random() * 256)},${(Math.random() * 0.5 + 0.5).toFixed(2)})`
-  let tColor = `rgba(${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)} , ${Math.floor(Math.random() * 256)},${(Math.random() * 0.5 + 0.5).toFixed(2)})`
+  const alpha = (Math.random() * 0.5 + 0.5).toFixed(2)
+  const color1 = [Math.floor(Math.random() * 256), Math.floor(Math.random() * 256), Math.floor(Math.random() * 256)]
+  let mainColor = `rgba(${color1[0]}, ${color1[1]} , ${color1[2]},${alpha})`
+  const color2 = color1.map(i => Math.floor(i * 0.5))
+  let tColor = `rgba(${color2[0]}, ${color2[1]} , ${color2[2]},${alpha})`
   addBall(index, radius, item.px, item.py, item.score, mainColor, tColor)
 })
 obj.appendChild(docfrag)
