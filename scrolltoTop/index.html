@@ -29,7 +29,7 @@
     function scrollToTop() {
         if (trigger) return;
         var curTop = document.documentElement.scrollTop || document.body.scrollTop
-        var each = curTop / 200
+        var each = curTop / 2000
         var timer = setInterval(function () {
             trigger = true
             curTop -= each
@@ -39,7 +39,7 @@
                 trigger = false
             }
             window.scrollTo(0, curTop)
-        }, 10)
+        }, 30)
     }
 </script>
 </html>
