@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>number Count up</title>
+</head>
+<body>
+<div id="number">0</div>
+</body>
+<script>
+  (function () {
+    const obj = document.querySelector('#number');
+    // 最大值为10000
+    // 现有值 暂为0
+    // 时间 默认2S
+    const max = 12950
+    const min = 0
+    const time = 1500
+    const renderGap = Math.random() * 50
+    const gap = ((max - min) / time * renderGap) | 0
+
+    let async = setInterval(() => {
+      let nextNumber = +obj.innerText + gap
+      if (nextNumber >= max) {
+        nextNumber = max
+        clearInterval(async)
+      }
+      obj.innerText = nextNumber
+    }, renderGap)
+
+  })()
+</script>
+</html>
