@@ -29,19 +29,17 @@
     function scrollToTop() {
         if (trigger) return;
         var curTop = document.documentElement.scrollTop || document.body.scrollTop
-        var each = curTop / 50
-        // 假设所有的页面都需0.5s到头部
-        // 那么 .5s/10 ms = 50 次
-        // 总长度/50 = 每次长度
+        var each = curTop / 2000
         var timer = setInterval(function () {
             trigger = true
             curTop -= each
+            each += 5
             if (curTop <= 0) {
                 clearInterval(timer)
                 trigger = false
             }
             window.scrollTo(0, curTop)
-        }, 10)
+        }, 30)
     }
 </script>
 </html>
