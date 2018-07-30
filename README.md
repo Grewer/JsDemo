@@ -99,3 +99,7 @@ demo:[点击查看](https://grewer.github.io/JsDemo/snake/)
 圆形渲染,在圆心不会占据到另一个圆的情况下的渲染算法  
 正常圆: [点击查看](https://grewer.github.io/JsDemo/overlap-circle/) 
 3d圆: [点击查看](https://grewer.github.io/JsDemo/overlap-circle/3dBall.html)
+
+- numberCount:  
+数字跳动原理:  
+demo: [点击查看](https://grewer.github.io/JsDemo/numberCount/)

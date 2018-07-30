@@ -6,17 +6,20 @@
 </head>
 <body>
 <div id="number">0</div>
+<form id="form">
+    <input type="text" name="min" placeholder="初始值">
+    <input type="text" name="max" placeholder="最大值">
+    <input type="text" name="time" placeholder="时间(单位毫秒)">
+
+</form>
+<button onclick="run()">run</button>
+
 </body>
 <script>
-  (function () {
+  function count({max, min = 0, time = 1000}) {
     const obj = document.querySelector('#number');
-    // 最大值为10000
-    // 现有值 暂为0
-    // 时间 默认2S
-    const max = 12950
-    const min = 0
-    const time = 1500
-    const renderGap = Math.random() * 50
+    obj.innerText = min
+    const renderGap = Math.random() * 30 + 20
     const gap = ((max - min) / time * renderGap) | 0
 
     let async = setInterval(() => {
@@ -27,7 +30,20 @@
       }
       obj.innerText = nextNumber
     }, renderGap)
+  }
 
-  })()
+  function run() {
+    const ele = document.getElementById('form').elements
+    let l = ele.length, params = {}
+    while (l--) {
+      const value = ele[l].value
+      if (value && value !== 0) params[ele[l].name] = value
+
+    }
+    count(params)
+    console.dir(params)
+  }
+
+  // count({max: 12950})
 </script>
 </html>
