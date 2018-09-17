@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>class</title>
+</head>
+<body>
+
+</body>
+<script>
+  //base:
+  var Foo = function (name) {
+    name && (this.name = name) // name 值对覆盖至对象中
+  }
+  Foo.prototype.name = 'prototype name'
+  Foo.prototype.say = function (what) {
+    console.log('say:' + what + ' ' + this.name)
+  }
+
+  var bar = new Foo('barrrrr');
+  bar.say('bar ')
+
+  var baz = new Foo();
+  baz.say('baz ')
+
+  var bax = new Foo('baxxxxxx');
+  bax.say('bax ')
+  bax.name = 'bax!!!'
+  // bax.name 处于函数对象中 Foo.name 处于原型链中
+  // 获取时采取就近原则
+  bax.say('bax ')
+
+  console.log(baz.hasOwnProperty('name')) // false 对象中无 name 属性
+  console.log(bax.hasOwnProperty('name')) // true
+  console.log('------------------------')
+  console.log('name' in baz)//true
+  console.log('name' in bax)//true // 不管是 原型链还是函数对象中 只要有 name 就会返回 true
+
+  //更简短的原型链创建
+  var Qaz = function () {}
+  Qaz.prototype = {
+    constructor: Qaz,
+    name: 'Grewer',
+    sayName: function (what) {
+      console.log('my name is:' + this.name + ' ' + what)
+    }
+  }
+  var wsx = new Qaz();
+  wsx.sayName('wsx')
+  for (i in wsx) {
+    console.log('枚举:', wsx[i])
+  } // 有一弊端 可以将 Qaz 枚举出来
+  //通过 defineProperty 修复
+  Object.defineProperty(Qaz.prototype, 'constructor', {
+    enumerable: false,
+  })
+  for (i in wsx) {
+    console.log('再次枚举:', wsx[i])
+  }
+</script>
+</html>
