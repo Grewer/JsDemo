@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+</body>
+<script>
+  function Person() {
+    this.friend = {
+      girl: 'Lily',
+      boy: "Bob"
+    }
+    this.family = ['shelby', 'court']
+  }
+
+  Person.prototype = {
+    constructor: Person,
+    say: function (what) {
+      console.log(this.firend)
+    }
+  }
+
+  var person1 = new Person();
+  var person2 = new Person();
+
+  person1.friend.boy = 'Van'
+  person1.family.push('Bob')
+
+  console.log(person1.friend)
+  console.log(person2.friend)
+  console.log(person1.friend === person2.friend)
+
+  console.log(person1.family)
+  console.log(person2.family)
+  console.log(person1.family === person2.family)
+
+  // 目前解决最广泛的一种模式
+
+</script>
+</html>
