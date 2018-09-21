@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Problem of prototype</title>
+</head>
+<body>
+
+</body>
+<script>
+  function Person() {
+
+  }
+
+  Person.prototype = {
+    constructor: Person,
+    friend: {
+      girl: 'Lily',
+      boy: "Bob"
+    },
+    family: ['shelby', 'court']
+  }
+
+  var person1 = new Person();
+  var person2 = new Person();
+
+  person1.friend.boy = 'Van'
+  person1.family.push('Bob')
+
+  console.log(person1.friend)
+  console.log(person2.friend)
+  console.log(person1.friend === person2.friend)
+
+  console.log(person1.family)
+  console.log(person2.family)
+  console.log(person1.family === person2.family)
+  // 原型链的问题所在,对象或数组 享用的是统一对象
+
+  // js 里很多问题说到底 还是值传递和引用传递的问题
+</script>
+</html>
