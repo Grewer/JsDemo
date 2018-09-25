@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<script>
+  function Person(name, age, job) {
+    var o = {
+      name, age, job
+    }
+    o.sayName = function () {
+      console.log(this.name)
+    }
+    return o;
+  }
+
+
+  var person1 = new Person('Van', 10, 'doctor');
+  var person2 = new Person('Nice', 20, 'doctor');
+
+  var person3 = Person('grewer', 22, 'program')
+
+
+  console.log(person1.name)
+  console.log(person2.name)
+  console.log(person3.name)
+  console.log(person1.sayName === person2.sayName) // false
+  console.log(person3.sayName === person2.sayName) // false
+  // 同时也解决了对象的共享问题
+  // 类似于工厂模式,除了 new 之外
+</script>
+</body>
+</html>

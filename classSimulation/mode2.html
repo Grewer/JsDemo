@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<script>
+  function Person(name, age, job) {
+    var o = {}
+    // 不将 name ,age, job 赋值到 o 对象中,成为一个私有变量,外界无法直接访问
+
+    o.sayName = function () {
+      console.log(name)
+    }
+    return o
+  }
+  // 稳妥 模式
+</script>
+</body>
+</html>
