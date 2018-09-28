@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>extend</title>
+</head>
+<body>
+<script>
+  function Person(name) {
+    this.name = name
+  }
+
+  Person.prototype.sayName = function () {
+    console.log(this.name)
+  }
+
+  function Man() {
+
+  }
+
+  Man.prototype = new Person('foo')
+
+
+  Man.prototype.setName = function (name) {
+    this.name = name
+  }
+
+  // override  Person sayName
+  Man.prototype.sayName = function () {
+    alert(this.name)
+  }
+  // override  Person sayName
+
+  var grewer = new Man()
+  grewer.sayName() // alert(foo)
+
+  var Bar = new Person('Bar')
+  console.log(Person.prototype.sayName)
+  // ƒ () {
+  //   console.log(this.name)
+  // }
+  Bar.sayName() // console.log(bar)
+
+</script>
+</body>
+</html>
