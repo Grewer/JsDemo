@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>extends</title>
+</head>
+<body>
+<script>
+    var Person = function (name) {
+      var o = {
+        name
+      }
+      o.sayName = function () {
+        console.log(this.name)
+      }
+      return o
+    }
+
+    var person1 = new Person('grewer')
+    person1.sayName()
+
+    var Man = function (name) {
+      this.name = name
+    }
+
+    Man.prototype = new Person()
+
+    console.dir(Man)
+
+    var Nice = new Man('grewer2')
+
+    Nice.sayName()
+    console.log(Nice)
+</script>
+</body>
+</html>
