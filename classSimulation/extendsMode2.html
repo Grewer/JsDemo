@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>extends</title>
+</head>
+<body>
+<script>
+  function Person(name) {
+    this.name = name
+    this.colors = ['yellow', 'white', 'black']
+  }
+
+  Person.prototype.sayName = function () {
+    console.log(this.name)
+  }
+
+
+  function Man(name, age) {
+    Person.call(this, name)
+    this.age = age
+  }
+
+  Man.prototype = new Person()
+  Man.prototype.sayAge = function () {
+    console.log(this.age)
+  }
+
+  var zh = new Man('y', 21)
+  var li = new Man('l', 20)
+  zh.sayAge() // 21
+  zh.sayName() // y
+  li.sayAge() // 20
+  li.sayName() // l
+
+
+  console.log(zh.colors === li.colors) // false
+
+  zh.colors.push('blue')
+
+  console.log(JSON.stringify(zh.colors))//["yellow","white","black","blue"]
+  console.log(JSON.stringify(li.colors)) // ["yellow","white","black"]
+
+
+  // extends + extendsMode1 的组合 ,其实也不算一种新的继承模式
+</script>
+</body>
+</html>
