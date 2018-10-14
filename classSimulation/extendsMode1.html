@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>extends</title>
+</head>
+<body>
+<script>
+  // 与 object 同样的问题
+  // 即对象的指向问题
+  // 详情查看 ./index.html
+
+  // 类型1 借用构造继承
+  //即 原来问题在于 this 的指向问题  现在用 apply/call 改变 指向即可
+
+  function Person() {
+    this.colors = ['yellow', 'white', 'black']
+  }
+
+  function Man() {
+    Person.call(this)
+  }
+
+  var zhang = new Man()
+  var li = new Man()
+  console.log(zhang.colors === li.colors) // false
+
+  zhang.colors.push('blue')
+
+  console.log(JSON.stringify(zhang.colors))//["yellow","white","black","blue"]
+  console.log(JSON.stringify(li.colors)) // ["yellow","white","black"]
+</script>
+</body>
+</html>
