@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<script>
+  // 成为继承模式
+  function create(obj) {
+    let clone = Object.create(obj) // 使用此方法可以不为同一个 object
+    clone.sayName = function () {
+      console.log('sayName', this.name)
+    }
+    return clone
+  }
+
+  var Person = {
+    name: "default"
+  }
+
+  var y = create(Person)
+  console.log(y)
+  y.name = 'zh'
+  y.sayName()
+  var l = create(Person)
+  console.log(y.name === l.name) // false
+
+  console.log(l)
+  l.name = 'l'
+  l.sayName()
+
+  console.log(y.sayName === l.sayName) // false
+  // 和 mode3 类似,但是可以返回不用的 object 更加实用
+
+</script>
+</body>
+</html>

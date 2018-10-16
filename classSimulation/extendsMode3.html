@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<script>
+  // 原型式继承  即使用 object
+  var Person = {
+    colors: ['yellow', 'white', 'black']
+  }
+  var Man = Object.create(Person)
+  Man.colors.push('blue')
+
+  var Woman = Object.create(Person)
+  Woman.colors.push('gray')
+
+  console.log(Man === Woman) // false
+  console.log(Man.colors)
+  console.log(Woman.colors)
+  console.log(Man.colors === Woman.colors) // true
+
+  // 要注意的是 值的引用问题
+  // 不过也算是一种继承的方式
+</script>
+</body>
+</html>
