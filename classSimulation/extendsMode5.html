@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<script>
+  function createClass(superClass, subClass) {
+    var prototype = Object.create(superClass.prototype)
+    prototype.constructor = subClass
+    subClass.prototype = prototype
+  }
+
+  function Person(name) {
+    this.name = name
+    this.colors = ['black', 'white']
+  }
+
+  Person.prototype.sayName = function () {
+    console.log(this.name)
+  }
+
+  function Man(name, age) {
+    Person.call(this, name) // 凡是通过改方法的都不会是同一对象
+    this.age = age
+  }
+
+  createClass(Person, Man)
+
+  Man.prototype.sayAge = function () {
+    console.log(this.age)
+  }
+
+  var zh = new Man('y', 12)
+  zh.colors.push('yellow')
+  console.log(zh)
+  zh.age = 22
+  console.log(zh)
+  var l = new Man('l', 23)
+  console.log(l)
+
+  console.log(zh.colors === l.colors) // false
+  console.log(zh.sayAge === l.sayAge) // true
+  console.log(zh.sayName === l.sayName) // true
+</script>
+</body>
+</html>
