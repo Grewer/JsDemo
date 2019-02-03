@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>test</title>
+</head>
+<body>
+<button id="download">点击下载图片</button>
+</body>
+<script>
+  const dlbtn = document.querySelector('#download')
+  dlbtn.onclick = () => {
+    const a = document.createElement('a')
+    a.target = '_block'
+    // a.href = './tt.jpg' // 成功
+    a.href = 'https://avatars1.githubusercontent.com/u/21995246?s=40&v=4' // 失败
+    a.download = ""
+    a.click();
+  }
+
+  // 一种简单的实现方案
+  // but a标签的download属性目前主流浏览器只有火狐和谷歌支持.
+  // 此属性仅适用于同源 URLs。
+</script>
+</html>
