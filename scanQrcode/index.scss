@@ -1,0 +1,82 @@
+$halfHeight: 150px;
+$height: 348px;
+
+.wrap {
+  position: relative;
+  overflow: hidden;
+  width: $height;
+  height: $height;
+  background: url("toGetQrCodeBg.svg") no-repeat;
+  background-size: 100% 100%;
+}
+
+
+.line {
+  width: 90%;
+  height: 6px;
+  background: #3D84FF;
+  position: absolute;
+  top: 50%;
+  left: 55%;
+  margin: -3px 0 0 -50%;
+  transform-origin: center;
+  animation: line 2s linear infinite alternate;
+}
+
+.curtain {
+  width: 80%;
+  position: absolute;
+  top: 50%;
+  left: 55%;
+  margin: -3px 0 0 -45%;
+  background: linear-gradient(360deg, rgba(255, 255, 255, 0) 0%, rgba(49, 164, 255, 0.4) 100%);
+  animation: curtain 4s linear infinite;
+  animation-delay: -2s
+}
+
+.topCurtain {
+  width: 80%;
+  position: absolute;
+  top: ($height/2-$halfHeight+3px);
+  left: 55%;
+  margin: 0 0 -3px -45%;
+  background: linear-gradient(360deg, rgba(49, 164, 255, 0.4) 0%, rgba(255, 255, 255, 0) 100%);
+  animation: topCurtain 4s linear infinite;
+}
+
+@keyframes line {
+  0% {
+    transform: translate3d(0, $halfHeight, 0);
+  }
+  100% {
+    transform: translate3d(0, -$halfHeight, 0);
+  }
+}
+
+@keyframes curtain {
+  0% {
+    transform: translate3d(0, -$halfHeight, 0);
+    height: 0;
+  }
+  50% {
+    height: 0;
+    transform: translate3d(0, $halfHeight, 0);
+  }
+  100% {
+    transform: translate3d(0, -$halfHeight, 0);
+    height: $halfHeight*2;
+  }
+}
+
+@keyframes topCurtain {
+  0% {
+    height: 0;
+  }
+  50% {
+    height: 0;
+  }
+  100% {
+    height: $halfHeight*2;
+  }
+}
+
