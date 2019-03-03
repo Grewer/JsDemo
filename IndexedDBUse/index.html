@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>IndexedDB</title>
+</head>
+<body>
+基础 api
+<ul>
+    <li>IDBFactory 提供了对数据库的访问。这是由全局对象 indexedDB 实现的接口，因而也是该 API 的入口。</li>
+    <li>IDBCursor 遍历对象存储空间和索引。</li>
+    <li>IDBCursorWithValue 遍历对象存储空间和索引并返回游标的当前值。
+    </li>
+    <li>IDBDatabase 表示到数据库的连接。只能通过这个连接来拿到一个数据库事务。
+    </li>
+    <li>IDBEnvironment 提供了到客户端数据库的访问。它由 window 对象实现。
+    </li>
+    <li>
+        IDBIndex 提供了到索引元数据的访问。
+    </li>
+    <li>IDBKeyRange 定义键的范围。
+    </li>
+    <li>
+        IDBObjectStore 表示一个对象存储空间。
+    </li>
+    <li>
+        IDBOpenDBRequest 表示一个打开数据库的请求。
+    </li>
+    <li>
+        IDBRequest 提供了到数据库异步请求结果和数据库的访问。这也是在你调用一个异步方法时所得到的。
+    </li>
+    <li>
+        IDBTransaction 表示一个事务。你在数据库上创建一个事务，指定它的范围（例如你希望访问哪一个对象存储空间），并确定你希望的访问类型（只读或写入）。
+    </li>
+    <li>
+        IDBVersionChangeEvent 表明数据库的版本号已经改变。
+    </li>
+</ul>
+
+添加兼容
+<strong>
+    通过 IndexedDB Polyfill 也有可能在 支持 WebSQL 的浏览器 上使用 IndexedDB。
+</strong>
+<script>
+  // 以下代码来自 mdn
+  const request = window.indexedDB.open("MyTestDatabase", 2); //第二个参数为整数 ,版本号 已有的变更时会触发一个事件 onupgradeneeded
+  // 打开数据库
+  console.log(request)
+  const customerData = [
+    {ssn: "444-44-4444", name: "Bill", age: 35, email: "bill@company.com"},
+    {ssn: "555-55-5555", name: "Donna", age: 32, email: "donna@home.org"}
+  ];
+  console.log(JSON.stringify(request)); // request 是异步获取的
+  request.onerror = function (event) {
+    alert("失败: " + event.target.errorCode);
+  };
+  request.onsuccess = function (event) {
+    console.log("某些事情的成功:", event)
+    var db = event.target.result;
+    var objectStore = db.transaction("customers", "readwrite").objectStore("customers");
+    console.log(objectStore)
+    var request = objectStore.get("444-44-4444")
+    // var request = objectStore.count()
+    request.onsuccess = function (event) {
+      console.log(event.target.result)
+    }
+  };
+
+  request.onupgradeneeded = function (event) {
+    console.log('onupgradeneeded', event.target.result)
+    var db = event.target.result;
+
+    // 建立一个对象仓库来存储我们客户的相关信息，我们选择 ssn 作为键路径（key path）
+    // 因为 ssn 可以保证是不重复的
+    var objectStore = db.createObjectStore("customers", {keyPath: "ssn"});
+
+    // 建立一个索引来通过姓名来搜索客户。名字可能会重复，所以我们不能使用 unique 索引
+    objectStore.createIndex("name", "name", {unique: false});
+
+    // 使用邮箱建立索引，我们向确保客户的邮箱不会重复，所以我们使用 unique 索引
+    objectStore.createIndex("email", "email", {unique: true});
+
+    console.log(objectStore)
+
+    // 使用事务的 oncomplete 事件确保在插入数据前对象仓库已经创建完毕
+    objectStore.transaction.oncomplete = function (event) {
+      // 将数据保存到新创建的对象仓库
+
+      // 如果你想支持这样旧版本的实现，你只要这样写就可以了：
+      // var transaction = db.transaction("[customers]", IDBTransaction.READ_WRITE);
+      var customerObjectStore = db.transaction("customers", "readwrite").objectStore("customers");
+      customerData.forEach(function (customer) {
+        customerObjectStore.add(customer);
+      });
+    };
+  };
+
+
+</script>
+</body>
+</html>
