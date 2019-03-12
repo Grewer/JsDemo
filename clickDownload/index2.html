@@ -5,7 +5,7 @@
     <title>new methods</title>
 </head>
 <body>
-<button id="download">点击下载图片</button>
+<button id="download">点击下载</button>
 
 <script>
     const isChrome = navigator.userAgent.toLowerCase().indexOf('chrome') > -1;
@@ -14,7 +14,6 @@
 
         //iOS devices do not support downloading. We have to inform user about this.
         if (/(iP)/g.test(navigator.userAgent)) {
-            message.error('移动端无法导出文件')
             return false;
         }
 
@@ -53,8 +52,25 @@
 <script>
     const dlbtn = document.querySelector('#download')
     dlbtn.onclick = function () {
-        downloadFile('./tt.jpg') // download success
+        // downloadFile('./tt.jpg') // download success
+
+        const iframe = document.createElement('iframe');
+        iframe.src = './1.PNG'
+        iframe.id = 'saveFile'
+        iframe.style.display = 'none'
+        iframe.onload = function () {
+            document.frames["saveFile"].document.execCommand('saveAs')
+            iframe.removeNode(true)
+        }
+        document.body.appendChild(iframe)
     };
+
+    // function browserIsIe() {
+    //     if (!!window.ActiveXObject || "ActiveXObject" in window)
+    //         return true;
+    //     else
+    //         return false;
+    // }
 </script>
 </body>
 </html>
