@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Carousel-demo1</title>
+</head>
+<body>
+<style>
+    /*common s*/
+    .carousel {
+        width: 500px;
+        height: 300px;
+        overflow: hidden;
+    }
+
+
+    .carousel img {
+        width: 500px;
+        height: 300px;
+    }
+
+    /*common e*/
+
+    /*carousel1 s*/
+    ul {
+        list-style-type: none;
+        padding: 0;
+        margin: 0;
+        width: 500%;
+        animation: slide 10s cubic-bezier(0.42, 0, 0.54, 0.98) infinite;
+    }
+
+    ul li {
+        float: left;
+    }
+
+
+    @keyframes slide {
+        0% {
+            transform: translateX(0px);
+        }
+        25% {
+            transform: translateX(-500px);
+        }
+        50% {
+            transform: translateX(-1000px);
+        }
+        75% {
+            transform: translateX(-1500px);
+        }
+        100% {
+            transform: translateX(-2000px);
+        }
+    }
+
+    /*carousel1 e*/
+
+
+    /*carousel2 s*/
+    .carousel span {
+        display: flex;
+        width: 500%;
+        margin-left: 0;
+        animation: slide2 10s cubic-bezier(0.42, 0, 0.54, 0.98) infinite;
+
+    }
+
+    @keyframes slide2 {
+        0% {
+            margin-left: 0;
+        }
+        25% {
+            margin-left: -100%;
+        }
+        50% {
+            margin-left: -200%;
+        }
+        75% {
+            margin-left: -300%;
+        }
+        100% {
+            margin-left: -400%;
+        }
+    }
+
+    /*carousel2 e*/
+</style>
+<h1>纯 css 的轮播</h1>
+<div>使用普通定位</div>
+<div class="carousel">
+    <ul>
+        <li><img src="./images/img1.jpg" alt="img1"></li>
+        <li><img src="./images/img2.jpeg" alt="img2"></li>
+        <li><img src="./images/img3.jpg" alt="img3"></li>
+        <li><img src="./images/img4.jpg" alt="img4"></li>
+        <li><img src="./images/img5.jpg" alt="img5"></li>
+    </ul>
+</div>
+
+<div class="carousel">
+    <span>
+        <img src="./images/img1.jpg" alt="img1">
+        <img src="./images/img2.jpeg" alt="img2">
+        <img src="./images/img3.jpg" alt="img3">
+        <img src="./images/img4.jpg" alt="img4">
+        <img src="./images/img5.jpg" alt="img5">
+    </span>
+</div>
+
+以上是有纯 css 代码完成的轮播图
+缺点1:css 样式需要写死,在正式项目中使用此情况接近于0
+缺点2:每滚动1张图后的停滞页面不好做(可以做)
+缺点3:不容易掺入 js 的点击滚动(上一页/下一页)
+缺点很大,所以滚动尽量还是由 js 来控制为好
+</body>
+</html>
