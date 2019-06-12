@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Carousel-demo1</title>
+</head>
+<style>
+    .carousel {
+        width: 500px;
+        height: 300px;
+        overflow: hidden;
+    }
+
+
+    .carousel img {
+        width: 500px;
+        height: 300px;
+
+    }
+
+    .carousel span {
+        display: flex;
+        width: 500%;
+        margin-left: 0;
+    }
+
+</style>
+<body>
+<div class="carousel">
+    <span>
+        <img src="./images/img1.jpg" alt="img1">
+        <img src="./images/img2.jpeg" alt="img2">
+        <img src="./images/img3.jpg" alt="img3">
+        <img src="./images/img4.jpg" alt="img4">
+        <img src="./images/img5.jpg" alt="img5">
+    </span>
+</div>
+<script type="text/javascript">
+    const carousel = document.querySelector('.carousel')
+    const album = carousel.querySelector('span')
+    const imagesNumber = album.children.length
+
+    let position = 0
+    let start = 0;
+
+    function step(timestamp) {
+        let progress = timestamp - start
+        if (progress >= 3000) {
+            position += 1
+            if (imagesNumber <= position) {
+                position = 0
+                album.style.marginLeft = `0`
+                album.style.transition = ``
+            } else {
+                album.style.marginLeft = `${position * -100}%`
+                album.style.transition = `margin-left 2s`
+            }
+            start = timestamp;
+        }
+        window.requestAnimationFrame(step);
+
+    }
+
+    // 使用 setInterval() 与 setTimeout() 同理
+    // todo 上下点击按钮
+    window.requestAnimationFrame(step);
+</script>
+</body>
+</html>
