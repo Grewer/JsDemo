@@ -9,6 +9,7 @@
         width: 500px;
         height: 300px;
         overflow: hidden;
+        position: relative;
     }
 
 
@@ -24,6 +25,23 @@
         margin-left: 0;
     }
 
+    .left, .right {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 50px;
+        opacity: 0.6;
+        cursor: pointer;
+    }
+
+    .left {
+        left: 0;
+    }
+
+    .right {
+        right: 0;
+    }
+
 </style>
 <body>
 <div class="carousel">
@@ -34,36 +52,87 @@
         <img src="./images/img4.jpg" alt="img4">
         <img src="./images/img5.jpg" alt="img5">
     </span>
+    <div class="left"><</div>
+    <div class="right">></div>
 </div>
+这个例子中 使用 js 来控制上下的滚动<br/>
+也有了上一张图/下一张图的功能<br/>
+但是还是有缺点<br/>
+1. 没有小点显示 当前位置和总位置 (点击位置的功能)<br/>
+2. 图片最后一张与第一张的衔接<br/>
+后续将会在后面 demo 中解决
 <script type="text/javascript">
     const carousel = document.querySelector('.carousel')
     const album = carousel.querySelector('span')
     const imagesNumber = album.children.length
+    const toLeftElement = carousel.querySelector('.left')
+    const toRightElement = carousel.querySelector('.right')
 
-    let position = 0
+    console.log(carousel, album, toLeftElement, toRightElement)
+    // 这边可以加上判断 若没有这些 dom 则停止运行
+    // 在 vue/react 中则不同
+
+    let timeGap = 3 * 1000 // 每张图的显示时间
+    let position = 0;
     let start = 0;
+    let rafId;
+    let timeoutId;
 
-    function step(timestamp) {
-        let progress = timestamp - start
-        if (progress >= 3000) {
-            position += 1
-            if (imagesNumber <= position) {
-                position = 0
-                album.style.marginLeft = `0`
-                album.style.transition = ``
-            } else {
-                album.style.marginLeft = `${position * -100}%`
-                album.style.transition = `margin-left 2s`
-            }
-            start = timestamp;
+    function renderNext() {
+        if (imagesNumber <= position) {
+            position = 0
+            album.style.cssText = `margin-left:0;transition:unset`
+        } else {
+            album.style.cssText = `margin-left:${position * -100}%;transition:margin-left 1s`
+            // 将 css 放置在一起 减少重排
         }
-        window.requestAnimationFrame(step);
-
     }
 
+    function step(timestamp) {
+        // console.log(timestamp)
+        let progress = timestamp - start
+        if (progress >= timeGap) {
+            // console.log(`progress>3000`, timestamp, start)
+            position += 1
+            renderNext()
+            console.log(position)
+            start = timestamp;
+        }
+        rafId = window.requestAnimationFrame(step);
+    }
+
+    rafId = window.requestAnimationFrame(step);
+
+    toRightElement.addEventListener('click', function () {
+        cancelAnimationFrame(rafId)
+        position += 1
+        renderNext()
+        if (timeoutId) {
+            clearTimeout(timeoutId)
+        }
+        timeoutId = setTimeout(() => {
+            rafId = window.requestAnimationFrame(step);
+        }, timeGap)
+    }, false)
+    toLeftElement.addEventListener('click', function () {
+        cancelAnimationFrame(rafId)
+        position -= 1
+        if (position < 0) {
+            position = imagesNumber - 1
+            album.style.cssText = `margin-left:${position * -100}%;transition:unset`
+        } else {
+            album.style.cssText = `margin-left:${position * -100}%;transition:margin-left 1s`
+        }
+        if (timeoutId) {
+            clearTimeout(timeoutId)
+        }
+        timeoutId = setTimeout(() => {
+            rafId = window.requestAnimationFrame(step);
+        }, timeGap)
+    }, false)
+
+
     // 使用 setInterval() 与 setTimeout() 同理
-    // todo 上下点击按钮
-    window.requestAnimationFrame(step);
 </script>
 </body>
 </html>
