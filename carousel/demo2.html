@@ -84,7 +84,7 @@
             album.style.cssText = `margin-left:0;transition:unset`
         } else {
             album.style.cssText = `margin-left:${position * -100}%;transition:margin-left 1s`
-            // 将 css 放置在一起 减少重排
+            // 将 css 放置在一起 减少重绘
         }
     }
 
