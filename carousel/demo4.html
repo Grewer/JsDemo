@@ -71,6 +71,10 @@
         background-color: #555555;
     }
 
+    .fakeImage {
+        display: none;
+    }
+
 
 </style>
 <body>
@@ -87,33 +91,35 @@
     <ul class="dots">
     </ul>
 </div>
-这就是基本的一个轮播图了<br/>
-如果对于样式的要求更高,可以自己调节,这边只是基础的样式<br/>
-虽然花了100行不到点的代码<br/>
-但是其中的代码已经优化了很多了<br/>
-现在唯一的缺点就是动画跳转的连贯性(最后一张调到第一张)<br/>
-这个问题将会在下一个 demo 中进行解决
+一般来说 市面上所有的轮播 隔张跳转(如第一张跳转至第三张)都不会使用顺滑的跳转<br/>
+所以这里基本就解决第一张返回最后一张<br/>
+最后一张跳至第一张的问题<br />
+这次使用了几个 setTimeout 来实现<br />
+当前也有另外的方案后面的 demo 中我会来实现
 <script type="text/javascript">
-    const carousel = document.querySelector('.carousel')
-    const album = carousel.querySelector('span')
-    const imagesNumber = album.children.length
-    const toLeftElement = carousel.querySelector('.left')
-    const toRightElement = carousel.querySelector('.right')
-    const dots = carousel.querySelector('.dots')
+    const carousel = document.querySelector('.carousel');
+    const album = carousel.querySelector('span');
+    const imagesNumber = album.children.length;
+    const toLeftElement = carousel.querySelector('.left');
+    const toRightElement = carousel.querySelector('.right');
+    const dots = carousel.querySelector('.dots');
 
-    console.log(carousel, album, toLeftElement, toRightElement)
+    console.log(carousel, album, toLeftElement, toRightElement);
     // 这边可以加上判断 若没有这些 dom 则停止运行
     // 在 vue/react 中则不同
 
-    let timeGap = 3 * 1000 // 每张图的显示时间
-    let animationGap = 1000 // 每张图的显示时间
+    let timeGap = 3 * 1000; // 每张图的显示时间
+    let animationGap = 300; // 每张图的显示时间
     let position = 0;
     let start = 0;
     let rafId;
     let timeoutId;
+    let fakeId;
+    let fakeLastImage = null;
+    let fakeFirstImage = null;
 
     function renderDots() {
-        let string = ''
+        let string = '';
         for (let i = 0; i < imagesNumber; i++) {
             if (position === i) {
                 string += `<li class="active"  data-p="${i}"></li>`
@@ -124,25 +130,49 @@
         dots.innerHTML = string
     }
 
-    renderDots()
+    renderDots();
 
     // 只需要第一次渲染 html 就足够了
     // 后续只需要渲染对应于位置的 class 即可
 
+    function renderFakeImages() {
+        const images = album.children;
+        const _firstImage = images[0].cloneNode(false);
+        const _lastImage = images[imagesNumber - 1].cloneNode(false);
+        console.log(_firstImage, _lastImage);
+        _lastImage.classList.add('fakeImage');
+        _firstImage.classList.add('fakeImage');
+        album.insertBefore(_lastImage, images[0]);
+        album.appendChild(_firstImage);
+        fakeFirstImage = _firstImage;
+        fakeLastImage = _lastImage
+    }
+
+    renderFakeImages();
+
     function renderDotsPosition() {
         let dotsChildren = dots.children,
-            dotsLength = dotsChildren.length
+            dotsLength = dotsChildren.length;
         while (dotsLength--) {
-            const dot = dotsChildren[dotsLength]
+            const dot = dotsChildren[dotsLength];
             dot.classList.toggle("active", position === dotsLength);
         }
     }
 
     function renderNext(step = 1) {
-        position += step
+        if (fakeId) {
+            return;
+        }
+        position += step;
         if (imagesNumber <= position) {
-            position = 0
-            album.style.cssText = `margin-left:0;transition:unset`
+            position = 0;
+            fakeFirstImage.classList.remove('fakeImage');
+            album.style.cssText = `margin-left:${-500}%;transition:margin-left ${animationGap}ms;width: ${(imagesNumber + 1) * 100}%;`;
+            fakeId = setTimeout(() => {
+                fakeFirstImage.classList.add('fakeImage');
+                album.style.cssText = `margin-left:0%;transition:unset`;
+                fakeId = null
+            }, animationGap)
         } else {
             album.style.cssText = `margin-left:${position * -100}%;transition:margin-left ${animationGap}ms`
             // 将 css 放置在一起 减少重绘
@@ -151,10 +181,22 @@
     }
 
     function renderPrev(step = 1) {
-        position -= step
+        if (fakeId) {
+            return;
+        }
+        position -= step;
         if (position < 0) {
-            position = imagesNumber - 1
-            album.style.cssText = `margin-left:${position * -100}%;transition:unset`
+            position = imagesNumber - 1;
+            fakeLastImage.classList.remove('fakeImage');
+            album.style.cssText = `margin-left:${-100}%;transition:unset;width: ${(imagesNumber + 1) * 100}%;`;
+            setTimeout(() => {
+                album.style.cssText = `margin-left:${0}%;transition:margin-left ${animationGap}ms;width: ${(imagesNumber + 1) * 100}%;`
+            }, 0);
+            fakeId = setTimeout(() => {
+                fakeLastImage.classList.add('fakeImage');
+                album.style.cssText = `margin-left:${position * -100}%;transition:unset`;
+                fakeId = null
+            }, animationGap)
         } else {
             album.style.cssText = `margin-left:${position * -100}%;transition:margin-left ${animationGap}ms`
         }
@@ -163,11 +205,11 @@
 
     function step(timestamp) {
         // console.log(timestamp)
-        let progress = timestamp - start
+        let progress = timestamp - start;
         if (progress >= timeGap) {
             // console.log(`progress>3000`, timestamp, start)
-            renderNext()
-            console.log(position)
+            renderNext();
+            console.log(position);
             start = timestamp;
         }
         rafId = window.requestAnimationFrame(step);
@@ -176,9 +218,9 @@
     rafId = window.requestAnimationFrame(step);
 
     function slightPauseRAF() {
-        cancelAnimationFrame(rafId)
+        cancelAnimationFrame(rafId);
         if (timeoutId) {
-            clearTimeout(timeoutId)
+            clearTimeout(timeoutId);
             timeoutId = 0
         }
         timeoutId = setTimeout(() => {
@@ -187,31 +229,30 @@
     }
 
     function leftRightClickHandle(ev) {
-        slightPauseRAF()
-        const target = ev.target
+        slightPauseRAF();
+        const target = ev.target;
         target.classList.contains('right') ?
             renderNext()
             : renderPrev()
     }
 
-    toRightElement.addEventListener('click', leftRightClickHandle, false)
-    toLeftElement.addEventListener('click', leftRightClickHandle, false)
+    toRightElement.addEventListener('click', leftRightClickHandle, false);
+    toLeftElement.addEventListener('click', leftRightClickHandle, false);
 
     dots.addEventListener('click', function (ev) {
-        const target = ev.target
+        const target = ev.target;
         if (target.nodeName === 'UL' || target.classList.contains('active')) {
             return false;
         }
         // 当点击了 ul 或者 当前元素时正显示的 dot 时 return
-        slightPauseRAF()
-        const p = target.dataset.p
+        slightPauseRAF();
+        const p = target.dataset.p;
         if (p > position) {
             renderNext(p - position)
         } else {
             renderPrev(position - p)
         }
     })
-
 </script>
 </body>
 </html>
