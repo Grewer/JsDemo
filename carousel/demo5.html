@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>carousel</title>
+</head>
+<style>
+    .carousel {
+        width: 500px;
+        height: 300px;
+        overflow: hidden;
+        position: relative;
+        text-align: center;
+    }
+
+
+    .carousel img {
+        width: 500px;
+        height: 300px;
+        opacity: 0;
+        transition: opacity 0.3s;
+        position: absolute;
+        left: 0;
+        top: 0;
+    }
+
+
+    .left, .right {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 50px;
+        opacity: 0.6;
+        cursor: pointer;
+    }
+
+    .left {
+        left: 0;
+    }
+
+    .right {
+        right: 0;
+    }
+
+    ul.dots {
+        list-style-type: none;
+        padding: 0;
+        margin: 0;
+        position: absolute;
+        bottom: 24px;
+        left: 50%;
+        transform: translateX(-50%);
+    }
+
+    .dots li {
+        width: 10px;
+        height: 10px;
+        border: 2px solid #fff;
+        border-radius: 100%;
+        float: left;
+        margin: 4px;
+        cursor: pointer;
+    }
+
+    .dots li:hover {
+        background-color: #51ccff;
+        /*你也可以显示得更加鲜明*/
+    }
+
+    .dots li.active {
+        background-color: #555555;
+    }
+
+
+    .carousel .appear {
+        opacity: 1;
+    }
+
+
+</style>
+<body>
+<div class="carousel">
+    <span>
+        <img class="appear" src="./images/img1.jpg" alt="img1">
+        <img src="./images/img2.jpeg" alt="img2">
+        <img src="./images/img3.jpg" alt="img3">
+        <img src="./images/img4.jpg" alt="img4">
+        <img src="./images/img5.jpg" alt="img5">
+    </span>
+    <div class="left"><</div>
+    <div class="right">></div>
+    <ul class="dots">
+    </ul>
+</div>
+<script type="text/javascript">
+    const carousel = document.querySelector('.carousel')
+    const album = carousel.querySelector('span')
+    const images = carousel.querySelectorAll('img')
+    const imagesNumber = album.children.length
+    const toLeftElement = carousel.querySelector('.left')
+    const toRightElement = carousel.querySelector('.right')
+    const dots = carousel.querySelector('.dots')
+
+    console.log(carousel, album, images, toLeftElement, toRightElement)
+    // 这边可以加上判断 若没有这些 dom 则停止运行
+    // 在 vue/react 中则不同
+
+    let timeGap = 3 * 1000 // 每张图的显示时间
+    let position = 0;
+    let start = 0;
+    let rafId;
+    let timeoutId;
+
+    function renderDots() {
+        let string = ''
+        for (let i = 0; i < imagesNumber; i++) {
+            if (position === i) {
+                string += `<li class="active"  data-p="${i}"></li>`
+            } else {
+                string += `<li data-p="${i}"></li>`
+            }
+        }
+        dots.innerHTML = string
+    }
+
+    renderDots()
+
+    // 只需要第一次渲染 html 就足够了
+    // 后续只需要渲染对应于位置的 class 即可
+
+    function renderDotsPosition() {
+        let dotsChildren = dots.children,
+            dotsLength = dotsChildren.length
+        while (dotsLength--) {
+            const dot = dotsChildren[dotsLength]
+            dot.classList.toggle("active", position === dotsLength);
+        }
+    }
+
+    function renderNext() {
+        let nextPosition = position + 1
+        if (nextPosition >= imagesNumber) {
+            nextPosition = 0
+        }
+        const curImage = images[position]
+        const nextImage = images[nextPosition]
+        curImage.classList.remove('appear')
+        nextImage.classList.add('appear')
+        position = nextPosition
+        renderDotsPosition()
+    }
+
+    function renderPrev(step = 1) {
+        position -= step
+        if (position < 0) {
+            position = imagesNumber - 1
+            album.style.cssText = `margin-left:${position * -100}%;transition:unset`
+        } else {
+            album.style.cssText = `margin-left:${position * -100}%;transition:margin-left ${animationGap}ms`
+        }
+        renderDotsPosition()
+    }
+
+    function step(timestamp) {
+        // console.log(timestamp)
+        let progress = timestamp - start
+        if (progress >= timeGap) {
+            // console.log(`progress>3000`, timestamp, start)
+            renderNext()
+            console.log(position)
+            start = timestamp;
+        }
+        rafId = window.requestAnimationFrame(step);
+    }
+
+    rafId = window.requestAnimationFrame(step);
+
+    function slightPauseRAF() {
+        cancelAnimationFrame(rafId)
+        if (timeoutId) {
+            clearTimeout(timeoutId)
+            timeoutId = 0
+        }
+        timeoutId = setTimeout(() => {
+            rafId = window.requestAnimationFrame(step);
+        }, timeGap - animationGap)
+    }
+
+    function leftRightClickHandle(ev) {
+        slightPauseRAF()
+        const target = ev.target
+        target.classList.contains('right') ?
+            renderNext()
+            : renderPrev()
+    }
+
+    toRightElement.addEventListener('click', leftRightClickHandle, false)
+    toLeftElement.addEventListener('click', leftRightClickHandle, false)
+
+    // dots.addEventListener('click', function (ev) {
+    //     const target = ev.target
+    //     if (target.nodeName === 'UL' || target.classList.contains('active')) {
+    //         return false;
+    //     }
+    //     // 当点击了 ul 或者 当前元素时正显示的 dot 时 return
+    //     slightPauseRAF()
+    //     const p = target.dataset.p
+    //     if (p > position) {
+    //         renderNext(p - position)
+    //     } else {
+    //         renderPrev(position - p)
+    //     }
+    // })
+
+</script>
+</body>
+</html>
