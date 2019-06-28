@@ -13,15 +13,11 @@
         text-align: center;
     }
 
-
     .carousel img {
         width: 500px;
         height: 300px;
         opacity: 0;
         transition: opacity 0.3s;
-        position: absolute;
-        left: 0;
-        top: 0;
     }
 
 
@@ -68,12 +64,15 @@
     }
 
     .dots li.active {
-        background-color: #555555;
+        background-color: #333333;
     }
 
 
     .carousel .appear {
         opacity: 1;
+        position: absolute;
+        left: 0;
+        top: 0;
     }
 
 
@@ -92,6 +91,7 @@
     <ul class="dots">
     </ul>
 </div>
+严格来说这种切换动画时一种更好的选择,无论对于是代码的优化,还是代码的量,都是如此
 <script type="text/javascript">
     const carousel = document.querySelector('.carousel')
     const album = carousel.querySelector('span')
@@ -142,22 +142,23 @@
         if (nextPosition >= imagesNumber) {
             nextPosition = 0
         }
-        const curImage = images[position]
-        const nextImage = images[nextPosition]
-        curImage.classList.remove('appear')
-        nextImage.classList.add('appear')
-        position = nextPosition
-        renderDotsPosition()
+        render(position, nextPosition)
     }
 
-    function renderPrev(step = 1) {
-        position -= step
-        if (position < 0) {
-            position = imagesNumber - 1
-            album.style.cssText = `margin-left:${position * -100}%;transition:unset`
-        } else {
-            album.style.cssText = `margin-left:${position * -100}%;transition:margin-left ${animationGap}ms`
+    function renderPrev() {
+        let nextPosition = position - 1
+        if (nextPosition < 0) {
+            nextPosition = imagesNumber - 1
         }
+        render(position, nextPosition)
+    }
+
+    function render(cPosition, nPosition) {
+        const curImage = images[cPosition]
+        const nextImage = images[nPosition]
+        curImage.classList.remove('appear')
+        nextImage.classList.add('appear')
+        position = nPosition
         renderDotsPosition()
     }
 
@@ -165,7 +166,6 @@
         // console.log(timestamp)
         let progress = timestamp - start
         if (progress >= timeGap) {
-            // console.log(`progress>3000`, timestamp, start)
             renderNext()
             console.log(position)
             start = timestamp;
@@ -183,7 +183,7 @@
         }
         timeoutId = setTimeout(() => {
             rafId = window.requestAnimationFrame(step);
-        }, timeGap - animationGap)
+        }, timeGap - 300)
     }
 
     function leftRightClickHandle(ev) {
@@ -197,20 +197,16 @@
     toRightElement.addEventListener('click', leftRightClickHandle, false)
     toLeftElement.addEventListener('click', leftRightClickHandle, false)
 
-    // dots.addEventListener('click', function (ev) {
-    //     const target = ev.target
-    //     if (target.nodeName === 'UL' || target.classList.contains('active')) {
-    //         return false;
-    //     }
-    //     // 当点击了 ul 或者 当前元素时正显示的 dot 时 return
-    //     slightPauseRAF()
-    //     const p = target.dataset.p
-    //     if (p > position) {
-    //         renderNext(p - position)
-    //     } else {
-    //         renderPrev(position - p)
-    //     }
-    // })
+    dots.addEventListener('click', function (ev) {
+        const target = ev.target
+        if (target.nodeName === 'UL' || target.classList.contains('active')) {
+            return false;
+        }
+        // 当点击了 ul 或者 当前元素时正显示的 dot 时 return
+        slightPauseRAF()
+        const p = target.dataset.p
+        render(position, p | 0)
+    })
 
 </script>
 </body>
