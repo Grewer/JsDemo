@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>数据双向绑定</title>
+</head>
+<body>
+双向绑定原理
+
+<label for="inp">输入内容:</label><input type="text" id="inp"/>
+
+<p>数据: <span id="content"></span></p>
+<script>
+    let inp = document.getElementById('inp');
+    let content = document.getElementById('content');
+
+
+    let store = {
+        input: ''
+    };
+
+    Object.defineProperty(store, 'input', {
+        set: function(val) {
+            content.innerHTML = val;
+            inp.value = val; // 虚拟 dom 需要
+        }
+    })
+
+
+    inp.addEventListener('input', function (ev) {
+        store.input = ev.target.value;
+    })
+</script>
+
+</body>
+</html>
