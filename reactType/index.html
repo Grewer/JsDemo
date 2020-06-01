@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>react type</title>
+</head>
+<body>
+<div id="root"></div>
+<script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+<script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.13.3/JSXTransformer.js"></script>
+
+<script type="text/jsx">
+    const React = window.React;
+
+
+    const TextFunc = (props) => {
+        console.log('render TextFunc', props)
+        const {children} = props
+
+        const element = React.createElement(children.type, {
+            ...children.props,
+            ...{
+                q: 123
+            }
+        })
+        return <div>
+            function
+
+            <p>children:</p>
+            {
+                element
+            }
+        </div>
+    }
+
+    console.log(<TextFunc/>, React.createElement(TextFunc))
+
+
+    class TextComponent extends React.Component {
+        render() {
+            console.log('render TextComponent', this.props)
+            return <div>class qwerty {JSON.stringify(this.props)}</div>
+        }
+    }
+
+    console.log(<TextComponent/>)
+
+
+    const TextFunc2 = (props) => {
+        console.log('render TextFunc', props)
+        const {children} = props
+
+        const element = React.cloneElement(children, {
+            ...children.props,
+            ...{
+                q: 1234
+            }
+        })
+        return <div>
+            function2
+
+            <p>children2:</p>
+            {
+                element
+            }
+        </div>
+    }
+
+
+    ReactDOM.render(
+        <div>
+            <TextComponent/>
+            <TextFunc>
+                <TextComponent w="true"/>
+            </TextFunc>
+            <TextFunc2>
+                <TextComponent w="false"/>
+            </TextFunc2>
+        </div>
+        ,
+        document.getElementById('root')
+    )
+
+</script>
+</body>
+</html>
