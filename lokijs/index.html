@@ -79,6 +79,13 @@
 
     console.log('resultsLine3',resultsLine3)
 
+    // 修改:
+    const item = resultsLine2[0]
+    item.age = 18
+
+    coll.update(item);
+
+    console.log(coll.chain().data())
 </script>
 </body>
 </html>

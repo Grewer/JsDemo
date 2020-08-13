@@ -183,8 +183,23 @@ const resultsLine3 = coll.chain().simplesort('age').data();
 
 ```
 // 要修改 就需要先获取要修改的东西是什么 
+const resultsLine2 = coll.chain().find({ 'name' : 'odin' }).data();
+const item = resultsLine2[0]
 
+item.age = 18
+coll.update(item);
+
+console.log(coll.chain().data())
+// 打印发现名字为 odin 的年龄已经改成了 18
+
+// 当然想要持久化就得保存数据库:
+db.saveDatabase(error => {
+  console.log('保存数据')
+  error && console.log(error)
+})
 ```
+
+
 
 
 官方文档地址:
