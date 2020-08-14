@@ -66,8 +66,6 @@
 
     dv3.applySimpleSort("age");
 
-    console.log(dv3)
-
     const results3 = dv3.data();
 
     console.log('获取数据 3', results3)
@@ -78,28 +76,28 @@
 
     const results4 = coll.find({'age': {'$aeq': 15}});
 
-    console.log('获取数据 4',results4)
+    console.log('获取数据 4', results4)
 
     // -------------
 
 
     const results5 = coll.findOne({'age': {'$aeq': 31}});
 
-    console.log('获取数据 5',results5)
+    console.log('获取数据 5', results5)
 
     // -------------
 
 
     const results6 = coll.findObject({'age': 38});
 
-    console.log('获取数据 6',results6)
+    console.log('获取数据 6', results6)
 
     // -------------
 
 
     const results7 = coll.findObjects({'age': 31});
 
-    console.log('获取数据 7',results7)
+    console.log('获取数据 7', results7)
 
 
     // 获取数据-链式调用
@@ -127,15 +125,61 @@
 
     coll.update(item);
 
-    console.log('修改结果 1',coll.chain().data())
+    console.log('修改结果 1', coll.chain().data())
+
+    // --------
+
+    coll.findAndUpdate({'age': {'$aeq': 25}}, data => {
+        // 原名"thor"
+        data.name = 'grewer'
+        return data
+    })
+
+    console.log('修改结果 2', coll.chain().data())
+
+
+    // --------
+
+    coll.updateWhere(data => {
+        return data.name === 'grewer';
+    }, data => {
+        data.age = '999'
+        return data
+    })
+
+    console.log('修改结果 3', coll.chain().data())
 
 
     // 删除:
-    const item2 =  coll.findOne({'age': {'$aeq': 31}});
+    const item2 = coll.findOne({'age': {'$aeq': 31}});
 
     coll.remove(item2);
 
-    console.log('删除结果 1',coll.chain().data())
+    console.log('删除结果 1', coll.chain().data())
+
+    // --------
+
+    coll.findAndRemove({'age': {'$aeq': 15}})
+
+    console.log('删除结果 2', coll.chain().data())
+
+    // --------
+
+    coll.findAndRemove({'age': {'$aeq': 15}})
+
+    console.log('删除结果 2', coll.chain().data())
+
+
+
+    // --------
+
+    coll.removeWhere((value,index)=>{
+        return index === 1
+    })
+
+    console.log('删除结果 3', coll.chain().data())
+
+
 
     // TODO  commit  eqJoin addTransform
 </script>

@@ -98,6 +98,10 @@ const coll = db.getCollection('users')
 var odin = users.insert({name: 'odin', email: 'odin.soap@lokijs.org', age: 38});
 var thor = users.insert({name: 'thor', email: 'thor.soap@lokijs.org', age: 25});
 var stan = users.insert({name: 'stan', email: 'stan.soap@lokijs.org', age: 29});
+
+// 也可以同时插入多个数据
+// users.insert([{ name: 'Thor', age: 35}, { name: 'Loki', age: 30}]);
+
 ```
 
 这里要注意的是: 分清楚数据的存储状态, 当我们不使用自动保存和手动保存的时候 insert, 会将数据插入 collection 中, 但是当我们刷新页面的时候,数据会重置会原来的数据,
@@ -221,6 +225,8 @@ console.log('获取数据 7',results7)
 
 比较推荐的是使用 `addDynamicView` 的方式来筛选,而不是通过 `collection` 直接获取
 
+需要注意的是 `DynamicView` 是一个数据格式,他可以 add  可以 get 也可以 remove
+
 #### 方法 2 的筛选:
 ```
 // 简单的筛选
@@ -261,6 +267,29 @@ db.saveDatabase(error => {
 
 ##### findAndUpdate
 
+```
+coll.findAndUpdate({'age': {'$aeq': 25}}, data => {
+    // 原名"thor"
+    data.name = 'grewer'
+    return data
+})
+
+// 获取并且修改 集中在同一个方法里面
+console.log('修改结果 2', coll.chain().data())
+```
+##### updateWhere
+```
+
+coll.updateWhere(data => {
+    return data.name === 'grewer';
+}, data => {
+    data.age = '999'
+    return data
+})
+
+// 与上面的类似,但是更加自由,而且还可以是用 `{'age': {'$aeq': 15}}` 这种方法来获取
+
+```
 ## 删除数据:
 
 ##### remove
@@ -275,6 +304,21 @@ console.log(coll.chain().data())
 
 ##### findAndRemove
 
+```
+coll.findAndRemove({'age': {'$aeq': 15}})
+// 同 findAndUpdate, 集中了 find 和 remove
+console.log('修改结果 2', coll.chain().data())
+```
+
+##### removeWhere
+```
+// 同 updateWhere
+coll.removeWhere((value,index)=>{
+    return index === 1
+})
+
+console.log('删除结果 3', coll.chain().data())
+```
 
 ## 添加操作的监听:
 
