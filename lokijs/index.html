@@ -8,35 +8,46 @@
 <script src="https://cdn.bootcdn.net/ajax/libs/lokijs/1.5.9/lokijs.min.js"></script>
 <script src="https://cdn.bootcdn.net/ajax/libs/lokijs/1.5.9/loki-indexed-adapter.min.js"></script>
 <script type="module">
-    console.log('run')
 
-    var adapter = new LokiIndexedAdapter();
     var db = new loki('Example');
+
+    console.log('run', db)
+
+    db.addListener('grewer', (data) => {
+        console.log('grewer事件', data)
+    })
 
     db.loadDatabase({}, error => {
         error && console.log(error)
     })
-    const coll = db.getCollection('users')
+    let coll = db.getCollection('users', {
+        unique: ["name"]
+    })
 
     console.log('判断是否存在 collection', coll)
+
 
     if (!coll) {
         console.log('无 coll, 需要创建 users')
         // create col
-        var users = db.addCollection('users', {indices: ['email']});
+        coll = db.addCollection('users', {indices: ['email']});
         // add data
-        var odin = users.insert({name: 'odin', email: 'odin.soap@lokijs.org', age: 38});
-        var thor = users.insert({name: 'thor', email: 'thor.soap@lokijs.org', age: 25});
-        var stan = users.insert({name: 'stan', email: 'stan.soap@lokijs.org', age: 29});
-        var oliver = users.insert({name: 'oliver', email: 'oliver.soap@lokijs.org', age: 31});
-        var hector = users.insert({name: 'hector', email: 'hector.soap@lokijs.org', age: 15});
-        var achilles = users.insert({name: 'achilles', email: 'achilles.soap@lokijs.org', age: 31});
+        var odin = coll.insert({name: 'odin', id: 0, email: 'odin.soap@lokijs.org', age: 38});
+        var thor = coll.insert({name: 'thor', id: 1, email: 'thor.soap@lokijs.org', age: 25});
+        var stan = coll.insert({name: 'stan', email: 'stan.soap@lokijs.org', age: 29});
+        var oliver = coll.insert({name: 'oliver', email: 'oliver.soap@lokijs.org', age: 31});
+        var hector = coll.insert({name: 'hector', email: 'hector.soap@lokijs.org', age: 15});
+        var achilles = coll.insert({name: 'achilles', email: 'achilles.soap@lokijs.org', age: 31});
 
         db.saveDatabase(error => {
             console.log('保存数据')
             error && console.log(error)
         })
     }
+
+    coll.on('update', (event) => {
+        console.log('coll change 事件', event)
+    })
 
     // 获取数据-直接调用
 
@@ -47,6 +58,7 @@
     const results = dv.data();
 
     console.log('获取数据 1', results)
+    db.emit('grewer', 'qwerty')
 
     // ------------
 
@@ -143,12 +155,29 @@
     coll.updateWhere(data => {
         return data.name === 'grewer';
     }, data => {
+        // console.log(data)
         data.age = '999'
         return data
     })
-
     console.log('修改结果 3', coll.chain().data())
 
+
+    // ------------
+
+    var collection = db.addCollection("test", {
+        unique: ["name"]
+    });
+
+    collection.insert({owner: 0, name: 'Betsy'});
+    collection.insert({owner: 1, name: 'Bingo'});
+    collection.insert({owner: 2, name: 'Fifi'});
+    collection.insert({owner: 3, name: 'Fuzzy'});
+    collection.insert({owner: 4, name: 'Gizmo'});
+
+    console.log('修改结果 4', collection.chain().data())
+
+    const resultSet = coll.eqJoin(collection.chain(), 'id', 'owner')
+    console.log('连表', resultSet.data())
 
     // 删除:
     const item2 = coll.findOne({'age': {'$aeq': 31}});
@@ -170,18 +199,27 @@
     console.log('删除结果 2', coll.chain().data())
 
 
-
     // --------
 
-    coll.removeWhere((value,index)=>{
+    coll.removeWhere((value, index) => {
         return index === 1
     })
 
     console.log('删除结果 3', coll.chain().data())
 
 
+    var tx = [
+        {
+            type: 'find',
+            value: {
+                'name': 'oliver'
+            }
+        }
+    ];
+    console.log(coll.chain(tx).data())
 
-    // TODO  commit  eqJoin addTransform
+
+    // TODO  commit  eqJoin
 </script>
 </body>
 </html>

@@ -12,19 +12,15 @@
 
     var adapter = new LokiIndexedAdapter();
     var db = new loki('Example', {
-        // adapter,
-        // persistenceMethod: 'memory'
-        // autoloadCallback : ()=>{
-        //     console.log('autoloadCallback')
-        // },
+        adapter,
+        autoloadCallback : ()=>{
+            console.log('autoloadCallback')
+        },
+        autoload: true,
+        autosave: true,
+        autosaveInterval: 4000
     });
-    db.throttledSaveDrain(function () {
-        console.log("queue drained");
-    }, { recursiveWait: false } );
-    console.log(db, adapter)
-    db.loadDatabase({}, error => {
-        error && console.log(error)
-    })
+
     const coll = db.getCollection('users')
     console.log('判断是否存在 collection', coll)
     if (!coll) {
@@ -38,9 +34,6 @@
         var oliver = users.insert({name: 'oliver', email: 'oliver.soap@lokijs.org', age: 31});
         var hector = users.insert({name: 'hector', email: 'hector.soap@lokijs.org', age: 15});
         var achilles = users.insert({name: 'achilles', email: 'achilles.soap@lokijs.org', age: 31});
-        db.saveDatabase(error => {
-            error && console.log(error)
-        })
         console.log(users)
     }
 

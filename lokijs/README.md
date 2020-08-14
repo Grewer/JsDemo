@@ -322,8 +322,171 @@ console.log('删除结果 3', coll.chain().data())
 
 ## 添加操作的监听:
 
+Loki 的 DB 支持自定义事件,使用如下:
+
+```
+// 添加自定义 grewer 事件
+db.addListener('grewer',(data) => {
+    console.log('grewer事件', data)
+})
+
+// 触发事件
+db.emit('grewer','qwerty')
+```
+
+Loki 支持对 `collection` 添加操作的监听, 监听的事件支持以下事件
+
+```
+close
+delete
+error
+flushbuffer
+insert
+pre-insert
+pre-update
+update
+warning
+```
+
+使用:
+```
+coll.on('update', (event) => {
+    console.log('coll change 事件', event)
+})
+// inset, delete 等其他事件同理
+```
+
+在我们使用 `update/findAndUpdate/updateWhere` 的时候就会自动触发此回调了
 
 
-官方文档地址:
+## 关于 Collection transforms
+
+他的官方介绍是这样的:
+> 转换背后的基本思想是允许将结果集“链”过程转换为该过程的对象定义。然后可以选择命名该数据定义，并将其与集合一起保存在数据库中。
+
+一个简单的使用:
+```
+var tx = [
+    {
+        type: 'find',
+        value: {
+            'name': 'oliver'
+        }
+    }
+];
+console.log(coll.chain(tx).data())
+
+// 打印结果:
+[{
+    $loki: 4
+    age: 18
+    email: "oliver.soap@lokijs.org"
+    meta: {...}
+    name: "oliver"
+}]
+
+```
+
+关于他的使用,感觉像是其他数据库里面的`schema`, 我这里也没碰到过具体的情况,所以了解不够深刻
+
+## 其他数据库功能:
+### 数据库事务操作:
+
+```
+/** start the transation */
+public startTransaction(): void;
+
+/** commit the transation */
+public commit(): void;
+
+/** roll back the transation */
+public rollback(): void;
+```
+
+### 连表查询:
+
+```
+public eqJoin(
+    joinData: Collection<any> | Resultset<any> | any[],
+    leftJoinProp: string | ((obj: any) => string),
+    rightJoinProp: string | ((obj: any) => string),
+    mapFun?: (left: any, right: any) => any,
+    dataOptions?: Partial<GetDataOptions>
+): Resultset<any>;
+```
+
+一个简单的使用例子:
+```
+// 创建另一个 collection(表)
+
+
+var collection = db.addCollection("test", {
+    unique: ["name"]
+});
+
+collection.insert({owner: 0, name: 'Betsy'});
+collection.insert({owner: 1, name: 'Bingo'});
+collection.insert({owner: 2, name: 'Fifi'});
+collection.insert({owner: 3, name: 'Fuzzy'});
+collection.insert({owner: 4, name: 'Gizmo'});
+
+// 这是另一个表
+
+// 进行查询:
+
+const resultSet = coll.eqJoin(collection.chain(), 'id', 'owner')
+// 当 id 和 owner 相等时 数据会被连接
+console.log('连表', resultSet.data())
+// 打印一下 console
+[{
+$loki: 1
+left: {name: "odin", id: 0, email: "odin.soap@lokijs.org", age: 38, meta: {…}, …}
+meta: {revision: 0, created: 1597421406034, version: 0}
+right: {owner: 0, name: "Betsy", meta: {…}, $loki: 1}
+},
+{
+$loki: 2
+left: {name: "grewer", id: 1, email: "thor.soap@lokijs.org", age: "999", meta: {…}, …}
+meta: {revision: 0, created: 1597421406034, version: 0}
+right: {owner: 1, name: "Bingo", meta: {…}, $loki: 2}
+},
+{
+$loki: 3
+left: {name: "stan", email: "stan.soap@lokijs.org", age: 29, meta: {…}, $loki: 3}
+meta: {revision: 0, created: 1597421406034, version: 0}
+right: {}
+},
+{
+$loki: 4
+left: {name: "oliver", email: "oliver.soap@lokijs.org", age: 18, meta: {…}, $loki: 4}
+meta: {revision: 0, created: 1597421406034, version: 0}
+right: {}
+},
+{
+$loki: 5
+left: {name: "hector", email: "hector.soap@lokijs.org", age: 15, meta: {…}, $loki: 5}
+meta: {revision: 0, created: 1597421406034, version: 0}
+right: {}
+},
+{
+$loki: 6
+left: {name: "achilles", email: "achilles.soap@lokijs.org", age: 31}
+meta: {revision: 0, created: 1597421406034, version: 0}
+right: {}
+}]
+```
+这就是最简单的连表使用
+
+还有一些没说到的,但是也就是边边角角的东西了,基本就是这些方法的使用
+
+## 写在最后
+
+Loki 拥有 adapter 使得他的适用性特别高,但是相对详细的使用却比较少,所以我写了这篇相对详细一点的文章来记录此数据库的相关操作
+
+关于官方文档地址:
 
 http://techfort.github.io/LokiJS/
+
+还有这篇文章里面的所有例子的地址:   
+
+https://github.com/Grewer/JsDemo/lokijs/index.html
