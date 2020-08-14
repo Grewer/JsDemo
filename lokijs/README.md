@@ -489,4 +489,4 @@ http://techfort.github.io/LokiJS/
 
 还有这篇文章里面的所有例子的地址:   
 
-https://github.com/Grewer/JsDemo/lokijs/index.html
+https://github.com/Grewer/JsDemo/blob/master/lokijs/index.html
