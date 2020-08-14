@@ -38,54 +38,106 @@
         })
     }
 
+    // 获取数据-直接调用
+
     const dv = coll.addDynamicView('test');
 
-    dv.applyFind({ 'name' : 'odin' });
+    dv.applyFind({'name': 'odin'});
 
     const results = dv.data();
 
-    console.log(results)
+    console.log('获取数据 1', results)
+
+    // ------------
 
     const dv2 = coll.addDynamicView('test2');
 
-    dv2.applyWhere(function(obj) { return obj.name === 'oliver'; });
+    dv2.applyWhere(function (obj) {
+        return obj.name === 'oliver';
+    });
 
     const results2 = dv2.data();
 
-    console.log(results2)
+    console.log('获取数据 2', results2)
+
+    // ------------
 
     const dv3 = coll.addDynamicView('test3');
 
     dv3.applySimpleSort("age");
 
+    console.log(dv3)
+
     const results3 = dv3.data();
 
-    console.log(results3)
+    console.log('获取数据 3', results3)
+
+
+    // -------------
+
+
+    const results4 = coll.find({'age': {'$aeq': 15}});
+
+    console.log('获取数据 4',results4)
+
+    // -------------
+
+
+    const results5 = coll.findOne({'age': {'$aeq': 31}});
+
+    console.log('获取数据 5',results5)
+
+    // -------------
+
+
+    const results6 = coll.findObject({'age': 38});
+
+    console.log('获取数据 6',results6)
+
+    // -------------
+
+
+    const results7 = coll.findObjects({'age': 31});
+
+    console.log('获取数据 7',results7)
+
+
+    // 获取数据-链式调用
 
     const resultsLine1 = coll.chain().data();
 
-    console.log(resultsLine1)
+    console.log('获取数据chain 1', resultsLine1)
 
+    // ------------
 
-    console.log(coll.chain())
+    const resultsLine2 = coll.chain().find({'name': 'odin'}).data();
 
+    console.log('获取数据chain 2', resultsLine2)
 
-    const resultsLine2 = coll.chain().find({ 'name' : 'odin' }).data();
-
-    console.log('resultsLine2',resultsLine2)
-
+    // ------------
 
     const resultsLine3 = coll.chain().simplesort('age').data();
 
-    console.log('resultsLine3',resultsLine3)
+    console.log('获取数据chain 3', resultsLine3)
 
     // 修改:
-    const item = resultsLine2[0]
+    const item = coll.findOne({'age': {'$aeq': 31}});
+
     item.age = 18
 
     coll.update(item);
 
-    console.log(coll.chain().data())
+    console.log('修改结果 1',coll.chain().data())
+
+
+    // 删除:
+    const item2 =  coll.findOne({'age': {'$aeq': 31}});
+
+    coll.remove(item2);
+
+    console.log('删除结果 1',coll.chain().data())
+
+    // TODO  commit  eqJoin addTransform
 </script>
 </body>
 </html>

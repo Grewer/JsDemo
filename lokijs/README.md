@@ -139,26 +139,54 @@ console.log(resultsLine)
 
 ### 获取数据时筛选想要的数据:
 #### 方法 1 的筛选:
+
+##### find
+```
+// 通过 coll 直接获取
+const results4 = coll.find({'age': {'$aeq': 15}});
+console.log('获取数据 4',results4)
+
+// 可使用不同的指令:
+// 指令名 作用
+// $eq  ===
+// $ne  !==
+// $aeq  ==
+// $dteq 时间上的相等
+// $gt  >
+// $gte >=
+// $lt  <
+// $lte  <=
+// $between   介于 2 个数之间
+
+// 如果不希望使用二进制索引，并且希望简单的javascript比较是可以接受的，我们提供以下操作，由于它们的简化比较，它们可以提供更好的执行速度。
+
+// $gt -> $jgt
+// $gte -> $jgte
+// $lt -> $jlt
+// $lte -> $jlte
+// $between -> $jbetween
+// $regex 使用正则
+
+```
+
+
+##### applyFind
 ```
 const dv = coll.addDynamicView('test');
 
 dv.applyFind({ 'name' : 'odin' });
-// 使用方法于 数组的 find 函数
 const results = dv.data();
-// 打印结果:
-// [{
-//   $loki: 1
-//   age: 38
-//   email: "odin.soap@lokijs.org"
-//   meta: {revision: 0, created: 1597304111206, version: 0}
-//   name: "odin"
-// }]
+```
 
+##### applyWhere
+```
 
 dv2.applyWhere(function(obj) { return obj.name === 'oliver'; });
 // 作用与上述方法相同
+```
 
-
+##### applySimpleSort
+```
 // 根据年龄进行排序
 const dv3 = coll.addDynamicView('test3');
 
@@ -167,8 +195,32 @@ dv3.applySimpleSort("age");
 const results3 = dv3.data();
 
 console.log(results3)
+```
+
+##### findOne
+```
+const results5 = coll.findOne({'age': {'$aeq': 31}});
+// 获取到的是对象  而不是一个数组
+console.log('获取数据 5',results5)
+```
+
+##### findObject
 
 ```
+const results6 = coll.findObject({'age': 38});
+// 使用的结果和 findOne 类似
+console.log('获取数据 6',results6)
+```
+
+##### findObjects
+```
+const results7 = coll.findObjects({'age': 31});
+// 返回的是一个数组
+console.log('获取数据 7',results7)
+```
+
+比较推荐的是使用 `addDynamicView` 的方式来筛选,而不是通过 `collection` 直接获取
+
 #### 方法 2 的筛选:
 ```
 // 简单的筛选
@@ -178,13 +230,21 @@ const resultsLine2 = coll.chain().find({ 'name' : 'odin' }).data();
 const resultsLine3 = coll.chain().simplesort('age').data();
 ```
 
+当然 chain 里还有其他操作,如: limit, map, findAnd, eqJoin, count等等,  
+我是更推荐使用第一种方法,这里的几种使用方案我就不详细举例了
+
+还有不建议使用 chain 的 update,remove 等操作,因为监听器里面会监听不到事件,
+这个问题不知道是故意这么做 还是 bug
+
+
 ## 修改数据:
+
+##### update
 与 insert 同理:
 
 ```
 // 要修改 就需要先获取要修改的东西是什么 
-const resultsLine2 = coll.chain().find({ 'name' : 'odin' }).data();
-const item = resultsLine2[0]
+const item = coll.findOne({'age': {'$aeq': 31}});
 
 item.age = 18
 coll.update(item);
@@ -199,6 +259,24 @@ db.saveDatabase(error => {
 })
 ```
 
+##### findAndUpdate
+
+## 删除数据:
+
+##### remove
+删除数据也是非常简单的(与更新类似):
+```
+const item2 = coll.findOne({'age': {'$aeq': 31}});
+
+coll.remove(item2);
+
+console.log(coll.chain().data())
+```
+
+##### findAndRemove
+
+
+## 添加操作的监听:
 
 
 
