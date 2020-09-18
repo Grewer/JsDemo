@@ -13,9 +13,26 @@
 
     console.log('run', db)
 
-    db.addListener('grewer', (data) => {
-        console.log('grewer事件', data)
-    })
+    db.on('trigger', (data) => {
+        console.log('trigger', data)
+    });
+
+
+    //     ['changes',
+    //     'close',
+    //     'flushChanges',
+    //     'init',
+    //         'sort',
+    //         'filter',
+    //         'rebuild',
+    //         'pre-insert',
+    //         'insert',
+    //     'loaded',
+    //     'warning'].forEach(listenName => {
+    //     db.on(listenName, (ev) => {
+    //         console.log('!!!!!',listenName, ev)
+    //     })
+    // })
 
     db.loadDatabase({}, error => {
         error && console.log(error)
@@ -58,7 +75,7 @@
     const results = dv.data();
 
     console.log('获取数据 1', results)
-    db.emit('grewer', 'qwerty')
+    db.emit('trigger', 'qwerty')
 
     // ------------
 
@@ -164,15 +181,28 @@
 
     // ------------
 
+
     var collection = db.addCollection("test", {
-        unique: ["name"]
+        unique: ["name"],
+        // transactional: true
     });
 
     collection.insert({owner: 0, name: 'Betsy'});
     collection.insert({owner: 1, name: 'Bingo'});
     collection.insert({owner: 2, name: 'Fifi'});
     collection.insert({owner: 3, name: 'Fuzzy'});
-    collection.insert({owner: 4, name: 'Gizmo'});
+    const Gizmo = collection.insert({owner: 4, name: 'Gizmo'});
+
+
+    try {
+        collection.startTransaction()
+        Gizmo.name = 'Fuzzy'
+        collection.update(Gizmo)
+        collection.commit()
+    } catch (e) {
+        collection.rollback()
+        alert(e)
+    }
 
     console.log('修改结果 4', collection.chain().data())
 
@@ -219,7 +249,7 @@
     console.log(coll.chain(tx).data())
 
 
-    // TODO  commit  eqJoin
+    db.close()
 </script>
 </body>
 </html>
