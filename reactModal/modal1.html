@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>modal</title>
+    <link type="text/css" rel="stylesheet" href="modal.css"/>
+    <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone@7.11.6/babel.min.js"></script>
+</head>
+<body>
+<div id="root"></div>
+</body>
+<script type="text/jsx" src="modal.jsx"></script>
+<script type="text/jsx">
+    /**
+     * 最基础的 modal 显示在 当前组件下
+     * 创建在某一个组件中
+     * 不能被缓存
+     */
+
+    const { useState } = React
+
+    function App() {
+        const [visible, setVisible] = useState(false)
+
+        return <>
+            <button onClick={() => {
+                setVisible(true)
+            }}>显示 modal
+            </button>
+            <Modal visible={visible} close={() => setVisible(false)}>qwerty</Modal>
+        </>
+    }
+
+    ReactDOM.render(<App/>,
+        document.getElementById('root')
+    );
+</script>
+</html>
