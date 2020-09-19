@@ -19,17 +19,31 @@
      * 不能被缓存
      */
 
-    const { useState } = React
+    const {useState, useMemo} = React
 
-    function App() {
+    const useModal = () => {
         const [visible, setVisible] = useState(false)
 
+        return useMemo(() => {
+            return {
+                visible,
+                show: () => {
+                    setVisible(true)
+                },
+                close: () => {
+                    setVisible(false)
+                }
+            }
+        }, [visible])
+    }
+
+    function App() {
+        const modal = useModal()
+
         return <>
-            <button onClick={() => {
-                setVisible(true)
-            }}>显示 modal
+            <button onClick={modal.show}>显示 modal
             </button>
-            <Modal visible={visible} close={() => setVisible(false)}>qwerty</Modal>
+            <Modal visible={modal.visible} close={modal.close}>qwerty</Modal>
         </>
     }
 
