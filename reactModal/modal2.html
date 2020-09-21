@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>modal</title>
+    <link type="text/css" rel="stylesheet" href="modal.css"/>
+    <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone@7.11.6/babel.min.js"></script>
+</head>
+<body>
+<div id="root"></div>
+</body>
+<script type="text/jsx" src="modal2.jsx"></script>
+<script type="text/jsx">
+
+    /**
+     * 第二种方案, 使用 ReactDOM 的 API 进行实现
+     */
+
+    const {useRef} = React
+    const {body} = document
+
+    const show = () => {
+        const Dom = document.createElement('div')
+        Dom.classList.add('modal-container')
+        body.appendChild(Dom)
+
+        const close = () => {
+            ReactDOM.unmountComponentAtNode(Dom)
+            body.removeChild(Dom)
+        }
+
+        ReactDOM.render(<Modal close={close}/>, Dom)
+    }
+
+
+    const showV2 = () => {
+        let Dom
+        if (!showV2.cacheDom) {
+            let _Dom = document.createElement('div')
+            _Dom.classList.add('modal-container')
+            body.appendChild(_Dom)
+            showV2.cacheDom = _Dom
+            Dom = _Dom
+        } else {
+            Dom = showV2.cacheDom
+            Dom.style.display = 'block'
+        }
+
+
+        const close = () => {
+            Dom.style.display = 'none'
+        }
+
+        ReactDOM.render(<Modal close={close}/>, Dom)
+    }
+
+    showV2.cacheDom = null
+
+    function App() {
+
+        return <>
+            <button onClick={show}>显示 modal
+            </button>
+            <button onClick={showV2}>显示 modal (缓存 modal)
+            </button>
+        </>
+    }
+
+    ReactDOM.render(<App/>,
+        document.getElementById('root')
+    );
+</script>
+</html>
