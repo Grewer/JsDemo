@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>modal</title>
+    <link type="text/css" rel="stylesheet" href="modal.css"/>
+    <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone@7.11.6/babel.min.js"></script>
+</head>
+<body>
+<div id="root"></div>
+</body>
+<script type="text/jsx" src="modal3.jsx"></script>
+<script type="text/jsx">
+
+    /**
+     * 使用 react 的官方 api 来实现方案 2 的方法
+     * https://zh-hans.reactjs.org/docs/portals.html
+     */
+
+    const {useState, useMemo} = React
+
+    const useModal = () => {
+        const [visible, setVisible] = useState(false)
+
+        return useMemo(() => {
+            return {
+                visible,
+                show: () => {
+                    setVisible(true)
+                },
+                close: () => {
+                    setVisible(false)
+                }
+            }
+        }, [visible])
+    }
+
+    function App() {
+        const modal = useModal()
+        return <>
+            <button onClick={modal.show}>显示</button>
+            <Modal visible={modal.visible} close={modal.close}/>
+        </>
+    }
+
+    ReactDOM.render(<App/>,
+        document.getElementById('root')
+    );
+</script>
+</html>
