@@ -8,7 +8,7 @@ const stopPropagation = ev => ev.stopPropagation()
  * @constructor
  */
 
-function Modal(props) {
+function Modal1(props) {
     return props.visible && <div onClick={props.close} className="modal-container">
         <div className="modal-box" onClick={stopPropagation}>
             <div className="modal-title">
