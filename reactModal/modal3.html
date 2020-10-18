@@ -41,7 +41,11 @@
         const modal = useModal()
         return <>
             <button onClick={modal.show}>显示</button>
-            <Modal visible={modal.visible} close={modal.close}/>
+            <div onClick={ev => {
+                console.log(ev, ev.target)
+            }}>
+                <Modal visible={modal.visible} close={modal.close}/>
+            </div>
         </>
     }
 
