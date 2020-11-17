@@ -1,0 +1,47 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "outDir": "build/",
+    "module": "commonjs",
+    "target": "es5",
+    "lib": [
+      "dom",
+      "es2015.promise",
+      "es5",
+      "es2015.iterable",
+      "es2015.generator",
+      "es2015.symbol",
+      "es7"
+    ],
+    "sourceMap": false,
+    "allowJs": true,
+    "jsx": "preserve",
+    "isolatedModules": false,
+    "moduleResolution": "node",
+    "forceConsistentCasingInFileNames": true,
+    "noImplicitReturns": true,
+    "noImplicitThis": true,
+    "noImplicitAny": false,
+    "strictNullChecks": true,
+    "suppressImplicitAnyIndexErrors": true,
+    "allowSyntheticDefaultImports": true,
+    "importHelpers": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "downlevelIteration": true,
+    "paths": {}
+  },
+  "exclude": [
+    "node_modules",
+    "config",
+    "build",
+    "scripts",
+    "acceptance-tests",
+    "webpack",
+    "jest",
+    "src/setupTests.ts"
+  ],
+  "include": [
+    "loader.ts"
+  ]
+}
