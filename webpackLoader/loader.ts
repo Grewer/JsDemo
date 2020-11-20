@@ -1,6 +1,12 @@
 import {getOptions} from 'loader-utils';
 import {validate} from 'schema-utils';
+import * as path from "path";
+import * as typescript from 'typescript'
 
+
+// compiler: typeof typescript
+//const babel = require("@babel/core");
+//const transform = promisify(babel.transform);
 const schema = {
   type: 'object',
   properties: {
@@ -10,15 +16,31 @@ const schema = {
   }
 } as const
 
-
 export default function (source: string) {
   const options = getOptions(this);
 
   validate(schema, options);
 
-  console.log('source', source)
+  // console.log('source', source)
 
-  return source;
+  // const _source = source.replace(/alert\(1\)/, `console.log('grewer')`)
+  //
+  // console.log('_source', _source)
 
+  // const callback = this.async()
+  //
+  // console.log('callback', callback)
+
+  // const rawFilePath = path.normalize(this.resourcePath)
+
+
+  // 关于 ts 的 API 可以参考这篇文章:
+  // 使用 TypeScript complier API:  https://zhuanlan.zhihu.com/p/141410800
+  const compiler = typescript
+
+  let result = compiler.transpileModule(source, { compilerOptions: { module: typescript.ModuleKind.CommonJS } })
+
+  console.log(result.outputText)
+
+  return result.outputText;
 };
-

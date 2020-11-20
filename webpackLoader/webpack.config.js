@@ -3,7 +3,12 @@ const webpack = require('webpack');
 const TerserPlugin = require('terser-webpack-plugin');
 
 module.exports = {
-  mode: 'development',
+  entry: './src/index.ts',
+  mode: 'production',
+  output: {
+    path: path.resolve(__dirname, 'dist'),
+    filename: 'main.js',
+  },
   plugins: [new webpack.ProgressPlugin()],
   module: {
     rules: [
@@ -13,7 +18,7 @@ module.exports = {
       //   loader: 'babel-loader',
       // }
       {
-        test: /\.js$/,
+        test: /\.ts$/,
         use: [
           {
             loader: path.resolve(__dirname, './build/loader.js'),
