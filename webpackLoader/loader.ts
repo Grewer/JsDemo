@@ -1,6 +1,5 @@
 import {getOptions} from 'loader-utils';
 import {validate} from 'schema-utils';
-import * as path from "path";
 import * as typescript from 'typescript'
 
 
@@ -28,6 +27,8 @@ export default function (source: string) {
   // console.log('_source', _source)
 
   // const callback = this.async()
+  // 对于异步加载程序，this.async用于检索回调函数
+  // 参考: https://webpack.js.org/api/loaders/#asynchronous-loaders
   //
   // console.log('callback', callback)
 
