@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>this in js</title>
+</head>
+<body>
+<script type="text/javascript">
+  console.log('普通情况', this)
+
+  function foo() {
+    console.log('普通函数体', this)
+  }
+
+  foo()
+
+  // this 受函数使用的绑定, 隐式绑定
+  function get() {
+    console.log(this.a);
+  }
+
+  var obj = {
+    a: 2,
+    get
+  }
+
+  obj.get() // 2
+  // 在 obj.get 调用下, get 中 this 指向的就是 obj 这个对象
+  // 从而得出结论
+
+</script>
+<script type="text/javascript" src="strict.js"></script>
+
+</body>
+</html>
