@@ -7,14 +7,17 @@
 <body>
 <script type="text/javascript">
     // 默认绑定
-    console.log('普通情况', this)
+    // 情景 1
+    console.log('普通情况', this) // window
 
+    // 情景 2
     function foo() {
         console.log('普通函数体', this)
     }
 
-    foo()
+    foo() // window
 
+    // 情景 3
     // this 受函数使用的绑定, 隐式绑定
     function get() {
         console.log(this.a);
@@ -29,6 +32,8 @@
     // 在 obj.get 调用下, get 中 this 指向的就是 obj 这个对象
     // 从而得出结论: 如果是谁调用的函数, 那么函数中的 this 就会指向谁
 
+
+    // 情景 4
     var obj2 = {
         obj,
         a: 1
@@ -38,19 +43,22 @@
     // 可以看到,尽管有二层调用, this 指向的还是最近一层中的 this
 
 
+    // 情景 5
     // this 丢失的情况
     // 更换调用方式:
     var getIns = obj.get
     getIns() // undefined
     // 可以得出结论 使用 `.` (或者`[]`) 调用的才是具有效用的
 
-    const o1 = {
+
+    // 情景 6
+    var o1 = {
         text: 'o1',
         fn: function () {
             return this.text
         }
     }
-    const o3 = {
+    var o3 = {
         text: 'o3',
         fn: function () {
             console.log('o3', this)
@@ -68,13 +76,76 @@
 
     // 显示绑定:
     // 显示绑定有很多方法: bind/call/apply
+    // 情景 7
+    // 套用情景 5 this 丢失的场景, 可以看到, 现在打印的是我们想要的值了
+    var getIns = obj.get.bind(obj)
+    getIns() // 2
+
+    // 情景 8
+    // 使用 call/apply
+    // 这两个函数的作用是一样的,唯一不一样的点在于传参, 一个是接受一个数组,一个是多个参数
+    // call(this,1,2,3)
+    // apply(this, [1,2,3])
+
+    // 情景 8:
+    // 套用情况 6 的丢失场景:
+    var o3 = {
+        text: 'o3',
+        fn: function () {
+            var fn = o1.fn
+            return fn.call(this)
+        }
+    }
+
+    console.log('情景 8  o3 丢失 this 的情况修改', o3.fn()) // undefined
+
+    // 当然 apply 接受参数是一个数组, 自然有他的优点:
+
+    var array = ['a', 'b'];
+    var elements = [0, 1, 2];
+    array.push.apply(array, elements);
+    console.log(array); // ["a", "b", 0, 1, 2]
+    // 通过 apply 直接 push 了多个参数
+    // 在 es6 之后 也快使用这种方式: array.push(...elements)
 
 
+    // 情景 9:
+    // class 中的函数, 这也属于一种 this 丢失的场景
+    // 熟悉 react 的人应该就知道这个场景
+    class Foo{
+        name="mike"
+        say(){
+            console.log(this.a)
+        }
 
+    }
+    var FooIns = new Foo()
+    FooIns.say() // undefined
 
     // new 绑定
+    // 场景 10
+    // 这里说的new 绑定和情景 9 是不一样, 其实说的是构造函数的绑定:
+    // es5代码:
+    function Foo2() {
+        this.bar = "LiLz"
+    }
+    const Foo2Ins = new Foo2()
+    console.log(Foo2Ins.bar) // LiLz
+    // 在上面情景一中 this 指向的是 window, 在场景 10 中, 通过 new 成功将 this 绑定在了 Foo2Ins 上
+
+    // 场景 11
+    class Foo3{
+        constructor(){
+            this.bar = 'lisa'
+        }
+    }
+    var Foo3Ins = new Foo3()
+    console.log(Foo3Ins.bar) // lisa
+    // 从这里可以看到 new 的作用, 虽然改变指向只是他的一部分功能
 
 
+    // 特殊情况
+    // 严格模式
     // 箭头函数和 this
 </script>
 <script type="text/javascript" src="strict.js"></script>
