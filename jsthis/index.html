@@ -112,13 +112,15 @@
     // 情景 9:
     // class 中的函数, 这也属于一种 this 丢失的场景
     // 熟悉 react 的人应该就知道这个场景
-    class Foo{
-        name="mike"
-        say(){
+    class Foo {
+        name = "mike"
+
+        say() {
             console.log(this.a)
         }
 
     }
+
     var FooIns = new Foo()
     FooIns.say() // undefined
 
@@ -129,16 +131,18 @@
     function Foo2() {
         this.bar = "LiLz"
     }
+
     const Foo2Ins = new Foo2()
     console.log(Foo2Ins.bar) // LiLz
     // 在上面情景一中 this 指向的是 window, 在场景 10 中, 通过 new 成功将 this 绑定在了 Foo2Ins 上
 
     // 场景 11
-    class Foo3{
-        constructor(){
+    class Foo3 {
+        constructor() {
             this.bar = 'lisa'
         }
     }
+
     var Foo3Ins = new Foo3()
     console.log(Foo3Ins.bar) // lisa
     // 从这里可以看到 new 的作用, 虽然改变指向只是他的一部分功能
@@ -146,9 +150,69 @@
 
     // 特殊情况
     // 严格模式
+    // 场景 12
+    function foo2() {
+        'use strict'
+        console.log('严格模式下的 this', this)
+    }
+
+    foo2()
+
     // 箭头函数和 this
+    // 我们来看看箭头函数对应的 this 有什么区别吧
+    // 场景 13, 即使在严格模式下 箭头函数中的 this 也不会是 undefined
+    const bar = () => {
+        'use strict'
+        console.log('箭头函数', this)
+    }
+    bar() // windows
+
+    // 场景 14
+    const get2 = () => {
+        console.log(this, this.a);
+    }
+
+    var obj3 = {
+        a: 2,
+        get2
+    }
+
+    obj3.get2() // window, undefined
+    // 调用无法改变其指向, 再看 bind/apply/call
+
+
+    // 场景 15
+    obj3.get2.bind(obj3)() // 同场景 14
+    // 场景 16
+    obj3.get2.call(obj3) // 场景 14
+
+    // 场景 17, 遇到 new 时, 可以看到  箭头函数,他是无法被作为构造函数的
+
+    const  Foo4 = () => {
+        this.bar = "LiLz"
+    }
+
+    // const Foo4Ins = new Foo4()
+    // console.log(Foo4Ins.bar) // TypeError: Foo4 is not a constructor
+
+    // 场景 18:
+
+    class Foo5 {
+        name = "mike"
+
+        say = () => {
+            console.log(this.name)
+        }
+
+    }
+
+    var Foo5Ins = new Foo5()
+    Foo5Ins.say() // mike
+
+
+    // 至此可以得出 this 改变的权重:  箭头函数 = new  > bind/apply/call > 函数调用
+
 </script>
-<script type="text/javascript" src="strict.js"></script>
 
 </body>
 </html>
