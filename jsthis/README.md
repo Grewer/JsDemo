@@ -1,8 +1,6 @@
 # 关于 js 中 js 指向的问题
 
-本文章通过代码的运行,得出 this 的指向结论
-
-下面通过一些场景来描述 this 的具体指向:
+本文章通过代码的运行来描述 this 的具体指向:
 
 ## 默认绑定
 
@@ -285,3 +283,5 @@ Foo5Ins.say() // mike
 - 隐式/显示调用可以改变 this 指向,而且比隐式调用的优先级要大
 - 隐式/显示调用都不能改变箭头函数的指向, 箭头函数与 new 的构造函数相矛盾
 - this 改变的优先级:  箭头函数 = new  > bind/apply/call > 函数调用
+
+本文中的所有例子都在 GitHub 中: https://github.com/Grewer/JsDemo/blob/master/jsthis/index.html
