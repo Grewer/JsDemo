@@ -111,3 +111,164 @@ console.log('o3 丢失 this 的情况', o3.fn())  // undefined
 
 ## 显示绑定
 ### 场景七:
+```
+var getIns = obj.get.bind(obj)
+getIns() // 2
+```
+套用情景 5 this 丢失的场景, 可以看到, 现在打印的是我们想要的值了
+
+### 场景八:
+```
+var o3 = {
+    text: 'o3',
+    fn: function () {
+        var fn = o1.fn
+        return fn.call(this)
+    }
+}
+
+console.log('情景 8  o3 丢失 this 的情况修改', o3.fn()) // undefined
+```
+该场景使用 call/apply
+这两个函数的作用是一样的,唯一不一样在于传参:
+`call(this,1,2,3)`  
+`apply(this, [1,2,3])`
+
+#### apply 这些函数特殊的地方:
+```
+var array = ['a', 'b'];
+var elements = [0, 1, 2];
+array.push.apply(array, elements);
+console.log(array); // ["a", "b", 0, 1, 2]
+```
+通过 apply 直接 push 了多个参数  
+在 es6 之后 也快使用这种方式: `array.push(...elements)`
+
+### 场景九:
+```
+class Foo {
+    name = "mike"
+
+    say() {
+        console.log(this.a)
+    }
+
+}
+
+var FooIns = new Foo()
+FooIns.say() // undefined
+```
+class 中的函数, 这也属于一种 this 丢失的场景
+熟悉 react 的人应该就知道这个场景
+
+## new 绑定
+
+这里说的new 绑定和情景 9 是不一样, 说的是构造函数的绑定:
+
+### 场景十
+```
+// es5代码
+function Foo2() {
+    this.bar = "LiLz"
+}
+
+const Foo2Ins = new Foo2()
+console.log(Foo2Ins.bar) // LiLz
+```
+在上面情景一中 this 指向的是 window, 在场景 10 中, 通过 new 成功将 this 绑定在了 Foo2Ins 上
+
+### 场景十一
+```
+class Foo3 {
+    constructor() {
+        this.bar = 'lisa'
+    }
+}
+
+var Foo3Ins = new Foo3()
+console.log(Foo3Ins.bar) // lisa
+```
+从这里可以看到 new 的作用, 虽然改变指向只是他的一部分功能
+
+## 特殊情况-严格模式
+
+### 场景十二
+```js
+function foo2() {
+    'use strict'
+    console.log('严格模式下的 this', this)
+}
+
+foo2() // undefined
+
+```
+
+可以看到在严格模式下 普通的 this 指向就是会丢失
+
+## 特殊情况-箭头函数
+我们来看看箭头函数对应的 this 有什么区别
+
+### 场景十三
+```
+const bar = () => {
+    'use strict'
+    console.log('箭头函数', this)
+}
+bar() // windows
+
+```
+即使在严格模式下 箭头函数中的 this 也不会是 undefined
+
+
+### 场景十四
+```
+const get2 = () => {
+    console.log(this, this.a);
+}
+
+var obj3 = {
+    a: 2,
+    get2
+}
+
+obj3.get2() // window, undefined
+```
+隐式调用无法改变其指向
+
+### 场景十五
+```js
+obj3.get2.bind(obj3)() // 同场景 14
+obj3.get2.call(obj3) // 场景 14
+```
+
+### 结论四
+这里可以得出结论, 隐式/显示调用都不能改变箭头函数的指向
+
+### 场景十六
+```js
+
+const  Foo4 = () => {
+    this.bar = "LiLz"
+}
+
+const Foo4Ins = new Foo4()
+console.log(Foo4Ins.bar) // TypeError: Foo4 is not a constructor
+```
+遇到 new 时, 可以看到箭头函数,他是无法被作为构造函数的
+
+### 场景十七
+```
+class Foo5 {
+    name = "mike"
+
+    say = () => {
+        console.log(this.name)
+    }
+
+}
+
+var Foo5Ins = new Foo5()
+Foo5Ins.say() // mike
+```
+### 结论五
+至此可以得出 this 改变的权重:  箭头函数 = new  > bind/apply/call > 函数调用
