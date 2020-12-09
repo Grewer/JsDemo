@@ -45,7 +45,7 @@ microtask，也叫jobs。 另一些异步任务的回调会依次进入micro tas
 运行原理:
 1. 运行同步任务, 微任务加入队列, 等待同步任务执行完毕
 2. 查看是否有微任务, 若有则执行, 按照先进先出的规则进行
-3. 微任务结束后执行宏任务, 执行完每一个宏任务之后都会再次进入第 2 步流程
+3. 微任务结束后执行宏任务, 执行完**每一个**宏任务之后都会再次进入第 2 步流程
 4. 微任务和宏任务都执行完毕
 
 ### 例子1:
@@ -76,6 +76,53 @@ setTimeout
 2. 执行微任务 `Promise` ,打印 `promise`
 3. 执行宏任务 `setTimeout`
 4. 清空队列和栈堆
+
+
+### 例子 2:
+```
+console.log(1);
+
+setTimeout(() => {
+  console.log(2);
+  Promise.resolve().then(() => {
+    console.log(3)
+  });
+});
+
+new Promise((resolve, reject) => {
+  console.log(4)
+  resolve(5)
+}).then((data) => {
+  console.log(data);
+})
+
+setTimeout(() => {
+  console.log(6);
+})
+
+console.log(7);
+```
+结果:
+```
+1
+4
+7
+5
+2
+3
+6
+```
+执行过程:
+1. 首先自然是执行同步代码: 几个 console, 关于 `new Promise` 需要注意的是, 他 `new`
+   的时候, 并不是异步的,回调函数才是异步任务, 所以打印的是: 1,4,7
+2. 执行微任务, promise 里的几个 then 回调函数, 所以打印 5
+3. 微任务暂时执行完毕, 执行宏任务, setTimeout, 打印 2, 这个时候又出现了一个微任务加入了微任务的队列
+4. 一个宏任务执行完毕了, 发现了新的同步任务和微任务,开始执行, 打印 3, 微任务执行完毕
+5. 执行下一个宏任务, 打印 6
+6. 全部执行完毕, 打印顺序是: 1,4,7,5,2,3,6
+
+**在执行微队列microtask queue中任务的时候，如果又产生了microtask，那么会继续添加到队列的末尾，也会在这个周期执行，直到microtask queue为空停止。**   
+当然如果你在microtask中不断的产生microtask，那么其他宏任务macrotask就无法执行了，但是这个操作也不是无限的，拿NodeJS中的微任务process.nextTick()来说，它的上限是1000个;
 
 
 参考引用:
