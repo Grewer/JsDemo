@@ -42,10 +42,119 @@ const { code } = babel.transformFromAstSync(result.ast, {
 console.log(code)
 ```
 
-
-在这个网站,你可以更加直接地看到 code 和 ast 的比较:
+在这个在线网站,你可以更加直接地看到 code 和 ast 的比较:
 https://lihautan.com/babel-ast-explorer
 
+`const n = 1` 的 ast:
+
+```
+-program:Program{
+    sourceType:"module"
+    -body:[
+        -VariableDeclaration {
+            -declarations:[
+                -VariableDeclarator{
+                    -id:Identifier{
+                        name:"n"
+                    }
+                    -init:NumericLiteral{
+                        -extra:{
+                            rawValue:1
+                            raw:"1"
+                        }
+                        value:1
+                    }
+                }
+            ]
+            kind:"const"
+        }
+    ]
+    directives:[]
+}
+```
+
+### babel 插件:
+```js
+var babel = require("@babel/core");
+
+const code = 'const n = 1';
+
+const output = babel.transformSync(code, {
+    plugins: [
+        function myCustomPlugin() {
+            return {
+                visitor: {
+                    Identifier(path) {
+                        // 在这个例子里我们将所有变量 `n` 变为 `x`
+                        if (path.isIdentifier({ name: 'n' })) {
+                            path.node.name = 'x';
+                        }
+                    },
+                },
+            };
+        },
+    ],
+});
+
+console.log(output.code);
+// const x = 1;
+```
+
+通过 babel 的插件我们可以对代码进行随心所以的修改
+
+
+关于 `visitor` 使用的是访问者模式, 在遍历阶段，babel会先进行深度优先遍历来访问AST的每一个节点。你可以为访问指定一个回调函数，然后每当访问某个节点的时候，babel会调用这个函数，并给函数传入当前访问的节点。
+
+现在我们添加另一个函数: `NumericLiteral`, 在刚刚的 ast 中我们可以看到 `const n = 1` 是有 `NumericLiteral` 此节点的
+
+```js
+function myCustomPlugin() {
+  return {
+    visitor: {
+      Identifier(path) {
+        console.log('identifier');
+      },
+      NumericLiteral(path) {
+        console.log('NumericLiteral');
+      },
+    },
+  };
+}
+```
+
+运行 `plugin.js`, 打印结果:
+
+```
+Identifier
+NumericLiteral
+const x = 1;
+```
+即在碰到此节点的时候 就会触发插件中对应节点的回调, 关于回调函数的 path 可以在此文档中查看: https://github.com/jamiebuilds/babel-handbook/blob/master/translations/en/plugin-handbook.md#paths
+
+
+### 修改表达式
+在插件方法 `NumericLiteral` 上添加操作:
+```js
+visitor: {
+    // 省略其他方法
+    NumericLiteral(path) {
+        console.log('NumericLiteral');
+        const newNode = babel.types.binaryExpression('+', babel.types.NumericLiteral(path.node.value), babel.types.NumericLiteral(10));
+        path.replaceWith(newNode);
+
+        path.skip();
+        // 因为我们新增加了一个 NumericLiteral, 所以插件会检测到, 并且又会触发此回调,造成无限循环
+        // skip 的作用就是跳过对当前路径子节点的访问
+    }
+}
+```
+
+这里我们新建了一个 binaryExpression, 将 `const x = 1` 转换为 `const x = 1 + 10`
+
+这是关于 `babel.types` 的文件: https://www.babeljs.cn/docs/babel-types
+
+
+本文代码记录: https://github.com/Grewer/JsDemo/tree/master/babel2AST
 
 ### 参考资料
 https://lihautan.com/step-by-step-guide-for-writing-a-babel-transformation/
