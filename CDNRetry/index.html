@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script type="text/javascript">
+        var assetsRetry = function () {
+            "use strict";
+
+            function n(t) {
+                return t
+            }
+
+            function f() {
+            }
+
+            var p = "retryTimes", b = "succeeded", m = "failed", E = "maxRetryCount", o = "onRetry", i = "onFail",
+                a = "domain", w = "data-assets-retry-hooked", A = "data-assets-retry-ignore", d = "data-retry-id",
+                c = window, l = window.document, e = c.HTMLElement, j = c.HTMLScriptElement, M = function (t, e, r) {
+                    var n = t.indexOf(e);
+                    return -1 === n ? t : t.substring(0, n) + r + t.substring(n + e.length)
+                }, T = function (e, t, r, n) {
+                    void 0 === r && (r = f), void 0 === n && (n = !1);
+                    var o, i, a, c, s, u = n || e.defer || e.async;
+                    "loading" !== l.readyState || /Edge|MSIE|rv:/i.test(navigator.userAgent) || u ? (o = l.createElement("script"), Object.keys(j.prototype).forEach(function (t) {
+                        if ("src" !== t && e[t] && "object" != typeof e[t]) try {
+                            o[t] = e[t]
+                        } catch (t) {
+                        }
+                    }), o.src = t, o.onload = e.onload, o.onerror = e.onerror, o.setAttribute(d, y()), (i = e.getAttribute("nonce")) && o.setAttribute("nonce", i), l.getElementsByTagName("head")[0].appendChild(o)) : (a = y(), c = e.outerHTML.replace(/data-retry-id="[^"]+"/, "").replace(/src=(?:"[^"]+"|.+)([ >])/, d + "=" + a + ' src="' + t + '"$1'), l.write(c), (s = l.querySelector("script[" + d + '="' + a + '"]')) && (s.onload = r))
+                }, L = function (t) {
+                    return t ? t instanceof e ? [t.nodeName, t.src, t.href, t.getAttribute(d)].join(";") : "not_supported" : "null"
+                }, y = function () {
+                    return Math.random().toString(36).slice(2)
+                }, O = function (t) {
+                    return t instanceof j ? t.src : null
+                }, s = {}, R = function (t, e) {
+                    var r, n = S(t, e), o = n[0], i = n[1];
+                    return o ? (s[o] = s[o] || ((r = {})[p] = 0, r[m] = [], r[b] = [], r), [i, s[o]]) : []
+                }, S = function (t, e) {
+                    var r, n, o, i, a = (r = t, n = e, Object.keys(n).filter(function (t) {
+                        return -1 < r.indexOf(t)
+                    }).sort(function (t, e) {
+                        return e.length - t.length
+                    })[0]);
+                    return a ? [(i = a, (o = t).substr(o.indexOf(i) + i.length, o.length)), a] : [t, ""]
+                }, x = {};
+            return function (t) {
+                var e, y, g, h, v;
+                void 0 === t && (t = {});
+                try {
+                    if ("object" != typeof t[a]) throw new Error("opts.domain cannot be non-object.");
+                    var r = ((e = {})[E] = t[E] || 3, e[o] = t[o] || n, e[i] = t[i] || f, e[a] = t[a], e);
+                    return g = (y = r)[o], h = y[i], v = y[a], l.addEventListener("error", function (t) {
+                        if (t) {
+                            var e = t.target || t.srcElement, r = O(e);
+                            if (r) {
+                                var n = R(r, v), o = n[0], i = n[1], a = e instanceof HTMLElement && e.hasAttribute(A);
+                                if (i && o && !a) {
+                                    i[p]++, i[m].push(r);
+                                    var c, s = i[p] > y[E];
+                                    if (s && (c = S(r, v)[0], h(c)), v[o] && !s) {
+                                        var u = v[o], f = M(r, o, u), d = g(f, r, i);
+                                        if (null !== d) {
+                                            if ("string" != typeof d) throw new Error("a string should be returned in `onRetry` function");
+                                            var l = L(e);
+                                            x[l] || (x[l] = !0, e instanceof j && !e.getAttribute(w) && e.src && T(e, d, function () {
+                                                i[b].push(d)
+                                            }))
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }, !0), s
+                } catch (t) {
+                    c.console && console.error("[assetsRetry] error captured", t)
+                }
+            }
+        }();
+    </script>
+    <script type="text/javascript">
+        var assetsRetryStatistics = window.assetsRetry({
+            // 域名列表，只有在域名列表中的资源，才会被重试
+            domain: {
+                'https://cdn.jsdelivr.net/npm/video.js@7.10.22/dist/':
+                    'https://cdn.bootcdn.net/ajax/libs/video.js/7.10.1/'
+            }
+        })
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/video.js@7.10.22/dist/video.js"></script>
+    <link href="//cdn.bootcss.com/video.js/7.0.0-alpha.1/alt/video-js-cdn.css" rel="stylesheet">
+</head>
+<body>
+<video id="vid" class="video-js" controls data-setup="{}" width="960" height="400">
+    <source src="https://grewer.github.io/dataSave/test.mp4"></source>
+</video>
+<script type="text/javascript">
+    const vid = videojs("vid");
+    vid.ready(function () {
+        console.log("已就绪");
+    });
+
+    onclick = function () {
+        console.log(vid.currentTime());
+    }
+</script>
+</body>
+</html>
