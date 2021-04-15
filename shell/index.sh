@@ -20,3 +20,14 @@ echo $name $url
 echo ${#name}
 
 echo ${url:1:3}
+
+arr=($name $url)
+echo ${arr[1]}
+
+arr=($name $url)
+echo ${arr[@]}
+
+
+length=${#arr[@]}
+
+echo $length
