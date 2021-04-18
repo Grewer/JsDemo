@@ -138,14 +138,108 @@ length=${#arr[@]}
 echo $length
 ```
 
+### 流程控制
+
+#### if else
+
+if 和 其他语言有些不太相同:
+```
+if [ $name=="foo" ]
+then
+  echo "name 是 foo"
+fi
+// fi 表示结束  因为不像其他语言 没有 {}
+```
+
+而 else 和 if else 的话 这样写:
+
+```
+if [ $name != "foo" ]
+then
+  echo "name 是 foo"
+else
+  echo "不符合"
+fi
+
+```
+
+``` 
+if [ $name == "bar" ] ;then
+  echo "name 是 bar"
+elif [ $name == "foo" ]; then
+  echo "name 是 foo"
+else
+  echo "不符合"
+fi
+```
+这种使用 `; then` 的写法 可能更加符合我们的直觉
+
+#### for
+
+```
+for loop in 1 2 3 4 5
+do
+    echo "The value is: $loop"
+done
+```
+
+#### while
+```
+int=1
+while(( $int<=5 ))
+do
+    echo $int
+    let "int++"
+done
+```
+for 和 while 都只用一个简单例子
 
 ### 函数
 
+#### 定义
+``` 
+GrewerFn(){
+    echo "这是我的第一个 shell 函数!"
+}
+```
+#### 执行
+执行是一个简单的操作:
+```
+GrewerFn(){
+    echo "这是我的第一个 shell 函数!"
+}
+
+GrewerFn
+```
+只需写上函数名称 即可调用
+
+#### 参数
+
+```
+GrewerFn(){
+    echo "第一个参数为 $1 !"
+    echo "第二个参数为 $2 !"
+    echo "打印所有参数 $@ !"
+}
+
+GrewerFn 1 "qwer" "zxc"
+```
+
+通过这样的方法能够传递参数
+
+而里面 `$1`, `$2` 这样的参数处理可以参数下面的表格:
+
+| 参数处理 | 说明 |
+| --- | --- |
+| $# | 传递到脚本或函数的参数个数 |
+| $\* | 以一个单字符串显示所有向脚本传递的参数 |
+| $$ | 脚本运行的当前进程ID号 |
+| $! | 后台运行的最后一个进程的ID号 |
+| $@ | 与$\*相同，但是使用时加引号，并在引号中返回每个参数。 |
+| $\- | 显示Shell使用的当前选项，与set命令功能相同。 |
+| $? | 显示最后命令的退出状态。0表示没有错误，其他任何值表明有错误。 |
+
 ### 交互
-
-### 常用 api
-
-## 常用场景
 
 
 ## 结语
