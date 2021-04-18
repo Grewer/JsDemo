@@ -241,6 +241,84 @@ GrewerFn 1 "qwer" "zxc"
 
 ### 交互
 
+#### 获取用户输入
+
+##### read
+使用的方法很简单:
+```
+read yourName
+echo "you name is $yourName"
+```
+
+后面还能加参数, 如
+-p 参数，允许在 read 命令行中直接指定一个提示。
+```
+    read -p "输入网站名:" website
+    echo "你输入的网站名是 $website"
+```
+
+限定字符:
+``` 
+read -n1 -p "Do you want to continue [Y/N]?" answer
+case $answer in
+Y | y)
+      echo "fine ,continue";;
+N | n)
+      echo "ok,good bye";;
+*)
+     echo "error choice";;
+esac
+```
+
+##### select
+
+```
+PS3='Please enter your choice: '
+options=("Option 1" "Option 2" "Option 3" "Quit")
+select opt in "${options[@]}"
+do
+    case $opt in
+        "Option 1")
+            echo "you chose choice 1"
+            ;;
+        "Option 2")
+            echo "you chose choice 2"
+            ;;
+        "Option 3")
+            echo "you chose choice $REPLY which is $opt"
+            ;;
+        "Quit")
+            break
+            ;;
+        *) echo "invalid option $REPLY";;
+    esac
+done
+```
+
+
+#### 小补充
+PS1——默认提示符
+PS2——再谈提示符
+PS3——Shell脚本中使用select时的提示符
+PS4——PS4-“set -x"用来修改跟踪输出的前缀
+
+具体参考: https://os.51cto.com/art/201205/334954.htm
+
+
+#### 其他
+还有一个比较热门的 expect ,这里就不多说了, 需要下载, 有些嵌入式环境不支持
+
+
+## 常用场景
+
+- Linux 上的自动脚本: 如使用 crontab 执行定时任务, 读取修改文件
+
+- 登录脚本等等, 可以省略很多麻烦的过程  
+    当然相较于其他语言, 都是可以这样做, shell 的优势就在于原生支持
+
+-  初始化环境, 使用脚本一键初始化整个 linux 环境,  如果接触过 cli 的话应该知道他的作用
 
 ## 结语
 
+shell 作为 linux 官方的语言, 他附带了很多功能, 给我们提供了很多便利      
+在没有环境的时候, 也可以直接运行, 学会此语言, 可以帮助你在服务器领域大展拳脚
