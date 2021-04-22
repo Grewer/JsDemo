@@ -13,8 +13,12 @@
 后续我将写一篇博客来引导一下
 
 ### 例子:
-demo1: https://grewer.github.io/JsDemo/carousel/demo1.html
-demo2: https://grewer.github.io/JsDemo/carousel/demo2.html
-demo3: https://grewer.github.io/JsDemo/carousel/demo3.html
-demo4: https://grewer.github.io/JsDemo/carousel/demo4.html
-demo5: https://grewer.github.io/JsDemo/carousel/demo5.html
+demo1: https://grewer.github.io/JsDemo/carousel/demo1.html  
+
+demo2: https://grewer.github.io/JsDemo/carousel/demo2.html  
+
+demo3: https://grewer.github.io/JsDemo/carousel/demo3.html  
+
+demo4: https://grewer.github.io/JsDemo/carousel/demo4.html  
+
+demo5: https://grewer.github.io/JsDemo/carousel/demo5.html  
