@@ -12,7 +12,9 @@
 其实在写这 demo 的过程中 ,确实也可以培养一下,如何养成  
 后续我将写一篇博客来引导一下
 
-
-### todo
-demo5 一种用前一图片变透明，后一图片由透明转实 的方案，突然发现这种方案可以由css 来控制，而且 最后一张图与第一张图的 切换会变得和普通切换一样流畅
-而且很多地方都用到了 比如LOL客户端的轮播便是如此 以前的转换方案注定要被此方案所淘汰
+### 例子:
+demo1: https://grewer.github.io/JsDemo/carousel/demo1.html
+demo2: https://grewer.github.io/JsDemo/carousel/demo2.html
+demo3: https://grewer.github.io/JsDemo/carousel/demo3.html
+demo4: https://grewer.github.io/JsDemo/carousel/demo4.html
+demo5: https://grewer.github.io/JsDemo/carousel/demo5.html

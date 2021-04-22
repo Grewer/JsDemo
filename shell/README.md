@@ -322,3 +322,6 @@ PS4——PS4-“set -x"用来修改跟踪输出的前缀
 
 shell 作为 linux 官方的语言, 他附带了很多功能, 给我们提供了很多便利      
 在没有环境的时候, 也可以直接运行, 学会此语言, 可以帮助你在服务器领域大展拳脚
+
+
+以上部分例子来源于 https://www.runoob.com/linux/linux-tutorial.html
