@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Custom elements</title>
+</head>
+<div is="my-name"></div>
+<gender-info></gender-info>
+<body>
+<script>
+    // 基础 HTML 的元素
+    class Names extends HTMLDivElement {
+        constructor() {
+            super();
+            // this 指向的就是当前元素
+            this.innerText = 'Grewer wrote example'
+        }
+    }
+
+    customElements.define('my-name', Names, {extends: 'div'});
+
+
+    // 自定义标签:
+    class Gender extends HTMLElement {
+        constructor() {
+            // 必须首先调用 super方法
+            super();
+
+            this.innerText = 'Grewer gender is male'
+
+            // 添加方法
+            this.onclick = () => {
+                console.log('run in customElement')
+            }
+        }
+    }
+
+    // 组件名注意点:
+    // 必须有 "-"  如果组件名是 gender  则直接报错, 即使是这样的名称也可以 "gender-"
+    // 首字母也不能大写, 比如就不能写成 Gender-info
+    customElements.define('gender-info', Gender)
+</script>
+</body>
+</html>
