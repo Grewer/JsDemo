@@ -6,6 +6,8 @@
 </head>
 <div is="my-name"></div>
 <gender-info></gender-info>
+<div>---------分割线---------</div>
+<life-test></life-test>
 <body>
 <script>
     // 基础 HTML 的元素
@@ -39,6 +41,41 @@
     // 必须有 "-"  如果组件名是 gender  则直接报错, 即使是这样的名称也可以 "gender-"
     // 首字母也不能大写, 比如就不能写成 Gender-info
     customElements.define('gender-info', Gender)
+
+
+    // 生命周期
+    class Life extends HTMLElement {
+        // 用来搭配 attributeChangedCallback, 控制要监听的具体属性
+        static get observedAttributes() {
+            return ['style', 'test'];
+        }
+
+        constructor() {
+            super();
+            this.innerText = 'life test  click'
+            this.onclick = this.change
+        }
+
+        change = () => {
+            console.log('add run')
+            this.style.background = `rgba(0, 0, 0, ${Math.random()})`
+            this.setAttribute('test', Math.random() * 100)
+        }
+
+        connectedCallback() {
+            console.log('connectedCallback', '初始化')
+        }
+
+        attributeChangedCallback(...arg) {
+            // 打印的值分别是: 属性值名, 旧值, 新值  如果没有就为 null
+            // 如果同时改变了 2 个属性, 则触发此函数两次
+            console.log('changed', arg)
+        }
+
+
+    }
+
+    customElements.define('life-test', Life)
 </script>
 </body>
 </html>

@@ -92,6 +92,46 @@ DOM 中的显示:
 *   `attributeChangedCallback`: 当 custom element增加、删除、修改自身属性时，被调用。
 
 
+大部分生命周期和其他框架的类似, 但是其中有一个 `attributeChangedCallback` 需要说明下:
+
+```html
+
+<life-test></life-test>
+
+<script>
+
+    class Life extends HTMLElement {
+        // 用来搭配 attributeChangedCallback, 控制要监听的具体属性
+        static get observedAttributes() {
+            return ['style', 'test'];
+        }
+
+        constructor() {
+            super();
+            this.innerText = 'life test  click'
+            this.onclick = this.change
+        }
+
+        change = () => {
+            console.log('add run')
+            this.style.background = `rgba(0, 0, 0, ${Math.random()})`
+            this.setAttribute('test', Math.random() * 100)
+        }
+        
+        attributeChangedCallback(...arg) {
+            // 打印的值分别是: 属性值名, 旧值, 新值  如果没有就为 null
+            // 如果同时改变了 2 个属性, 则触发此函数两次
+            console.log('changed', arg)
+        }
+    }
+
+    customElements.define('life-test', Life)
+    
+</script>
+```
+想要使用 `attributeChangedCallback` 生命周期, 就必须搭配上 `observedAttributes`
+
+
 
 ## 兼容以及 polyfill
 
