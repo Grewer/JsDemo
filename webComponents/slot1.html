@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>slot</title>
+</head>
+<body>
+<template id="my-paragraph">
+    <p>
+        下面会显示插槽的内容:
+        <slot name="my-text"></slot>
+    </p>
+</template>
+<div id="container">
+    <span slot="my-text">Let's have some different text!</span>
+</div>
+<script>
+    let template = document.getElementById('my-paragraph');
+    let templateContent = template.content;
+
+    const shadowRoot = document.getElementById('container').attachShadow({mode: 'open'})
+        .appendChild(templateContent.cloneNode(true));
+</script>
+</body>
+</html>

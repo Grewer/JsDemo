@@ -255,11 +255,104 @@ shadow.appendChild(linkElem);
 
 ## templates and slots
 
+### templates
+顾名思义也就是模板, 最基本的使用:
+
+**正常情况下 template 并不会显示在网页中**
+
+```html
+<template id="my-paragraph">
+    <p>My paragraph</p>
+</template>
+<p>2 秒钟后执行插入</p>
+</body>
+<script>
+    function show() {
+        let template = document.getElementById('my-paragraph');
+        let templateContent = template.content;
+        document.body.appendChild(templateContent);
+    }
+    // 这里我们就是要拿到模板中的内容 插入到网页
+    // 就像框架中的组件的使用
+    setTimeout(show, 2000)
+</script>
+```
+
+### slot
+
+浏览器对这个功能的支持比<template>少，在Chrome 53, Opera 40, Safari 10, 火狐 59 和 Edge 79中支持
+
+#### shadow dom 和 template,slot 的合并使用
+
+```html
+<template id="my-paragraph">
+    <p>
+        下面会显示插槽的内容:
+        <slot name="my-text"></slot>
+    </p>
+</template>
+<div id="container">
+    <span slot="my-text">Let's have some different text!</span>
+</div>
+<script>
+    let template = document.getElementById('my-paragraph');
+    let templateContent = template.content;
+
+    const shadowRoot = document.getElementById('container').attachShadow({mode: 'open'})
+        .appendChild(templateContent.cloneNode(true));
+</script>
+```
+在线查看: [点击查看](https://grewer.github.io/JsDemo/webComponents/slot1.html)
+
+
+这里的 slot 和 Vue 框架中的基本差不多
+
+### 完全 WebComponents 使用:
+我们再深入一步, 加上 Custom Element, 组成完全的 Web Components
+
+```html
+<template id="my-paragraph">
+    <p>
+        下面会显示插槽的内容:
+        <slot name="my-text"></slot>
+    </p>
+</template>
+<my-paragraph>
+    <span slot="my-text">Let's have some different text!</span>
+</my-paragraph>
+<script>
+    customElements.define('my-paragraph',
+        class extends HTMLElement {
+            constructor() {
+                super();
+                let template = document.getElementById('my-paragraph');
+                let templateContent = template.content;
+
+                const shadowRoot = this.attachShadow({mode: 'open'})
+                    .appendChild(templateContent.cloneNode(true));
+            }
+        })
+</script>
+```
+在线查看: [点击查看](https://grewer.github.io/JsDemo/webComponents/slot2.html)
+
+查看 Chrome 中的 dom 显示更加有利于理解:
+
+![](./imgs/slot.png)
 
 
 ## 兼容以及 polyfill
+说到这,我们要说下兼容问题了, 通过 caniuse 我们可以查看他的兼容程度:
 
 
+![](./imgs/compatible1.png)
+![](./imgs/compatible2.png)
+![](./imgs/compatible3.png)
+
+可以看到, 除了 slot 之外, 其他的兼容都已经到了 94% 以上, 当然遗憾的是没有 ie11
+
+slot 的兼容稍差, 但也有 92%:
+![](./imgs/compatible4.png)
 
 https://www.webcomponents.org/polyfills
 

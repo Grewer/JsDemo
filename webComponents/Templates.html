@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>templates</title>
+</head>
+<body>
+<template id="my-paragraph">
+    <p>My paragraph</p>
+</template>
+<p>2 秒钟后执行插入</p>
+</body>
+<script>
+    function show() {
+        let template = document.getElementById('my-paragraph');
+        let templateContent = template.content;
+        document.body.appendChild(templateContent);
+    }
+
+    setTimeout(show, 2000)
+</script>
+</html>
