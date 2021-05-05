@@ -130,8 +130,95 @@ DOM 中的显示:
 </script>
 ```
 想要使用 `attributeChangedCallback` 生命周期, 就必须搭配上 `observedAttributes`
+在线查看上述 dom: [点击查看](https://grewer.github.io/JsDemo/webComponents/CustomElements.html)
 
 
+## shadow DOM
+
+Web components 的一个重要属性是封装——可以将标记结构、样式和行为隐藏起来，并与页面上的其他代码相隔离，保证不同的部分不会混在一起，可使代码更加干净、整洁。其中，Shadow DOM 接口是关键所在，它可以将一个隐藏的、独立的 DOM 附加到一个元素上。
+
+有了组件的定义之后, 当然少不了 scoped 的掌控, 而 shadow DOM 就是用来做这个的
+
+Shadow DOM 允许将隐藏的 DOM 树附加到常规的 DOM 树中——它以 shadow root 节点为起始根节点，在这个根节点的下方，可以是任意元素，和普通的 DOM 元素一样。
+![](./imgs/shadowDom1.png)
+
+这里，有一些 Shadow DOM 特有的术语需要我们了解：
+
+*   Shadow host：一个常规 DOM节点，Shadow DOM 会被附加到这个节点上。
+*   Shadow tree：Shadow DOM内部的DOM树。
+*   Shadow boundary：Shadow DOM结束的地方，也是常规 DOM开始的地方。
+*   Shadow root: Shadow tree的根节点。
+
+
+### 基本使用:
+
+```html
+<div id="foo"></div>
+<body>
+<script>
+    const div = document.getElementById('foo')
+    // 将普通 dom 转换为 shadow dom
+    let shadow = div.attachShadow({mode: 'open'});
+
+
+    // 获取 shadow dom 对象
+    // 如果 mode: 'open' 则能够正常获取, 如果为 closed  则 shadowObj 是 null
+    const shadowObj = div.shadowRoot
+    console.log(shadowObj)
+
+
+    const p = document.createElement('p')
+    p.textContent = 'this is p'
+    // 关于 textContent 和 innerText 的区别: https://developer.mozilla.org/zh-CN/docs/Web/API/Node/textContent#%E4%B8%8E_innertext_%E7%9A%84%E5%8C%BA%E5%88%AB
+
+    shadow.append(p)
+</script>
+```
+我感觉不足的地方在于, 只有在 dom 创建完毕之后在可以将他转变成 shadow dom, 而不是在浏览器的创建阶段
+
+
+### 添加 styles
+
+```html
+<style>
+    p{
+        background-color: #444444;
+    }
+</style>
+<div id="foo"></div>
+<p>不在 shadow 中的 p</p>
+<body>
+<script>
+    //省略前一步的代码
+
+    const style = document.createElement('style');
+
+    style.textContent =  `
+        p {
+            background-color: #2c9edd;
+        }
+    `
+    shadow.append(style)
+
+    // 通过运行可以看到 p 的样式有了一个 scoped
+</script>
+```
+在线查看: [点击查看](https://grewer.github.io/JsDemo/webComponents/ShadowDom.html)
+
+当然我们也可以使用外部样式:
+
+```js
+// 将外部引用的样式添加到 Shadow DOM 上
+const linkElem = document.createElement('link');
+linkElem.setAttribute('rel', 'stylesheet');
+linkElem.setAttribute('href', 'style.css');
+
+// 将所创建的元素添加到 Shadow DOM 上
+shadow.appendChild(linkElem);
+```
+
+
+## templates and slots
 
 ## 兼容以及 polyfill
 

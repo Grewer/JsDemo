@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<style>
+    p{
+        background-color: #444444;
+    }
+</style>
+<div id="foo"></div>
+<p>不在 shadow 中的 p</p>
+<body>
+<script>
+    const div = document.getElementById('foo')
+    // 将普通 dom 转换为 shadow dom
+    let shadow = div.attachShadow({mode: 'open'});
+
+
+    // 获取 shadow dom 对象
+    // 如果 mode: 'open' 则能够正常获取, 如果为 closed  则 shadowObj 是 null
+    const shadowObj = div.shadowRoot
+    console.log(shadowObj)
+
+
+    const p = document.createElement('p')
+    p.textContent = 'this is p'
+    // 关于 textContent 和 innerText 的区别: https://developer.mozilla.org/zh-CN/docs/Web/API/Node/textContent#%E4%B8%8E_innertext_%E7%9A%84%E5%8C%BA%E5%88%AB
+
+    shadow.append(p)
+
+
+    const style = document.createElement('style');
+
+    style.textContent =  `
+        p {
+            background-color: #2c9edd;
+        }
+    `
+    shadow.append(style)
+
+    // 通过运行可以看到 p 的样式有了一个 scoped
+</script>
+</body>
+</html>
