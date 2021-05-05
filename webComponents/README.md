@@ -217,8 +217,45 @@ linkElem.setAttribute('href', 'style.css');
 shadow.appendChild(linkElem);
 ```
 
+### Shadow Dom 和 Custom Element 搭配使用
+
+```html
+<life-test></life-test>
+<script>
+  class Life extends HTMLElement {
+
+    constructor() {
+      super();
+      const shadow = this.attachShadow({mode: 'closed'});
+        
+      const p = document.createElement('p')
+      p.textContent = 'click me'
+      shadow.append(p)
+      this.p = p
+
+      this.onclick = this.change
+    }
+
+    change = () => {
+      console.log('add run')
+      this.p.style.background = `rgba(0, 0, 0, ${Math.random()})`
+      this.p.setAttribute('test', Math.random() * 100)
+    }
+
+    connectedCallback() {
+      console.log('connectedCallback', '初始化')
+    }
+
+  }
+
+  customElements.define('life-test', Life)
+</script>
+```
+在线查看: [点击查看](https://grewer.github.io/JsDemo/webComponents/ShadowDom2.html)
 
 ## templates and slots
+
+
 
 ## 兼容以及 polyfill
 

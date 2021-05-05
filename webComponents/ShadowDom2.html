@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ShadowDom2</title>
+</head>
+<life-test></life-test>
+<body>
+<script>
+
+  class Life extends HTMLElement {
+
+    constructor() {
+      super();
+      const shadow = this.attachShadow({mode: 'closed'});
+
+
+      const p = document.createElement('p')
+      p.textContent = 'click me'
+      shadow.append(p)
+      this.p = p
+
+      this.onclick = this.change
+    }
+
+    change = () => {
+      console.log('add run')
+      this.p.style.background = `rgba(0, 0, 0, ${Math.random()})`
+      this.p.setAttribute('test', Math.random() * 100)
+    }
+
+    connectedCallback() {
+      console.log('connectedCallback', '初始化')
+    }
+
+  }
+
+  customElements.define('life-test', Life)
+</script>
+</body>
+</html>
