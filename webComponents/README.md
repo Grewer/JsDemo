@@ -354,11 +354,49 @@ shadow.appendChild(linkElem);
 slot 的兼容稍差, 但也有 92%:
 ![](./imgs/compatible4.png)
 
-https://www.webcomponents.org/polyfills
+### polyfill
+如果对于上述的兼容还不够完美, 我们还有 polyfill 来帮助你:
+
+这是 webComponents的 polyfill 仓库: https://github.com/webcomponents/polyfills
+
+使用了 polyfill 之后, 兼容程度现在是这样:
+
+
+| Polyfill        | Edge | IE11+ | Chrome\* | Firefox\* | Safari 9+\* | Chrome Android\* | Mobile Safari\* |
+| --------------- | ---- | ----- | -------- | --------- | ----------- | ---------------- | --------------- |
+| Custom Elements |  ✓   |   ✓   |    ✓     |     ✓     |      ✓      |        ✓         |        ✓        |
+| Shady CSS/DOM   |  ✓   |   ✓   |    ✓     |     ✓     |      ✓      |        ✓         |        ✓        |
+
+*表示浏览器的当前版本
+
+> 该polyfill可能在较旧的浏览器中工作，但是需要使用其他的polyfill（例如classList或其他平台的polyfill）。我们不能保证在兼容性列表之外对浏览器的支持。
+ 
+现在加上了 polyfill 之后, 他的兼容就是比较稳妥了
+
+## 框架拓展
+下面列出了几个基于 WebComponents 的框架, 有兴趣的可以看一看:
+
+*   LitElement (Google)
+*   Fast (Microsoft)
+*   LWC (salesforce)
+*   [Stencil](https://link.zhihu.com/?target=https%3A//stenciljs.com)
+*   [Cybernetically enhanced web apps](https://link.zhihu.com/?target=https%3A//svelte.dev)
 
 ## 结语
 
+webComponents 展示了一套全面的原生支持组件方案, 但是呢, 因为现在框架的发展, 想要在原生支持上在下功夫, 就比较麻烦了  
+对于我们开发者来说, 现在有 3 种选择
 
+1. 从 0 开始, 基于原生 WebComponents 使用或者搭建基础
+2. 关注大框架(如 Vue/React)的对于此 API 的使用倾向以及进程
+3. 尝试使用我上面展示的一些基于 WebComponents 的框架
+
+不过看了网上的一些评论还是有一些痛点在的
+
+在作者写此文的时候, 有一个想法 -- WebComponents 应该也可以是一种微前端的实现方案
+
+这个话题还可以继续延伸下去, 有兴趣我会在后面讲述
 
 参考:  
 - https://developer.mozilla.org/zh-CN/docs/Web/Web_Components
+- https://www.zhihu.com/question/449639542/answer/1805468770
