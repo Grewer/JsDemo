@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+  <script>
+
+    const errorHandler = (event) => {
+      if (!event) {
+        return
+      }
+      console.log(event)
+      const target = event.target
+      const doc = document
+      const newSrc = `https://cdn.jsdelivr.net/npm/video.js@7.10.2/dist/video.js`
+      if (target.nodeName === "SCRIPT") {
+        if (doc.readyState === 'loading') {
+          const newHtml = target.outerHTML
+                  .replace(/src=(?:"[^"]+"|.+)([ >])/, `src="${newSrc}"$1`)
+          doc.write(newHtml)
+          return
+        }
+
+        const $newScript = doc.createElement('script')
+
+        $newScript.src = newSrc
+        doc.getElementsByTagName('head')[0].appendChild($newScript)
+      }
+    }
+
+    document.addEventListener('error', errorHandler, true)
+  </script>
+
+  <script async src="https://cdn.jsdelivr.net/npm/video.js@7.10.22/dist/video.js"></script>
+  <link href="//cdn.bootcss.com/video.js/7.0.0-alpha.1/alt/video-js-cdn.css" rel="stylesheet">
+
+</head>
+<body>
+<video id="vid" class="video-js" controls data-setup="{}" width="960" height="400">
+  <source src="https://grewer.github.io/dataSave/test.mp4"></source>
+</video>
+<script type="text/javascript">
+  console.log('run  videojs', window.videojs)
+  const vid = window.videojs("vid");
+  vid.ready(function () {
+    console.log("已就绪", window.videojs);
+  });
+
+  onclick = function () {
+    console.log(vid.currentTime());
+  }
+</script>
+</body>
+</html>
