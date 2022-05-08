@@ -6,11 +6,11 @@
 </head>
 <body>
 <div class="container">
-    <input class="lightOverride" id="lightModeCheckbox" type="checkbox" />
-    <label class="lightOverride" for="lightModeCheckbox">Light Mode</label>
+    <input class="lightOverride" id="lightMode" type="checkbox" />
+    <label class="lightOverride" for="lightMode">Light Mode</label>
 
-    <input class="darkOverride" id="darkModeCheckbox" type="checkbox" />
-    <label class="darkOverride" for="darkModeCheckbox">Dark Mode</label>
+    <input class="darkOverride" id="darkMode" type="checkbox" />
+    <label class="darkOverride" for="darkMode">Dark Mode</label>
 
     <div class="body">
         <h3 class="title">My Website</h3>
@@ -56,11 +56,11 @@
         color: black;
     }
 
-    #darkModeCheckbox:checked {
+    #darkMode:checked {
         color: whitesmoke;
     }
 
-    #darkModeCheckbox:checked ~ label {
+    #darkMode:checked ~ label {
         color: whitesmoke;
     }
 
@@ -68,11 +68,11 @@
         color: whitesmoke;
     }
 
-    #lightModeCheckbox:checked {
+    #lightMode:checked {
         color: black;
     }
 
-    #lightModeCheckbox:checked ~ label {
+    #lightMode:checked ~ label {
         color: black;
     }
 
@@ -86,7 +86,7 @@
             color: black;
         }
 
-        #darkModeCheckbox:checked ~ .body {
+        #darkMode:checked ~ .body {
             background-color: darkslategrey;
             color: whitesmoke;
         }
@@ -102,7 +102,7 @@
             color: whitesmoke;
         }
 
-        #lightModeCheckbox:checked ~ .body {
+        #lightMode:checked ~ .body {
             background-color: white;
             color: black;
         }
@@ -111,6 +111,15 @@
 
 <script>
    // 暗黑模式的切换方案
+
+   // 目前媒体查询 prefers-color-scheme 的兼容行是 Chrome76 以上
+   // https://developer.mozilla.org/zh-CN/docs/Web/CSS/@media/prefers-color-scheme
+
+   // 局限点:
+   // 1 因为 CSS 提供的选择器的支持
+   // 2 浏览器的兼容
+
+   // 目前更加推荐使用 CSS 自定义变量 替换网站的整体色调
 </script>
 </body>
 </html>
