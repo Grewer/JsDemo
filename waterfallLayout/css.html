@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>css waterfall</title>
+    <meta name='viewport' content='width=device-width,initial-scale=1.0,user-scalable=no' />
     <style>
         div.item{
             transition: all .5s;
@@ -11,7 +12,7 @@
             padding:5px;
             box-sizing: border-box;
         }
-        .container{
+        #container{
             column-width: 200px;
             column-count: auto;
             column-gap: 1rem;
@@ -22,7 +23,27 @@
 <div id="container"></div>
 <script>
     // 数据源
-    const urls = []
+    const urls = new Array(10).fill(0).map((it, index)=>{
+        return `https://grewer.github.io/JsDemo/waterfallLayout/imgs/img_${index}.png`
+    })
+
+    let container = document.getElementById('container');
+    
+    urls.forEach(url=>{
+        let div = document.createElement('div');
+        div.className = 'item';
+    
+        let img = document.createElement('img');
+        img.src = url;
+        img.style.width = '100%';
+        img.style.height = 'auto';
+    
+        div.appendChild(img);
+        container.appendChild(div);
+    
+    })
+
+    
 </script>
 </body>
 </html>
