@@ -13,6 +13,25 @@
     // 这样根据屏幕宽度算出, 可以有多少列
     // 假如有 3 列, 那么我们需要 3 个数组, 每个数组的值就是这一列, 每张图片的高度
     // 通过高度的叠加, 使用绝对定位控制图片位置
+    // 数据源
+    const urls = new Array(10).fill(0).map((it, index)=>{
+        return `https://grewer.github.io/JsDemo/waterfallLayout/imgs/img_${index}.png`
+    })
+
+
+    urls.forEach(url=>{
+        const img = document.createElement('img');
+        img.src = url
+    })
+    // todo  等待 img 全部加载完成
+    
+    
+    const width = 200; // 默认设置为 200px 的宽度
+    const columns = Math.floor(window.innerWidth/200) // 计算出当前页面的列
+    
+    const columnsHeightArr = new Array(columns).fill(0).map(_=>[]);
+    
+    
     
 </script>
 
