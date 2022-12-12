@@ -19,6 +19,7 @@
     const width = 200; // 默认设置为 200px 的宽度
     const columns = Math.floor(window.innerWidth/200) // 计算出当前页面的列
 
+    const heights = []
     const columnsHeightArr = new Array(columns).fill(0).map(_=>[]);
     
     const urls = new Array(10).fill(0).map((it, index)=>{
@@ -27,33 +28,34 @@
     
     let flag = 0
     
-    const getImg = (url) =>{
+    const getImg = (url, index) =>{
         let img = new Image();
         img.src = url;
         
-        const imgCallback = () => {
+        const imgCallback = (img) => {
             flag++;
-            // 全部图片加载完毕后再开始布局，否则获取不到元素的最终高度。
+            heights[index] = img.height
             if (flag === urls.length) {
-                main();
+                handler();
             } 
         }
         
         if (img.complete){
-            imgCallback()
+            imgCallback(img)
         } else {
-            img.onload = imgCallback
+            img.onload = (ev)=>imgCallback(ev.target)
         }
     }
     
     const imgInit = () => {
-        urls.forEach(url=>{
-            getImg(url)
+        urls.forEach((url, index)=>{
+            getImg(url, index)
         })
     }
     
-    const main = () => {
+    const handler = () => {
         console.log('图片初始化完毕');
+        console.log(heights)
     }
 
     // 在这之前我们可以添加 loading
