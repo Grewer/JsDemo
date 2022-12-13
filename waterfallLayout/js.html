@@ -4,8 +4,23 @@
     <meta charset="UTF-8">
     <title>Title</title>
 </head>
+<style>
+    
+    html,body{
+        margin: 0;
+        padding: 0;
+    }
+    #container{
+        position: relative;
+    }
+    
+    #container > img{
+        width: 200px;
+        position: absolute;
+    }
+</style>
 <body>
-
+<div id="container"></div>
 <script>
     
     // 思路
@@ -15,12 +30,12 @@
     // 通过高度的叠加, 使用绝对定位控制图片位置
     // 数据源
 
-
+    const container = document.getElementById('container')
     const width = 200; // 默认设置为 200px 的宽度
     const columns = Math.floor(window.innerWidth/200) // 计算出当前页面的列
 
     const heights = []
-    const columnsHeightArr = new Array(columns).fill(0).map(_=>[]);
+    const columnsHeightArr = []
     
     const urls = new Array(10).fill(0).map((it, index)=>{
         return `https://grewer.github.io/JsDemo/waterfallLayout/imgs/img_${index}.png`
@@ -53,9 +68,30 @@
         })
     }
     
+    const appendImages = (url, position, top)=>{
+        const img = document.createElement('img');
+        img.src = url;
+        img.style.left = (position * width) + 'px';
+        img.style.top = top + 'px';
+        container.appendChild(img)
+    }
+    
+    const insertImages = () => {
+        for(let i = 0; i< urls.length;i++){
+            if(columnsHeightArr.length < columns){
+                columnsHeightArr[i] = heights[i];
+                appendImages(urls[i], i, 0)
+            }else{
+                
+            }
+        }
+    }
+    
     const handler = () => {
+        console.log(`当前文档流分为 ${columns} 列`)
         console.log('图片初始化完毕');
         console.log(heights)
+        insertImages()
     }
 
     // 在这之前我们可以添加 loading
