@@ -18,6 +18,8 @@
     #container > img {
         width: 200px;
         position: absolute;
+        padding: 4px;
+        box-sizing: border-box;
     }
 </style>
 <body>
@@ -89,11 +91,11 @@
         for (let i = 0; i < urls.length; i++) {
             if (columnsHeightArr.length < columns) {
                 const img = appendImages(urls[i], i, 0)
-                columnsHeightArr[i] = img.height;
+                columnsHeightArr[i] = img.offsetHeight;
             } else {
                 const {index, minHeight} = getMin(columnsHeightArr)
                 const img = appendImages(urls[i], index, minHeight);
-                columnsHeightArr[index] = columnsHeightArr[index] + img.height;
+                columnsHeightArr[index] = columnsHeightArr[index] + img.offsetHeight;
             }
         }
     }
@@ -106,7 +108,12 @@
     
     // 在这之前我们可以添加 loading
     imgInit();
-
+    
+    // 缺点, 需要加载完全部的图片才能知道, 具体的图片渲染高度
+    // 除非我们给一个预设值(计算出高度)
+    // 另一种方案是  使用动态的加载, 一开始不加载图片, 插入具体图片后, 等到图片加载完, 再插入第二批图片
+    
+    // 不考虑图片加载失败的情况
 </script>
 
 </body>
