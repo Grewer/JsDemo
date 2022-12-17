@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+
+        html, body {
+            margin: 0;
+            padding: 0;
+        }
+
+        #container {
+            position: relative;
+        }
+
+        #container > img {
+            width: 200px;
+            position: absolute;
+            padding: 4px;
+            box-sizing: border-box;
+        }
+    </style>
+</head>
+<body>
+<div id="container"></div>
+
+<script>
+    // 由于上一版本, 在开头的时候会将图片全部加载完成, 导致前期的loading 非常严重,
+    // 所以有了第二版本, 每次加载只加载一批, 分批次加载
+
+    const container = document.getElementById('container')
+    const width = 200; // 默认设置为 200px 的宽度
+    const columns = Math.floor(window.innerWidth / 200) // 计算出当前页面的列
+
+    const columnsHeightArr = []
+
+    const urls = new Array(10).fill(0).map((it, index) => {
+        return `https://grewer.github.io/JsDemo/waterfallLayout/imgs/img_${index}.png`
+    })
+
+    const getMin = (arr) => {
+        let minHeight = arr[0];
+        let index = 0
+        for (let i = 1; i < arr.length; i++) {
+            if (arr[i] < minHeight) {
+                minHeight = arr[i]
+                index = i
+            }
+        }
+        return {index, minHeight}
+    }
+    
+    const appendImages = (url, position, top) => {
+        const img = document.createElement('img');
+        img.src = url;
+        img.style.left = (position * width) + 'px';
+        img.style.top = top + 'px';
+        img.onload = () => {
+            // alert(1)
+        }
+        container.appendChild(img)
+        return img
+    }
+    
+    const insertImages = () => {
+        // for (let i = 0; i < urls.length; i++) {
+            // if (columnsHeightArr.length < columns) {
+            //     const img = appendImages(urls[i], i, 0)
+            //     columnsHeightArr[i] = img.offsetHeight;
+            // } else {
+            //     const {index, minHeight} = getMin(columnsHeightArr)
+            //     const img = appendImages(urls[i], index, minHeight);
+            //     columnsHeightArr[index] = columnsHeightArr[index] + img.offsetHeight;
+            // }
+        // }
+        
+    }
+
+    insertImages()
+    
+    const init = () => {
+        
+    }
+</script>
+</body>
+</html>
