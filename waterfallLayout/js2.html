@@ -51,36 +51,50 @@
         return {index, minHeight}
     }
     
-    const appendImages = (url, position, top) => {
+    const loadImage = (url) => {
         return new Promise(resolve => {
             const img = document.createElement('img');
             img.src = url;
-            img.style.left = (position * width) + 'px';
-            img.style.top = top + 'px';
             if (img.complete) {
                 resolve(img)
             } else {
                 img.onload = ev => resolve(ev.target)
             }
-            container.appendChild(img)
         })
     }
     
+    const appendImages = (img, position, top) => {
+        img.style.left = (position * width) + 'px';
+        img.style.top = top + 'px';
+        container.appendChild(img)
+    }
+    
     const insertImages = () => {
+        if (!urls || urls.length <= 0) {
+            console.log('done 全部加载完毕')
+            return
+        }
+        
         const arr = urls.splice(0, columns)
         
-        arr.forEach(async (item, i)=>{
+        let flag = arr.length;
+        arr.forEach(async (item, i) => {
             if (columnsHeightArr.length < columns) {
-                const img = await appendImages(item, i, 0)
+                const img = await loadImage(item);
+                appendImages(img, i, 0)
                 columnsHeightArr[i] = img.offsetHeight;
             } else {
+                const img = await loadImage(item);
                 const {index, minHeight} = getMin(columnsHeightArr)
-                const img = await appendImages(item, index, minHeight);
+                appendImages(img, index, minHeight);
                 columnsHeightArr[index] = columnsHeightArr[index] + img.offsetHeight;
             }
             // 做出检查, 所有图片是否都已经加载完毕
+            flag--;
             
-            //TODO
+            if (flag <= 0) {
+                insertImages()
+            }
         })
         
     }
