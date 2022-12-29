@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+
+        html, body {
+            margin: 0;
+            padding: 0;
+        }
+
+        #container {
+            position: relative;
+        }
+
+        #container > img {
+            width: 200px;
+            position: absolute;
+            padding: 4px;
+            box-sizing: border-box;
+        }
+    </style>
+</head>
+<body>
+<div id="container"></div>
+
+<script>
+    // 因为加载的速度问题, 造成的用户体验还是很差, 所以最好的方案还是需要提前知道
+    // 图片的尺寸/比例  这样布局就能提前出现, 图片什么时候加载完 就不用我们关心了
+    // 在业务中, 我们需要在图片上传之后, 将图片比例/长宽数据存为一个字段或者我们也可以直接存到 url 上
+    // 如 https://grewer.github.io/JsDemo/waterfallLayout/imgs/img_3.png?w=200&h=300
+    
+    const container = document.getElementById('container')
+    const width = 200; // 默认设置为 200px 的宽度
+    const columns = Math.floor(window.innerWidth / 200) // 计算出当前页面的列
+    const gap = 8
+    const columnsHeightArr = []
+    
+    const data = [
+        {
+            "url": "https://grewer.github.io/JsDemo/waterfallLayout/imgs/img_0.png",
+            "width": 1776,
+            "height": 1184
+        },
+        {
+            "url": "https://grewer.github.io/JsDemo/waterfallLayout/imgs/img_1.png",
+            "width": 960,
+            "height": 1200
+        },
+        {
+            "url": "https://grewer.github.io/JsDemo/waterfallLayout/imgs/img_2.png",
+            "width": 1694,
+            "height": 1200
+        },
+        {
+            "url": "https://grewer.github.io/JsDemo/waterfallLayout/imgs/img_3.png",
+            "width": 800,
+            "height": 1200
+        },
+        {
+            "url": "https://grewer.github.io/JsDemo/waterfallLayout/imgs/img_4.png",
+            "width": 947,
+            "height": 1200
+        },
+        {
+            "url": "https://grewer.github.io/JsDemo/waterfallLayout/imgs/img_5.png",
+            "width": 1776,
+            "height": 1184
+        },
+        {
+            "url": "https://grewer.github.io/JsDemo/waterfallLayout/imgs/img_6.png",
+            "width": 1764,
+            "height": 1200
+        },
+        {
+            "url": "https://grewer.github.io/JsDemo/waterfallLayout/imgs/img_7.png",
+            "width": 1800,
+            "height": 1013
+        },
+        {
+            "url": "https://grewer.github.io/JsDemo/waterfallLayout/imgs/img_8.png",
+            "width": 1800,
+            "height": 1192
+        },
+        {
+            "url": "https://grewer.github.io/JsDemo/waterfallLayout/imgs/img_9.png",
+            "width": 647,
+            "height": 971
+        }
+    ]
+    
+    const getMin = (arr) => {
+        let minHeight = arr[0];
+        let index = 0
+        for (let i = 1; i < arr.length; i++) {
+            if (arr[i] < minHeight) {
+                minHeight = arr[i]
+                index = i
+            }
+        }
+        return {index, minHeight}
+    }
+    
+
+    const appendImages = (img, position, top, height) => {
+        img.style.left = (position * width) + 'px';
+        img.style.top = top + 'px';
+        img.width = 200 - gap;
+        img.height = height;
+        container.appendChild(img)
+    }
+    
+    const insertImages = () => {
+    
+        data.forEach( (item, i) => {
+            const img = document.createElement('img');
+            img.src = item.url;
+            const height = ((item.height/item.width) * (200-gap)) + gap;
+            if (columnsHeightArr.length < columns) {
+                appendImages(img, i, 0, height)
+                columnsHeightArr[i] = height;
+            } else {
+                const {index, minHeight} = getMin(columnsHeightArr)
+                appendImages(img, index, minHeight, height);
+                columnsHeightArr[index] = columnsHeightArr[index] + height;
+            }
+        })
+    }
+    
+    
+    const init = () => {
+        insertImages()
+    }
+    
+    init()
+    
+</script>
+</body>
+</html>
