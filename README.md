@@ -107,3 +107,7 @@ demo: [点击查看](https://grewer.github.io/JsDemo/numberCount/)
 - switchTheme
 使用 HTML 和 CSS 切换完整的暗黑模式
 demo: [点击查看](https://grewer.github.io/JsDemo/switchTheme/)
+
+- waterfallLayout  
+瀑布流布局原理  
+demo: [点击查看](https://grewer.github.io/JsDemo/waterfallLayout/js3.html)
